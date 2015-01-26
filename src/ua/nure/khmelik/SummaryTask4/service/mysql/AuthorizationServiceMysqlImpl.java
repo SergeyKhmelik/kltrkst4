@@ -1,5 +1,6 @@
 package ua.nure.khmelik.SummaryTask4.service.mysql;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.naming.NamingException;
@@ -28,9 +29,9 @@ public class AuthorizationServiceMysqlImpl implements AuthorizationService {
     }
 
     @Override
-    public User getUserByLoginPassword(String login, String password) {
+    public User getUserByLoginPassword(final String login, final String password) {
 	User result = (User) tm.doTransaction(new Operation<User>() {
-	    public User execute(java.sql.Connection conn) {
+	    public User execute(java.sql.Connection conn) throws SQLException {
 		User result = null;
 		int[] userInfo = authDao.getUserIdRoleId(conn, login, password);
 
@@ -59,6 +60,7 @@ public class AuthorizationServiceMysqlImpl implements AuthorizationService {
 			result.setPassword(password);
 			result.setRoleId(userInfo[1]);
 		}
+		return result;
 	    };
 	});
 	return result;
