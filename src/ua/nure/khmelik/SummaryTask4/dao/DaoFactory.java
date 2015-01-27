@@ -1,6 +1,7 @@
 package ua.nure.khmelik.SummaryTask4.dao;
 
 import ua.nure.khmelik.SummaryTask4.dao.PermissionDao;
+import ua.nure.khmelik.SummaryTask4.exceptions.NoSupportedDatabase;
 
 public abstract class DaoFactory {
 
@@ -18,14 +19,14 @@ public abstract class DaoFactory {
     
     public abstract PermissionDao getPermissionDao();
 
-    public static DaoFactory getDaoFactory(int factoryNum) {
+    public static DaoFactory getDaoFactory(int factoryNum) throws NoSupportedDatabase {
 	switch (factoryNum) {
 	case MYSQL:
 	    return new MysqlDaoFactory();
 	case DERBY:
 	    return new DerbyDaoFactory();
 	default:
-	    return null;
+	    throw new NoSupportedDatabase(factoryNum);
 	}
     }
 

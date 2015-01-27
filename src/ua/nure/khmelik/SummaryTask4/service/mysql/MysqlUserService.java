@@ -2,12 +2,24 @@ package ua.nure.khmelik.SummaryTask4.service.mysql;
 
 import java.util.ArrayList;
 
+import ua.nure.khmelik.SummaryTask4.dao.UserDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
 import ua.nure.khmelik.SummaryTask4.service.UserService;
+import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
 
 public class MysqlUserService implements UserService {
+
+    private TransactionManager transactionManager;
+    private UserDao userDao;
+    
+    public MysqlUserService(TransactionManager transactionManager,
+	    UserDao userDao) {
+	super();
+	this.transactionManager = transactionManager;
+	this.userDao = userDao;
+    }
 
     @Override
     public ArrayList<Teacher> readTeachers() {

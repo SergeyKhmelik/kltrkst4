@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
+import javax.servlet.UnavailableException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,8 +18,6 @@ import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchRoleException;
 import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchUserException;
 import ua.nure.khmelik.SummaryTask4.service.AuthorizationService;
 import ua.nure.khmelik.SummaryTask4.service.PermissionService;
-import ua.nure.khmelik.SummaryTask4.service.implementation.AuthorizationLogic;
-
 public class LoginServlet extends HttpServlet {
 
     private static final long serialVersionUID = -9056876894273126770L;
@@ -41,6 +40,10 @@ public class LoginServlet extends HttpServlet {
 		.getAttribute("authorizationService");
 	permissionService = (PermissionService) getServletContext()
 		.getAttribute("permissionService");
+
+	if (authorizationService == null || permissionService == null) {
+	    throw new UnavailableException("Couldn`t get DAO");
+	}
     }
 
     @Override
@@ -69,10 +72,10 @@ public class LoginServlet extends HttpServlet {
 	    if (user.getIdRole() == Constants.ROLE_STUDENT) {
 		session.setAttribute("title", "student");
 	    }
-	    
-	    req.getRequestDispatcher("main.jsp").forward(req, resp);
+
+	    req.getRequestDispatcher("/main").forward(req, resp);
 	} catch (SQLException e) {
-	    //REDIRECT NA "SORRY PAGE"
+	    // REDIRECT NA "SORRY PAGE"
 	    e.printStackTrace();
 	} catch (NoSuchRoleException e) {
 	    resp.getWriter().write(e.getMessage());
@@ -80,8 +83,6 @@ public class LoginServlet extends HttpServlet {
 	    resp.getWriter().write(e.getMessage());
 	    e.printStackTrace();
 	}
-
-	
 
 	/*
 	 * try { AuthorizationLogic logic = new AuthorizationLogic(); User user

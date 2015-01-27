@@ -1,11 +1,23 @@
 package ua.nure.khmelik.SummaryTask4.service.mysql;
 
+import ua.nure.khmelik.SummaryTask4.dao.JournalDao;
 import ua.nure.khmelik.SummaryTask4.entity.Journal;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
 import ua.nure.khmelik.SummaryTask4.service.JournalService;
+import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
 
 public class MysqlJournalService implements JournalService {
+
+    private TransactionManager transactionManager;
+    private JournalDao journalDao;
+        
+    public MysqlJournalService(TransactionManager transactionManager,
+	    JournalDao journalDao) {
+	super();
+	this.transactionManager = transactionManager;
+	this.journalDao = journalDao;
+    }
 
     @Override
     public Journal getJournal(int idCourse) {
