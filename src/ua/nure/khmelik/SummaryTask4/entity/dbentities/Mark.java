@@ -6,8 +6,8 @@ public class Mark implements Serializable{
 
 	private static final long serialVersionUID = -4399100703782619629L;
 
-	private int studentId;
-	private int courseControlpointId;
+	private int idStudent;
+	private int idCourseControlpoint;
 	private int value;
 
 	public int getValue() {
@@ -18,20 +18,20 @@ public class Mark implements Serializable{
 		this.value = value;
 	}
 
-	public int getStudentId() {
-		return studentId;
+	public int getIdStudent() {
+		return idStudent;
 	}
 
-	public void setStudentId(int studentId) {
-		this.studentId = studentId;
+	public void setIdStudent(int studentId) {
+		this.idStudent = studentId;
 	}
 
-	public int getCourseControlpointId() {
-		return courseControlpointId;
+	public int getIdCourseControlpoint() {
+		return idCourseControlpoint;
 	}
 
-	public void setCourseControlpointId(int courseCodePointId) {
-		this.courseControlpointId = courseCodePointId;
+	public void setIdCourseControlpoint(int idCourseCodePoint) {
+		this.idCourseControlpoint = idCourseCodePoint;
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class Mark implements Serializable{
 
 	@Override
 	public int hashCode() {
-		int result = studentId;
-		result = 31 * result + courseControlpointId;
+		int result = idStudent;
+		result = 31 * result + idCourseControlpoint;
 		result = 31 * result + value;
 		return result;
 	}

@@ -2,23 +2,23 @@ package ua.nure.khmelik.SummaryTask4.entity.dbentities;
 
 public class StudentCourse{
 
-	private int idstudent;
-	private int idcourse;
+	private int idStudent;
+	private int idCourse;
 
 	public int getIdStudent() {
-		return idstudent;
+		return idStudent;
 	}
 
-	public void setIdStudent(int idstudent) {
-		this.idstudent = idstudent;
+	public void setIdStudent(int idStudent) {
+		this.idStudent = idStudent;
 	}
 
 	public int getIdCourse() {
-		return idcourse;
+		return idCourse;
 	}
 
-	public void setIdCourse(int idcourse) {
-		this.idcourse = idcourse;
+	public void setIdCourse(int idCourse) {
+		this.idCourse = idCourse;
 	}
 
 	@Override
@@ -30,9 +30,9 @@ public class StudentCourse{
 
 		StudentCourse that = (StudentCourse) o;
 
-		if (idcourse != that.idcourse)
+		if (idCourse != that.idCourse)
 			return false;
-		if (idstudent != that.idstudent)
+		if (idStudent != that.idStudent)
 			return false;
 
 		return true;
@@ -40,8 +40,8 @@ public class StudentCourse{
 
 	@Override
 	public int hashCode() {
-		int result = idstudent;
-		result = 31 * result + idcourse;
+		int result = idStudent;
+		result = 31 * result + idCourse;
 		return result;
 	}
 }

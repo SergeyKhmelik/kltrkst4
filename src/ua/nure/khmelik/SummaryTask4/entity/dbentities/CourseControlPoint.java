@@ -29,8 +29,8 @@ public class CourseControlPoint{
 		return idCourseControlPoint;
 	}
 
-	public void setIdCourseControlPoint(int idcourseControlpoint) {
-		this.idCourseControlPoint = idcourseControlpoint;
+	public void setIdCourseControlPoint(int idCourseControlpoint) {
+		this.idCourseControlPoint = idCourseControlpoint;
 	}
 
 	public Date getDate() {

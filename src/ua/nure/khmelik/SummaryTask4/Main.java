@@ -26,7 +26,7 @@ public class Main {
 		    "koloturka", "cepera");
 	    System.out.println(user);
 	    System.out.println(new AuthorizationLogic()
-		    .getPermissionsByRole(user.getRoleId()));
+		    .getPermissionsByRole(user.getIdRole()));
 	} catch (SQLException | NamingException | ClassNotFoundException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -37,7 +37,7 @@ public class Main {
 	    user = new MysqlAuthorizationService(
 	    	new MysqlAuthorizationDao(),
 	    	new MysqlPermissionDao())
-	    	.getUserByLoginPassword("koloturka", "cepera");
+	    	.getUser("koloturka", "cepera");
 	    System.out.println(user);
 	} catch (NamingException e) {
 	    // TODO Auto-generated catch block

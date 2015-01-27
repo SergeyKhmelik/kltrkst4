@@ -63,8 +63,8 @@ public class MysqlJournalDao implements JournalDao {
 	    Mark currentMark;
 	    while (rs.next()) {
 		currentMark = new Mark();
-		currentMark.setStudentId(rs.getInt(1));
-		currentMark.setCourseControlpointId(rs.getInt(2));
+		currentMark.setIdStudent(rs.getInt(1));
+		currentMark.setIdCourseControlpoint(rs.getInt(2));
 		currentMark.setValue(rs.getInt(3));
 		result.add(currentMark);
 	    }
@@ -131,8 +131,8 @@ public class MysqlJournalDao implements JournalDao {
     @Override
     public int updateMark(Connection conn, Mark mark) throws SQLException {
 	try (PreparedStatement pstm = conn.prepareStatement(UPDATE_MARK)) {
-	    pstm.setInt(1, mark.getStudentId());
-	    pstm.setInt(2, mark.getCourseControlpointId());
+	    pstm.setInt(1, mark.getIdStudent());
+	    pstm.setInt(2, mark.getIdCourseControlpoint());
 	    pstm.setInt(3, mark.getValue());
 	    pstm.setInt(4, mark.getValue());
 	    pstm.executeUpdate();
@@ -140,7 +140,7 @@ public class MysqlJournalDao implements JournalDao {
 	    // Logger
 	    throw ex;
 	}
-	return mark.getCourseControlpointId();
+	return mark.getIdCourseControlpoint();
     }
 
 }

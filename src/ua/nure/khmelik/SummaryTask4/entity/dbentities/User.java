@@ -10,7 +10,7 @@ public abstract class User extends Entity {
     private String sirname;
     private String patronymic;
     private String email;
-    private int roleId;
+    private int idRole;
 
     public String getLogin() {
 	return login;
@@ -60,12 +60,12 @@ public abstract class User extends Entity {
 	this.email = email;
     }
 
-    public int getRoleId() {
-	return roleId;
+    public int getIdRole() {
+	return idRole;
     }
 
-    public void setRoleId(int roleId) {
-	this.roleId = roleId;
+    public void setIdRole(int idRole) {
+	this.idRole = idRole;
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class User extends Entity {
 	if (sirname != null ? !sirname.equals(user.sirname)
 		: user.sirname != null)
 	    return false;
-	if (roleId != user.roleId)
+	if (idRole != user.idRole)
 	    return false;
 	return true;
     }
@@ -108,7 +108,7 @@ public abstract class User extends Entity {
 	result = 31 * result + (sirname != null ? sirname.hashCode() : 0);
 	result = 31 * result + (patronymic != null ? patronymic.hashCode() : 0);
 	result = 31 * result + (email != null ? email.hashCode() : 0);
-	result = 31 * result + roleId;
+	result = 31 * result + idRole;
 	return result;
     }
 
@@ -116,7 +116,7 @@ public abstract class User extends Entity {
     public String toString() {
 	return "User [login=" + login + ", password=" + password + ", name="
 		+ name + ", sirname=" + sirname + ", patronymic=" + patronymic
-		+ ", email=" + email + ", roleId=" + roleId + "]";
+		+ ", email=" + email + ", roleId=" + idRole + "]";
     }
     
     

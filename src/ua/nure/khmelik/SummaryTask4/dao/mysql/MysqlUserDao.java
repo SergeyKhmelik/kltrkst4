@@ -143,7 +143,7 @@ public class MysqlUserDao implements UserDao {
 		Statement.RETURN_GENERATED_KEYS)) {
 	    pstm.setString(1, user.getLogin());
 	    pstm.setString(2, user.getPassword());
-	    pstm.setInt(3, user.getRoleId());
+	    pstm.setInt(3, user.getIdRole());
 	    pstm.setString(4, user.getName());
 	    pstm.setString(5, user.getSirname());
 	    pstm.setString(6, user.getPatronymic());

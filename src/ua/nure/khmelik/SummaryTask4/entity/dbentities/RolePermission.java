@@ -13,7 +13,6 @@ public class RolePermission {
 		this.idRole = idrole;
 	}
 
-
 	public int getIdPermition() {
 		return idPermition;
 	}

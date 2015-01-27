@@ -19,8 +19,8 @@ public class Student extends User{
 		return blocked;
 	}
 
-	public void setBlocked(boolean isBlocked) {
-		this.blocked = isBlocked;
+	public void setBlocked(boolean blocked) {
+		this.blocked = blocked;
 	}
 
 	@Override

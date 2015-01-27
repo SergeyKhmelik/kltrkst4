@@ -15,7 +15,6 @@ public class CourseTheme extends Entity{
 		this.name = name;
 	}
 
-
 	public String getDescription() {
 		return description;
 	}

@@ -36,12 +36,12 @@ public class Course extends Entity {
 		this.end = end;
 	}
 
-	public int getTeacherId() {
+	public int getIdTeacher() {
 		return idTeacher;
 	}
 
-	public void setTeacherId(int teacherId) {
-		this.idTeacher = teacherId;
+	public void setIdTeacher(int idTeacher) {
+		this.idTeacher = idTeacher;
 	}
 	
 	public int getIdTheme() {

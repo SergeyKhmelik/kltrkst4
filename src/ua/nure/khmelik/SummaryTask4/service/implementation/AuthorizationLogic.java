@@ -51,7 +51,7 @@ public class AuthorizationLogic {
 			if (result != null) {
 				result.setLogin(login);
 				result.setPassword(password);
-				result.setRoleId(userInfo[1]);
+				result.setIdRole(userInfo[1]);
 			}
 			conn.commit();
 			conn.setAutoCommit(true);
