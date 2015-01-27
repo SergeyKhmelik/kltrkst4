@@ -11,7 +11,7 @@ import ua.nure.khmelik.SummaryTask4.dao.DaoFactory;
 import ua.nure.khmelik.SummaryTask4.dao.JournalDao;
 import ua.nure.khmelik.SummaryTask4.dao.PermissionDao;
 import ua.nure.khmelik.SummaryTask4.dao.UserDao;
-import ua.nure.khmelik.SummaryTask4.exceptions.NoSupportedDatabase;
+import ua.nure.khmelik.SummaryTask4.exceptions.NotSupportedDatabaseIndexException;
 import ua.nure.khmelik.SummaryTask4.service.AuthorizationService;
 import ua.nure.khmelik.SummaryTask4.service.CourseService;
 import ua.nure.khmelik.SummaryTask4.service.JournalService;
@@ -59,7 +59,7 @@ public class AppContextListener implements ServletContextListener {
 	    context.setAttribute("journalService", journalService);
 	    context.setAttribute("permissionService", permissionService);
 	    context.setAttribute("userService", userService);
-	} catch (NoSupportedDatabase e) {
+	} catch (NotSupportedDatabaseIndexException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (NamingException e) {

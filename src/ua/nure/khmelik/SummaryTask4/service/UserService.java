@@ -12,14 +12,14 @@ public interface UserService {
 	
 	ArrayList<Student> readStudents();
 	
-	void addStudent(Student student);
+	int addStudent(Student student);
 	
-	void addTeacher(Teacher teacher);
+	int addTeacher(Teacher teacher);
 	
-	void updateUser(User user);
+	int updateUser(User user);
 	
-	void deleteUser(int idUser);
+	int deleteUser(int idUser);
 	
-	void blockStudent(int idStudent, boolean block);	
+	int blockStudent(int idStudent, boolean block);	
 	
 }

@@ -1,10 +1,12 @@
 package ua.nure.khmelik.SummaryTask4.exceptions;
 
-public class NoSupportedDatabase extends Exception {
+public class NotSupportedDatabaseIndexException extends Exception {
 
+    private static final long serialVersionUID = 7550978185536276544L;
+    
     private int factoryNumber;
    
-    public NoSupportedDatabase(int factoryNumber) {
+    public NotSupportedDatabaseIndexException(int factoryNumber) {
 	super();
 	this.factoryNumber = factoryNumber;
     }

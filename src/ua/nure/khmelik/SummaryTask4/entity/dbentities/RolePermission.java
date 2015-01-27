@@ -3,22 +3,22 @@ package ua.nure.khmelik.SummaryTask4.entity.dbentities;
 public class RolePermission {
 	
 	private int idRole;
-	private int idPermition;
+	private int idPermission;
 
 	public int getIdRole() {
 		return idRole;
 	}
 
-	public void setIdRole(int idrole) {
-		this.idRole = idrole;
+	public void setIdRole(int idRole) {
+		this.idRole = idRole;
 	}
 
-	public int getIdPermition() {
-		return idPermition;
+	public int getIdPermission() {
+		return idPermission;
 	}
 
-	public void setIdPermition(int idpermition) {
-		this.idPermition = idpermition;
+	public void setIdPermission(int idPermission) {
+		this.idPermission = idPermission;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class RolePermission {
 
 		RolePermission that = (RolePermission) o;
 
-		if (idPermition != that.idPermition)
+		if (idPermission != that.idPermission)
 			return false;
 		if (idRole != that.idRole)
 			return false;
@@ -41,7 +41,7 @@ public class RolePermission {
 	@Override
 	public int hashCode() {
 		int result = idRole;
-		result = 31 * result + idPermition;
+		result = 31 * result + idPermission;
 		return result;
 	}
 }

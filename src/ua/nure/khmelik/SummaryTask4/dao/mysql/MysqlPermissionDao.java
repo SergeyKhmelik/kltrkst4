@@ -40,7 +40,7 @@ public class MysqlPermissionDao implements PermissionDao {
     }
 
     @Override
-    public ArrayList<Permission> getPermitionsByRole(Connection conn, int idRole)
+    public ArrayList<Permission> getPermissions(Connection conn, int idRole)
 	    throws SQLException {
 	ArrayList<Permission> result = new ArrayList<Permission>();
 	Permission currentPermission;
@@ -68,29 +68,29 @@ public class MysqlPermissionDao implements PermissionDao {
 	    throws SQLException {
 	try (PreparedStatement pstm = conn
 		.prepareStatement(ADD_PERMISSION_TO_ROLE)) {
-	    pstm.setInt(1, rolePermission.getIdPermition());
+	    pstm.setInt(1, rolePermission.getIdPermission());
 	    pstm.setInt(2, rolePermission.getIdRole());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
 	    // Logging
 	    throw ex;
 	}
-	return rolePermission.getIdPermition();
+	return rolePermission.getIdPermission();
     }
 
     @Override
-    public int removeRolePermission(Connection conn, RolePermission rolePermission)
+    public int deleteRolePermission(Connection conn, RolePermission rolePermission)
 	    throws SQLException {
 	try (PreparedStatement pstm = conn
 		.prepareStatement(REMOVE_PERMISSION_FROM_ROLE)) {
-	    pstm.setInt(1, rolePermission.getIdPermition());
+	    pstm.setInt(1, rolePermission.getIdPermission());
 	    pstm.setInt(2, rolePermission.getIdRole());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
 	    // Logging
 	    throw ex;
 	}
-	return rolePermission.getIdPermition();
+	return rolePermission.getIdPermission();
     }
 
 }

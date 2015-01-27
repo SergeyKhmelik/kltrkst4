@@ -66,7 +66,7 @@ public class AuthorizationLogic {
 			conn.setAutoCommit(false);
 			AuthorizationDao dao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
 					.getAuthorizationDao();
-			result = dao.getPermitionsByRole(conn, idRole);
+			result = dao.getPermissions(conn, idRole);
 			conn.commit();
 			conn.setAutoCommit(true);
 		}

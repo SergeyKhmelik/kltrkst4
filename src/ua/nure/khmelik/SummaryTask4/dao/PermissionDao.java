@@ -10,12 +10,14 @@ import ua.nure.khmelik.SummaryTask4.entity.dbentities.RolePermission;
 public interface PermissionDao {
 
     ArrayList<Permission> getPermissions(Connection conn) throws SQLException;
-    
-    int createRolePermission(Connection conn, RolePermission rolePermission) throws SQLException;
-    
-    int removeRolePermission(Connection conn, RolePermission rolePermission) throws SQLException;
 
-    ArrayList<Permission> getPermitionsByRole(Connection conn, int idRole)
+    ArrayList<Permission> getPermissions(Connection conn, int idRole)
 	    throws SQLException;
-    
+
+    int createRolePermission(Connection conn, RolePermission rolePermission)
+	    throws SQLException;
+
+    int deleteRolePermission(Connection conn, RolePermission rolePermission)
+	    throws SQLException;
+
 }

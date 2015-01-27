@@ -19,14 +19,14 @@ public class TransactionManager {
 	ds = (DataSource) initContext.lookup("java:comp/env/jdbc/courses");
     }
 
-    public <T> T doTransaction(Operation<T> operation) {
+    public <T> T doTransaction(Operation<T> operation) throws NoSuchRoleException, NoSuchUserException {
 	T result = null;
 	Connection connection = null;
 	try {
 	    connection = ds.getConnection();
 	    result = operation.execute(connection);
 	    connection.commit();
-	} catch (SQLException | NoSuchRoleException | NoSuchUserException e) {
+	} catch (SQLException e) {
 	    try {
 		connection.rollback();
 	    } catch (SQLException e1) {
