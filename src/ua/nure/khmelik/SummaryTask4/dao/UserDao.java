@@ -17,18 +17,18 @@ public interface UserDao {
 
     ArrayList<Teacher> readTeachers(Connection conn) throws SQLException;
 
-    int createStudent(Connection conn, Student st) throws SQLException;
+    int createStudent(Connection conn, Student student) throws SQLException;
 
-    int createTeacher(Connection conn, Teacher te) throws SQLException;
+    int createTeacher(Connection conn, Teacher teacher) throws SQLException;
 
-    int createUser(Connection conn, User u) throws SQLException;
+    int createUser(Connection conn, User user) throws SQLException;
 
-    int updateUser(Connection conn, User u) throws SQLException;
+    int updateUser(Connection conn, User user) throws SQLException;
 
-    int deleteUser(Connection conn, int userId) throws SQLException;
+    int deleteUser(Connection conn, int idUser) throws SQLException;
 
-    int blockStudent(Connection conn, int studentId) throws SQLException;
+    int blockStudent(Connection conn, int idStudent) throws SQLException;
 
-    int unblockStudent(Connection conn, int studentId) throws SQLException;
+    int unblockStudent(Connection conn, int idStudent) throws SQLException;
     
 }

@@ -14,6 +14,6 @@ public interface JournalService {
 
     int setAnotherDate(CourseControlPoint point);
 
-    int updateMark(Mark m);
+    int updateMark(Mark mark);
 
 }

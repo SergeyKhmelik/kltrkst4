@@ -8,16 +8,16 @@ public interface CourseService {
 
     ArrayList<Course> getIncomingCourses();
 
-    ArrayList<Course> getIncomingCourses(int teacherId);
+    ArrayList<Course> getIncomingCourses(int idTeacher);
 
-    ArrayList<Course> getPassedCourses(int studentId);
+    ArrayList<Course> getPassedCourses(int idStudent);
 
-    ArrayList<Course> getCurrentCourses(int teacherId);
+    ArrayList<Course> getCurrentCourses(int idTeacher);
 
     int createCourse(Course course);
 
     int updateCourse(Course course);
 
-    int deleteCourse(int courseId);
+    int deleteCourse(int idCourse);
 
 }

@@ -4,11 +4,11 @@ import java.sql.SQLException;
 
 import javax.naming.NamingException;
 
-import ua.nure.khmelik.SummaryTask4.dao.mysql.AuthorizationDaoMysqlImpl;
-import ua.nure.khmelik.SummaryTask4.dao.mysql.PermissionDaoMySqlImpl;
+import ua.nure.khmelik.SummaryTask4.dao.mysql.MysqlAuthorizationDao;
+import ua.nure.khmelik.SummaryTask4.dao.mysql.MysqlPermissionDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
 import ua.nure.khmelik.SummaryTask4.service.implementation.AuthorizationLogic;
-import ua.nure.khmelik.SummaryTask4.service.mysql.AuthorizationServiceMysqlImpl;
+import ua.nure.khmelik.SummaryTask4.service.mysql.MysqlAuthorizationService;
 
 public class Main {
 
@@ -34,9 +34,9 @@ public class Main {
 
 	User user;
 	try {
-	    user = new AuthorizationServiceMysqlImpl(
-	    	new AuthorizationDaoMysqlImpl(),
-	    	new PermissionDaoMySqlImpl())
+	    user = new MysqlAuthorizationService(
+	    	new MysqlAuthorizationDao(),
+	    	new MysqlPermissionDao())
 	    	.getUserByLoginPassword("koloturka", "cepera");
 	    System.out.println(user);
 	} catch (NamingException e) {

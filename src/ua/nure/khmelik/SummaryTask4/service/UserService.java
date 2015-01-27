@@ -20,6 +20,6 @@ public interface UserService {
 	
 	void deleteUser(int idUser);
 	
-	void blockStudent(boolean toBlock, int studentId);	
+	void blockStudent(int idStudent, boolean block);	
 	
 }

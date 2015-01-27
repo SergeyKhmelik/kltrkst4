@@ -43,64 +43,64 @@ public class UserManagementLogic {
 	return result;
     }
 
-    public void addStudent(Student st) throws ClassNotFoundException,
+    public void addStudent(Student student) throws ClassNotFoundException,
 	    SQLException, NamingException {
 	try (Connection conn = ConnectionManager.getConnection()) {
 	    conn.setAutoCommit(false);
 	    UserDao dao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
 		    .getUserDao();
-	    dao.createStudent(conn, st);
+	    dao.createStudent(conn, student);
 	    conn.commit();
 	    conn.setAutoCommit(true);
 	}
     }
 
-    public void addTeacher(Teacher te) throws ClassNotFoundException,
+    public void addTeacher(Teacher teacher) throws ClassNotFoundException,
 	    SQLException, NamingException {
 	try (Connection conn = ConnectionManager.getConnection()) {
 	    conn.setAutoCommit(false);
 	    UserDao dao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
 		    .getUserDao();
-	    dao.createTeacher(conn, te);
+	    dao.createTeacher(conn, teacher);
 	    conn.commit();
 	    conn.setAutoCommit(true);
 	}
     }
 
-    public void updateUser(User u) throws ClassNotFoundException, SQLException,
+    public void updateUser(User uuser) throws ClassNotFoundException, SQLException,
 	    NamingException {
 	try (Connection conn = ConnectionManager.getConnection()) {
 	    conn.setAutoCommit(false);
 	    UserDao dao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
 		    .getUserDao();
-	    dao.updateUser(conn, u);
+	    dao.updateUser(conn, uuser);
 	    conn.commit();
 	    conn.setAutoCommit(true);
 	}
     }
 
-    public void deleteUser(int userId) throws SQLException,
+    public void deleteUser(int idUser) throws SQLException,
 	    ClassNotFoundException, NamingException {
 	try (Connection conn = ConnectionManager.getConnection()) {
 	    conn.setAutoCommit(false);
 	    UserDao dao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
 		    .getUserDao();
-	    dao.deleteUser(conn, userId);
+	    dao.deleteUser(conn, idUser);
 	    conn.commit();
 	    conn.setAutoCommit(true);
 	}
     }
 
-    public void blockStudent(boolean toBlock, int studentId)
+    public void blockStudent(boolean block, int idStudent)
 	    throws ClassNotFoundException, SQLException, NamingException {
 	try (Connection conn = ConnectionManager.getConnection()) {
 	    conn.setAutoCommit(false);
 	    UserDao dao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
 		    .getUserDao();
-	    if (toBlock) {
-		dao.blockStudent(conn, studentId);
+	    if (block) {
+		dao.blockStudent(conn, idStudent);
 	    } else {
-		dao.unblockStudent(conn, studentId);
+		dao.unblockStudent(conn, idStudent);
 	    }
 	    conn.commit();
 	    conn.setAutoCommit(true);

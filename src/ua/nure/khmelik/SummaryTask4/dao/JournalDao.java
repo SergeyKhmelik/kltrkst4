@@ -13,18 +13,18 @@ public interface JournalDao {
     ArrayList<CourseControlPointInfo> getControlPoints(Connection conn,
 	    int idCourse) throws SQLException;
 
-    ArrayList<Mark> getMarks(Connection conn, int idCourse, int idStudent)
+    ArrayList<Mark> getMarks(Connection conn, int idStudent, int idCourse)
 	    throws SQLException;
 
     int createCourseControlPoint(Connection conn, CourseControlPoint point)
 	    throws SQLException;
 
-    int deleteCourseControlPoint(Connection conn, int courseControlPointId)
+    int deleteCourseControlPoint(Connection conn, int idCourseControlPoint)
 	    throws SQLException;
 
     int updateCourseControlPoint(Connection conn, CourseControlPoint point)
 	    throws SQLException;
 
-    int updateMark(Connection conn, Mark m) throws SQLException;
+    int updateMark(Connection conn, Mark mark) throws SQLException;
 
 }

@@ -32,13 +32,13 @@ public class AuthorizationLogic {
 			if (userInfo != null && userInfo[0] != 0) {
 				switch (userInfo[1]) {
 				case Constants.ROLE_ADMIN:
-					result = dao.readAdminById(conn, userInfo[0]);
+					result = dao.readAdmin(conn, userInfo[0]);
 					break;
 				case Constants.ROLE_STUDENT:
-					result = dao.readStudentById(conn, userInfo[0]);
+					result = dao.readStudent(conn, userInfo[0]);
 					break;
 				case Constants.ROLE_TEACHER:
-					result = dao.readTeacherById(conn, userInfo[0]);
+					result = dao.readTeacher(conn, userInfo[0]);
 					break;
 				default:
 					// Logging no role exception
