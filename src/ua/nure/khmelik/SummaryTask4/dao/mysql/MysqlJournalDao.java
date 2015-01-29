@@ -6,12 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import ua.nure.khmelik.SummaryTask4.dao.JournalDao;
 import ua.nure.khmelik.SummaryTask4.entity.CourseControlPointInfo;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
 
 public class MysqlJournalDao implements JournalDao {
+
+    private static final Logger LOGGER = Logger
+	    .getLogger(MysqlJournalDao.class);
 
     private static final String READ_COURSE_POINTS = "SELECT idcourse_controlpoint, course_controlpoint.idcontrol_point, idcourse, date, name, description FROM course_controlpoint INNER JOIN control_point ON course_controlpoint.idcontrol_point=control_point.idcontrol_point WHERE idcourse=?";
     private static final String READ_MARKS = "SELECT idstudent, idcourse_controlpoint, value FROM mark WHERE idstudent=? AND idcourse_controlpoint IN (SELECT idcourse_controlpoint FROM course_controlpoint WHERE idcourse=?)";
@@ -26,7 +31,7 @@ public class MysqlJournalDao implements JournalDao {
      * @throws SQLException
      */
     @Override
-    public ArrayList<CourseControlPointInfo> getControlPoints(Connection conn,
+    public ArrayList<CourseControlPointInfo> readControlPoints(Connection conn,
 	    int idCourse) throws SQLException {
 	ArrayList<CourseControlPointInfo> result = new ArrayList<CourseControlPointInfo>();
 
@@ -45,15 +50,15 @@ public class MysqlJournalDao implements JournalDao {
 		result.add(currentCCPInfo);
 	    }
 	} catch (SQLException ex) {
-	    // Logger
+	    LOGGER.error("Cannot read controlpoint entities with idCourse" + idCourse, ex);
 	    throw ex;
 	}
 	return result;
     }
 
     @Override
-    public ArrayList<Mark> getMarks(Connection conn, int idStudent, int idCourse)
-	    throws SQLException {
+    public ArrayList<Mark> readMarks(Connection conn, int idStudent,
+	    int idCourse) throws SQLException {
 	ArrayList<Mark> result = new ArrayList<Mark>();
 
 	try (PreparedStatement pstm = conn.prepareStatement(READ_MARKS)) {
@@ -69,7 +74,8 @@ public class MysqlJournalDao implements JournalDao {
 		result.add(currentMark);
 	    }
 	} catch (SQLException ex) {
-	    // Logger
+	    LOGGER.error("Cannot read mark entities with idStudent " + idStudent
+		    + " course " + idCourse, ex);
 	    throw ex;
 	}
 	return result;
@@ -84,7 +90,7 @@ public class MysqlJournalDao implements JournalDao {
 	    pstm.setDate(3, point.getDate());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
-	    // Logger
+	    LOGGER.error("Cannot create a course controlpoint ", ex);
 	    throw ex;
 	}
 	return point.getIdCourse();
@@ -97,7 +103,8 @@ public class MysqlJournalDao implements JournalDao {
 	    pstm.setInt(1, idCourseControlPoint);
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
-	    // Logger
+	    LOGGER.error("Cannot delete course control point with id "
+		    + idCourseControlPoint, ex);
 	    throw ex;
 	}
 	return idCourseControlPoint;
@@ -115,7 +122,9 @@ public class MysqlJournalDao implements JournalDao {
 	    pstm.setDate(2, point.getDate());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
-	    // Logger
+	    LOGGER.error(
+		    "Cannot update course control point with id "
+			    + point.getIdCourseControlPoint(), ex);
 	    throw ex;
 	}
 	return point.getIdCourseControlPoint();
@@ -137,7 +146,7 @@ public class MysqlJournalDao implements JournalDao {
 	    pstm.setInt(4, mark.getValue());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
-	    // Logger
+	    LOGGER.error("Cannot update a mark ", ex);
 	    throw ex;
 	}
 	return mark.getIdCourseControlpoint();

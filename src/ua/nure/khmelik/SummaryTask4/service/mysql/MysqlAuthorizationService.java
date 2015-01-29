@@ -15,13 +15,12 @@ import ua.nure.khmelik.SummaryTask4.util.Operation;
 import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
 
 public class MysqlAuthorizationService implements AuthorizationService {
-
+    
     private TransactionManager transactionManager;
     private AuthorizationDao authDao;
 
     public MysqlAuthorizationService(TransactionManager transactionManager,
 	    AuthorizationDao authdao) throws NamingException {
-	super();
 	this.transactionManager = transactionManager;
 	this.authDao = authdao;
     }
@@ -30,9 +29,8 @@ public class MysqlAuthorizationService implements AuthorizationService {
     public User getUser(final String login, final String password)
 	    throws SQLException, NoSuchRoleException, NoSuchUserException {
 
-	User result;
-	result = (User) transactionManager.doTransaction(new Operation<User>() {
-	    
+	return (User) transactionManager.doTransaction(new Operation<User>() {
+
 	    public User execute(Connection conn) throws SQLException,
 		    NoSuchRoleException, NoSuchUserException {
 		User result = null;
@@ -59,9 +57,8 @@ public class MysqlAuthorizationService implements AuthorizationService {
 		result.setIdRole(userInfo[1]);
 		return result;
 	    }
-	    
+
 	});
-	return result;
     }
 
 }

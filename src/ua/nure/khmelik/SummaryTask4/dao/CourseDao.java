@@ -10,18 +10,18 @@ import ua.nure.khmelik.SummaryTask4.entity.dbentities.StudentCourse;
 
 public interface CourseDao {
 
-    ArrayList<Course> getIncomingCourses(Connection conn) throws SQLException;
+    ArrayList<Course> readIncomingCourses(Connection conn) throws SQLException;
 
-    ArrayList<Course> getIncomingCourses(Connection conn, int idTeacher)
+    ArrayList<Course> readIncomingCourses(Connection conn, int idTeacher)
 	    throws SQLException;
 
-    ArrayList<Course> getPassedCourses(Connection conn, int idStudent)
+    ArrayList<Course> readPassedCourses(Connection conn, int idStudent)
 	    throws SQLException;
 
-    ArrayList<Course> getCurrentCourses(Connection conn, int idTeacher)
+    ArrayList<Course> readCurrentCourses(Connection conn, int idTeacher)
 	    throws SQLException;
 
-    ArrayList<CourseTheme> getCourseThemes(Connection conn) throws SQLException;
+    ArrayList<CourseTheme> readCourseThemes(Connection conn) throws SQLException;
 
     int createCourse(Connection conn, Course course) throws SQLException;
 

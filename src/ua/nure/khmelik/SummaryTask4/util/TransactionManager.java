@@ -7,10 +7,15 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchRoleException;
 import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchUserException;
 
 public class TransactionManager {
+
+    private static final Logger LOGGER = Logger
+	    .getLogger(TransactionManager.class);
 
     private DataSource ds;
 
@@ -19,24 +24,29 @@ public class TransactionManager {
 	ds = (DataSource) initContext.lookup("java:comp/env/jdbc/courses");
     }
 
-    public <T> T doTransaction(Operation<T> operation) throws NoSuchRoleException, NoSuchUserException {
+    public <T> T doTransaction(Operation<T> operation)
+	    throws NoSuchRoleException, NoSuchUserException {
 	T result = null;
 	Connection connection = null;
 	try {
 	    connection = ds.getConnection();
+	    LOGGER.trace("Connection is taken from the pool.");
+	    
 	    result = operation.execute(connection);
 	    connection.commit();
 	} catch (SQLException e) {
 	    try {
 		connection.rollback();
+		LOGGER.error("Connection rollback caused by SQLException.", e);
 	    } catch (SQLException e1) {
-		// logger.error(e1);
+		LOGGER.error("Cannot rollback the connection.", e1);		
 	    }
 	} finally {
 	    try {
 		connection.close();
+		LOGGER.trace("Connection returned to the pool.");
 	    } catch (SQLException e) {
-		e.printStackTrace();
+		LOGGER.error("Cannot close the connection.", e);		
 	    }
 	}
 	return result;

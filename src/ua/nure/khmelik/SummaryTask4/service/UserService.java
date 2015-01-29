@@ -1,5 +1,6 @@
 package ua.nure.khmelik.SummaryTask4.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
@@ -8,18 +9,18 @@ import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
 
 public interface UserService {
 
-	ArrayList<Teacher> readTeachers();
+	ArrayList<Teacher> readTeachers() throws SQLException;
 	
-	ArrayList<Student> readStudents();
+	ArrayList<Student> readStudents() throws SQLException;
 	
-	int addStudent(Student student);
+	int addStudent(Student student) throws SQLException;
 	
-	int addTeacher(Teacher teacher);
+	int addTeacher(Teacher teacher) throws SQLException;
 	
-	int updateUser(User user);
+	int updateUser(User user) throws SQLException;
 	
-	int deleteUser(int idUser);
+	int deleteUser(int idUser) throws SQLException;
 	
-	int blockStudent(int idStudent, boolean block);	
+	int blockStudent(int idStudent, boolean block) throws SQLException;	
 	
 }

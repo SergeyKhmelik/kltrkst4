@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import ua.nure.khmelik.SummaryTask4.dao.PermissionDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Permission;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.RolePermission;
@@ -15,12 +17,14 @@ import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
 
 public class MysqlPermissionService implements PermissionService {
 
+    private static final Logger LOGGER = Logger
+	    .getLogger(MysqlPermissionService.class);
+    
     private TransactionManager transactionManager;
     private PermissionDao permissionDao;
 
     public MysqlPermissionService(TransactionManager transactionManager,
 	    PermissionDao permissionDao) {
-	super();
 	this.transactionManager = transactionManager;
 	this.permissionDao = permissionDao;
     }
@@ -35,14 +39,14 @@ public class MysqlPermissionService implements PermissionService {
 			@Override
 			public ArrayList<Permission> execute(Connection conn)
 				throws SQLException {
-			    return permissionDao.getPermissions(conn);
+			    return permissionDao.readPermissions(conn);
 			}
 		    });
 
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return permissions;
     }
@@ -57,14 +61,14 @@ public class MysqlPermissionService implements PermissionService {
 			@Override
 			public ArrayList<Permission> execute(Connection conn)
 				throws SQLException {
-			    return permissionDao.getPermissions(conn, idRole);
+			    return permissionDao.readPermissions(conn, idRole);
 			}
 		    });
 
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return permissions;
     }
@@ -89,7 +93,7 @@ public class MysqlPermissionService implements PermissionService {
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }
@@ -114,7 +118,7 @@ public class MysqlPermissionService implements PermissionService {
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }

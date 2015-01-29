@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import ua.nure.khmelik.SummaryTask4.dao.CourseDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Course;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseTheme;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.StudentCourse;
 import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchRoleException;
 import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchUserException;
@@ -15,12 +18,14 @@ import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
 
 public class MysqlCourseService implements CourseService {
 
+    private static final Logger LOGGER = Logger
+	    .getLogger(MysqlCourseService.class);
+
     private TransactionManager transactionManager;
     private CourseDao courseDao;
 
     public MysqlCourseService(TransactionManager transactionManager,
 	    CourseDao courseDao) {
-	super();
 	this.transactionManager = transactionManager;
 	this.courseDao = courseDao;
     }
@@ -35,14 +40,14 @@ public class MysqlCourseService implements CourseService {
 			@Override
 			public ArrayList<Course> execute(Connection conn)
 				throws SQLException {
-			    return courseDao.getIncomingCourses(conn);
+			    return courseDao.readIncomingCourses(conn);
 			}
 		    });
 
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }
@@ -57,15 +62,15 @@ public class MysqlCourseService implements CourseService {
 			@Override
 			public ArrayList<Course> execute(Connection conn)
 				throws SQLException {
-			    return courseDao
-				    .getIncomingCourses(conn, idTeacher);
+			    return courseDao.readIncomingCourses(conn,
+				    idTeacher);
 			}
 		    });
 
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }
@@ -80,14 +85,14 @@ public class MysqlCourseService implements CourseService {
 			@Override
 			public ArrayList<Course> execute(Connection conn)
 				throws SQLException {
-			    return courseDao.getPassedCourses(conn, idStudent);
+			    return courseDao.readPassedCourses(conn, idStudent);
 			}
 		    });
 
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }
@@ -102,14 +107,15 @@ public class MysqlCourseService implements CourseService {
 			@Override
 			public ArrayList<Course> execute(Connection conn)
 				throws SQLException {
-			    return courseDao.getCurrentCourses(conn, idTeacher);
+			    return courseDao
+				    .readCurrentCourses(conn, idTeacher);
 			}
 		    });
 
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }
@@ -128,7 +134,7 @@ public class MysqlCourseService implements CourseService {
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }
@@ -145,8 +151,9 @@ public class MysqlCourseService implements CourseService {
 		}
 	    }).intValue();
 	} catch (NoSuchRoleException | NoSuchUserException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
+	    // THIS METHOD...
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }
@@ -165,7 +172,7 @@ public class MysqlCourseService implements CourseService {
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }
@@ -188,7 +195,29 @@ public class MysqlCourseService implements CourseService {
 	} catch (NoSuchRoleException | NoSuchUserException e) {
 	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
 	    // THIS METHOD...
-	    e.printStackTrace();
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
+	}
+	return result;
+    }
+
+    @Override
+    public ArrayList<CourseTheme> getCourseThemes() throws SQLException {
+	ArrayList<CourseTheme> result = null;
+	try {
+	    result = transactionManager
+		    .doTransaction(new Operation<ArrayList<CourseTheme>>() {
+
+			@Override
+			public ArrayList<CourseTheme> execute(Connection conn)
+				throws SQLException {
+			    return courseDao.readCourseThemes(conn);
+			}
+		    });
+
+	} catch (NoSuchRoleException | NoSuchUserException e) {
+	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
+	    // THIS METHOD...
+	    LOGGER.error("Something caused custom exceptions in non authorization service.");
 	}
 	return result;
     }

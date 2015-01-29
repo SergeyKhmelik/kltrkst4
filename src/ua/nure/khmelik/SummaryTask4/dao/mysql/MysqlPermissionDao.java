@@ -7,19 +7,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import ua.nure.khmelik.SummaryTask4.dao.PermissionDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Permission;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.RolePermission;
 
 public class MysqlPermissionDao implements PermissionDao {
 
-    private static final String FIND_PERMISSIONS = "";
+    private final static Logger LOGGER = Logger
+	    .getLogger(MysqlPermissionDao.class);
+
+    private static final String FIND_PERMISSIONS = "SELECT * FROM permission";
     private static final String FIND_PERMITIONS_BY_ROLEID = "SELECT * FROM permission WHERE idpermission IN (SELECT idpermission FROM role_permission WHERE idrole=?)";
-    private static final String ADD_PERMISSION_TO_ROLE = "";
-    private static final String REMOVE_PERMISSION_FROM_ROLE = "";
-    
+    private static final String ADD_PERMISSION_TO_ROLE = "INSERT INTO role_permission VALUES (?, ?)";
+    private static final String REMOVE_PERMISSION_FROM_ROLE = "DELETE FROM role_permission WHERE idrole=? AND idpermission=?";
+
     @Override
-    public ArrayList<Permission> getPermissions(Connection conn)
+    public ArrayList<Permission> readPermissions(Connection conn)
 	    throws SQLException {
 	ArrayList<Permission> result = new ArrayList<Permission>();
 	try (Statement stm = conn.createStatement()) {
@@ -33,14 +38,14 @@ public class MysqlPermissionDao implements PermissionDao {
 		result.add(currentPermission);
 	    }
 	} catch (SQLException ex) {
-	    // Logging
+	    LOGGER.error("Cannot read permission entities ", ex);
 	    throw ex;
 	}
 	return result;
     }
 
     @Override
-    public ArrayList<Permission> getPermissions(Connection conn, int idRole)
+    public ArrayList<Permission> readPermissions(Connection conn, int idRole)
 	    throws SQLException {
 	ArrayList<Permission> result = new ArrayList<Permission>();
 	Permission currentPermission;
@@ -56,38 +61,41 @@ public class MysqlPermissionDao implements PermissionDao {
 		currentPermission.setDescription(rs.getString(3));
 		result.add(currentPermission);
 	    }
-	} catch (SQLException e) {
-	    // Logger
-	    throw e;
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read permission entities where idRole="
+		    + idRole, ex);
+	    throw ex;
 	}
 	return result;
     }
 
     @Override
-    public int createRolePermission(Connection conn, RolePermission rolePermission)
-	    throws SQLException {
+    public int createRolePermission(Connection conn,
+	    RolePermission rolePermission) throws SQLException {
 	try (PreparedStatement pstm = conn
 		.prepareStatement(ADD_PERMISSION_TO_ROLE)) {
 	    pstm.setInt(1, rolePermission.getIdPermission());
 	    pstm.setInt(2, rolePermission.getIdRole());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
-	    // Logging
+	    LOGGER.error("Cannot create a role_permission ", ex);
 	    throw ex;
 	}
 	return rolePermission.getIdPermission();
     }
 
     @Override
-    public int deleteRolePermission(Connection conn, RolePermission rolePermission)
-	    throws SQLException {
+    public int deleteRolePermission(Connection conn,
+	    RolePermission rolePermission) throws SQLException {
 	try (PreparedStatement pstm = conn
 		.prepareStatement(REMOVE_PERMISSION_FROM_ROLE)) {
 	    pstm.setInt(1, rolePermission.getIdPermission());
 	    pstm.setInt(2, rolePermission.getIdRole());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
-	    // Logging
+	    LOGGER.error("Cannot delete role_permission with idRole="
+		    + rolePermission.getIdRole() + " and idPermission="
+		    + rolePermission.getIdPermission(), ex);
 	    throw ex;
 	}
 	return rolePermission.getIdPermission();

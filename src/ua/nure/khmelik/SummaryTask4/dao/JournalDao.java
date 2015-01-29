@@ -10,10 +10,10 @@ import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
 
 public interface JournalDao {
 
-    ArrayList<CourseControlPointInfo> getControlPoints(Connection conn,
+    ArrayList<CourseControlPointInfo> readControlPoints(Connection conn,
 	    int idCourse) throws SQLException;
 
-    ArrayList<Mark> getMarks(Connection conn, int idStudent, int idCourse)
+    ArrayList<Mark> readMarks(Connection conn, int idStudent, int idCourse)
 	    throws SQLException;
 
     int createCourseControlPoint(Connection conn, CourseControlPoint point)

@@ -4,46 +4,55 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
+import javax.servlet.UnavailableException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
-import ua.nure.khmelik.SummaryTask4.service.implementation.UserManagementLogic;
+import ua.nure.khmelik.SummaryTask4.service.UserService;
 
 public class UserManagementServlet extends HttpServlet {
 
     private static final long serialVersionUID = 4201954460980180457L;
 
+    private static final Logger LOGGER = Logger.getLogger(UserManagementServlet.class);
+
+    private UserService userService;
+    
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    public void init() throws ServletException {
+        super.init();
+        userService = (UserService) getServletContext().getAttribute("userService");
+        
+        if(userService == null){
+            throw new UnavailableException("Couldn`t get DAO");
+        }
+    }
+    
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	response.setContentType("text/html");
 
-	resp.setContentType("text/html");
-	HttpSession session = req.getSession();
-
-	ArrayList<Teacher> teachers;
-	ArrayList<Student> students;
-	try {
-	    teachers = new UserManagementLogic().readTeachers();
-	    students = new UserManagementLogic().readStudents();
-	    session.setAttribute("teachers", teachers);
-	    session.setAttribute("students", students);
-	    req.getRequestDispatcher(
-		    "WEB-INF/view/jsp/admin/UserManagement.jsp").forward(req,
-		    resp);
-	} catch (ClassNotFoundException | SQLException | NamingException e) {
-	    req.setAttribute("error", e);
-	    req.getRequestDispatcher("WEB-INF/view/jsp/login_error.jsp")
-		    .forward(req, resp);
-	    System.out.println(e.getMessage());
-	    System.out.println(e.getLocalizedMessage());
-	    e.printStackTrace();
-	}
+	LOGGER.info("Entered usermanagement servlet");
+	
+	try{
+	    ArrayList<Teacher> teachers = userService.readTeachers();
+	    ArrayList<Student> students = userService.readStudents();
+	    request.setAttribute("teachers", teachers);
+	    request.setAttribute("students", students);
+	    request.getRequestDispatcher("/users").forward(request, response);
+	} catch (SQLException ex){
+	    // REDIRECT NA "SORRY PAGE"
+	    LOGGER.error("Exception during users authorization.");
+	    return;
+	}	
     }
 
 }

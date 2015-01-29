@@ -1,6 +1,6 @@
 package ua.nure.khmelik.SummaryTask4.exceptions;
 
-public class NotSupportedDatabaseIndexException extends Exception {
+public class NotSupportedDatabaseIndexException extends RuntimeException {
 
     private static final long serialVersionUID = 7550978185536276544L;
     

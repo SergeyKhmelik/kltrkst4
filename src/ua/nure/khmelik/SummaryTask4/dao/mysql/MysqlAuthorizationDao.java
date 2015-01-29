@@ -5,13 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import ua.nure.khmelik.SummaryTask4.dao.AuthorizationDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Admin;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 
+
 public class MysqlAuthorizationDao implements AuthorizationDao {
 
+    private static final Logger LOGGER = Logger.getLogger(MysqlAuthorizationDao.class);
+    
     private static final String FIND_USERINFO_BY_LOGIN_PASSWORD = "SELECT iduser, idrole FROM user WHERE login=? AND password=?";
     private static final String FIND_STUDENT_BY_USERID = "SELECT name, patronymic, sirname, email, college, isBlocked FROM user INNER JOIN student ON user.iduser = student.iduser WHERE user.iduser=?";
     private static final String FIND_TEACHER_BY_USERID = "SELECT name, patronymic, sirname, email, specialization, experience FROM user INNER JOIN teacher ON user.iduser = teacher.iduser WHERE user.iduser=?";
@@ -38,7 +43,7 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 	    result[0] = userId;
 	    result[1] = roleId;
 	} catch (SQLException e) {
-	    // Logger
+	    LOGGER.error("Cannot read userInfo ", e);
 	    throw e;
 	}
 	return result;
@@ -63,7 +68,7 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 		result.setBlocked(!(rs.getInt(6) == 0));
 	    }
 	} catch (SQLException e) {
-	    // Logger
+	    LOGGER.error("Cannot read student entity ", e);
 	    throw e;
 	}
 	return result;
@@ -88,7 +93,7 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 		result.setExperience(rs.getInt(6));
 	    }
 	} catch (SQLException e) {
-	    // Logger
+	    LOGGER.error("Cannot read teacher entity ", e);
 	    throw e;
 	}
 	return result;
@@ -112,7 +117,7 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 		result.setPhone(rs.getInt(5));
 	    }
 	} catch (SQLException e) {
-	    // Logger
+	    LOGGER.error("Cannot read admin entity ", e);
 	    throw e;
 	}
 	return result;
