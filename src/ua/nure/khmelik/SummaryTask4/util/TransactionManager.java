@@ -9,9 +9,6 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
-import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchRoleException;
-import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchUserException;
-
 public class TransactionManager {
 
     private static final Logger LOGGER = Logger
@@ -24,8 +21,7 @@ public class TransactionManager {
 	ds = (DataSource) initContext.lookup("java:comp/env/jdbc/courses");
     }
 
-    public <T> T doTransaction(Operation<T> operation)
-	    throws NoSuchRoleException, NoSuchUserException {
+    public <T> T doTransaction(Operation<T> operation) {
 	T result = null;
 	Connection connection = null;
 	try {

@@ -8,56 +8,42 @@ import javax.naming.NamingException;
 import ua.nure.khmelik.SummaryTask4.constants.Constants;
 import ua.nure.khmelik.SummaryTask4.dao.AuthorizationDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
-import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchRoleException;
-import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchUserException;
 import ua.nure.khmelik.SummaryTask4.service.AuthorizationService;
 import ua.nure.khmelik.SummaryTask4.util.Operation;
 import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
 
 public class MysqlAuthorizationService implements AuthorizationService {
-    
+
     private TransactionManager transactionManager;
-    private AuthorizationDao authDao;
+    private AuthorizationDao authorizationDao;
 
     public MysqlAuthorizationService(TransactionManager transactionManager,
 	    AuthorizationDao authdao) throws NamingException {
 	this.transactionManager = transactionManager;
-	this.authDao = authdao;
+	this.authorizationDao = authdao;
     }
 
     @Override
     public User getUser(final String login, final String password)
-	    throws SQLException, NoSuchRoleException, NoSuchUserException {
+	    throws SQLException {
 
 	return (User) transactionManager.doTransaction(new Operation<User>() {
 
-	    public User execute(Connection conn) throws SQLException,
-		    NoSuchRoleException, NoSuchUserException {
-		User result = null;
-		int[] userInfo = authDao.getUserIdRoleId(conn, login, password);
-
+	    public User execute(Connection conn) throws SQLException {
+		User result = authorizationDao.getUser(conn, login, password);
 		// No such user in db
-		if (userInfo[0] == 0) {
-		    throw new NoSuchUserException();
-		}
+		if (result != null) {
+		    if (result.getIdRole() == Constants.ROLE_ADMIN) {
 
-		// Creating different objects depending on
-		// idRole(userInfo[1])
-		if (userInfo[1] == Constants.ROLE_ADMIN) {
-		    result = authDao.readAdmin(conn, userInfo[0]);
-		} else if (userInfo[1] == Constants.ROLE_STUDENT) {
-		    result = authDao.readStudent(conn, userInfo[0]);
-		} else if (userInfo[1] == Constants.ROLE_TEACHER) {
-		    result = authDao.readTeacher(conn, userInfo[0]);
-		} else {
-		    throw new NoSuchRoleException(userInfo[1]);
+			result = authorizationDao.readAdmin(conn, result);
+		    } else if (result.getIdRole() == Constants.ROLE_STUDENT) {
+			result = authorizationDao.readStudent(conn, result);
+		    } else if (result.getIdRole() == Constants.ROLE_TEACHER) {
+			result = authorizationDao.readTeacher(conn, result);
+		    }
 		}
-		result.setLogin(login);
-		result.setPassword(password);
-		result.setIdRole(userInfo[1]);
 		return result;
 	    }
-
 	});
     }
 

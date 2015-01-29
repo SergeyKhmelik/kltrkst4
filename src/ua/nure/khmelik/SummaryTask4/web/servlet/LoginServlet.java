@@ -1,4 +1,4 @@
-package ua.nure.khmelik.SummaryTask4.web;
+package ua.nure.khmelik.SummaryTask4.web.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,7 +23,7 @@ import ua.nure.khmelik.SummaryTask4.service.PermissionService;
 public class LoginServlet extends HttpServlet {
 
     private static final long serialVersionUID = -9056876894273126770L;
-    
+
     private static final Logger LOGGER = Logger.getLogger(LoginServlet.class);
 
     private AuthorizationService authorizationService;
@@ -51,21 +51,27 @@ public class LoginServlet extends HttpServlet {
 	String login = request.getParameter("login");
 	String password = request.getParameter("password");
 
-	LOGGER.info("Entered login servlet: login=" + login + " password=" + password);
-	
+	LOGGER.info("Entered login servlet: login=" + login + " password="
+		+ password);
+
 	User user;
 	ArrayList<Permission> permissions;
 	try {
 	    user = authorizationService.getUser(login, password);
 
+	    if (user == null) {
+		throw new NoSuchUserException();
+	    }
 	    permissions = permissionService.getPermissions(user.getIdRole());
 
 	    HttpSession session = request.getSession();
 	    session.setAttribute("user", user);
 	    session.setAttribute("permissions", permissions);
 
-	    //request.getRequestDispatcher("/mainjsp").forward(request, response);
-	    LOGGER.info("User " + user.getLogin() + "(id:" + user.getId() + ") logged in. ");
+	    // request.getRequestDispatcher("/mainjsp").forward(request,
+	    // response);
+	    LOGGER.info("User " + user.getLogin() + "(id:" + user.getId()
+		    + ") logged in. ");
 	    response.sendRedirect("main");
 
 	} catch (NoSuchUserException | NoSuchRoleException e) {

@@ -11,61 +11,59 @@ import ua.nure.khmelik.SummaryTask4.dao.AuthorizationDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Admin;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
-
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
 
 public class MysqlAuthorizationDao implements AuthorizationDao {
 
-    private static final Logger LOGGER = Logger.getLogger(MysqlAuthorizationDao.class);
-    
-    private static final String FIND_USERINFO_BY_LOGIN_PASSWORD = "SELECT iduser, idrole FROM user WHERE login=? AND password=?";
-    private static final String FIND_STUDENT_BY_USERID = "SELECT name, patronymic, sirname, email, college, isBlocked FROM user INNER JOIN student ON user.iduser = student.iduser WHERE user.iduser=?";
-    private static final String FIND_TEACHER_BY_USERID = "SELECT name, patronymic, sirname, email, specialization, experience FROM user INNER JOIN teacher ON user.iduser = teacher.iduser WHERE user.iduser=?";
-    private static final String FIND_ADMIN_BY_USERID = "SELECT name, patronymic, sirname, email, phone FROM user INNER JOIN admin ON user.iduser = admin.iduser WHERE user.iduser=?";
-  
-    @Override
-    public int[] getUserIdRoleId(Connection conn, String login, String password)
-	    throws SQLException {
-	int roleId, userId;
-	int[] result = new int[2];
+    private static final Logger LOGGER = Logger
+	    .getLogger(MysqlAuthorizationDao.class);
 
-	// Search for userID and roleID
+    private static final String FIND_USER_BY_LOGIN_PASSWORD = "SELECT iduser, name, patronymic, sirname, email, idrole FROM user WHERE login=? AND password=?";
+    private static final String FIND_STUDENT_BY_USERID = "SELECT * FROM student WHERE student.iduser=?";
+    private static final String FIND_TEACHER_BY_USERID = "SELECT * FROM teacher WHERE teacher.iduser=?";
+    private static final String FIND_ADMIN_BY_USERID = "SELECT * FROM admin WHERE admin.iduser=?";
+
+    @Override
+    public User getUser(Connection conn, String login, String password)
+	    throws SQLException {
+	User result;
 	try (PreparedStatement pstm = conn
-		.prepareStatement(FIND_USERINFO_BY_LOGIN_PASSWORD)) {
+		.prepareStatement(FIND_USER_BY_LOGIN_PASSWORD)) {
 	    pstm.setString(1, login);
 	    pstm.setString(2, password);
 	    ResultSet rs = pstm.executeQuery();
 	    if (rs.next()) {
-		userId = rs.getInt(1);
-		roleId = rs.getInt(2);
+		result = new User();
+		result.setId(rs.getInt(1));
+		result.setName(rs.getString(2));
+		result.setPatronymic(rs.getString(3));
+		result.setSirname(rs.getString(4));
+		result.setEmail(rs.getString(5));
+		result.setIdRole(rs.getInt(6));
+		result.setLogin(login);
+		result.setPassword(password);
 	    } else {
-		return new int[] { 0, 0 };
-	    }
-	    result[0] = userId;
-	    result[1] = roleId;
+		return null;
+	    };
 	} catch (SQLException e) {
-	    LOGGER.error("Cannot read userInfo ", e);
+	    LOGGER.error("Cannot read user info ", e);
 	    throw e;
 	}
 	return result;
     }
 
     @Override
-    public Student readStudent(Connection conn, int idStudent)
+    public Student readStudent(Connection conn, User user)
 	    throws SQLException {
 	Student result = null;
 	try (PreparedStatement pstm = conn
 		.prepareStatement(FIND_STUDENT_BY_USERID)) {
-	    pstm.setInt(1, idStudent);
+	    pstm.setInt(1, user.getId());
 	    ResultSet rs = pstm.executeQuery();
 	    if (rs.next()) {
-		result = new Student();
-		result.setId(idStudent);
-		result.setName(rs.getString(1));
-		result.setPatronymic(rs.getString(2));
-		result.setSirname(rs.getString(3));
-		result.setEmail(rs.getString(4));
-		result.setCollege(rs.getString(5));
-		result.setBlocked(!(rs.getInt(6) == 0));
+		result = new Student(user);
+		result.setBlocked(!(rs.getInt(2) == 0));
+		result.setCollege(rs.getString(3));
 	    }
 	} catch (SQLException e) {
 	    LOGGER.error("Cannot read student entity ", e);
@@ -75,22 +73,17 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
     }
 
     @Override
-    public Teacher readTeacher(Connection conn, int idTeacher)
+    public Teacher readTeacher(Connection conn, User user)
 	    throws SQLException {
 	Teacher result = null;
 	try (PreparedStatement pstm = conn
 		.prepareStatement(FIND_TEACHER_BY_USERID)) {
-	    pstm.setInt(1, idTeacher);
+	    pstm.setInt(1, user.getId());
 	    ResultSet rs = pstm.executeQuery();
 	    if (rs.next()) {
-		result = new Teacher();
-		result.setId(idTeacher);
-		result.setName(rs.getString(1));
-		result.setPatronymic(rs.getString(2));
-		result.setSirname(rs.getString(3));
-		result.setEmail(rs.getString(4));
-		result.setSpecialization(rs.getString(5));
-		result.setExperience(rs.getInt(6));
+		result = new Teacher(user);
+		result.setSpecialization(rs.getString(2));
+		result.setExperience(rs.getInt(3));
 	    }
 	} catch (SQLException e) {
 	    LOGGER.error("Cannot read teacher entity ", e);
@@ -100,21 +93,15 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
     }
 
     @Override
-    public Admin readAdmin(Connection conn, int idAdmin)
-	    throws SQLException {
+    public Admin readAdmin(Connection conn, User user) throws SQLException {
 	Admin result = null;
 	try (PreparedStatement pstm = conn
 		.prepareStatement(FIND_ADMIN_BY_USERID)) {
-	    pstm.setInt(1, idAdmin);
+	    pstm.setInt(1, user.getId());
 	    ResultSet rs = pstm.executeQuery();
 	    if (rs.next()) {
-		result = new Admin();
-		result.setId(idAdmin);
-		result.setName(rs.getString(1));
-		result.setPatronymic(rs.getString(2));
-		result.setSirname(rs.getString(3));
-		result.setEmail(rs.getString(4));
-		result.setPhone(rs.getInt(5));
+		result = new Admin(user);
+		result.setPhone(rs.getInt(2));
 	    }
 	} catch (SQLException e) {
 	    LOGGER.error("Cannot read admin entity ", e);
@@ -122,6 +109,5 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 	}
 	return result;
     }
-
 
 }

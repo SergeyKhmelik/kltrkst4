@@ -1,4 +1,4 @@
-package ua.nure.khmelik.SummaryTask4.web;
+package ua.nure.khmelik.SummaryTask4.web.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;

@@ -6,16 +6,17 @@ import java.sql.SQLException;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Admin;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
 
 public interface AuthorizationDao {
 
-    int[] getUserIdRoleId(Connection conn, String login, String password)
+    User getUser(Connection conn, String login, String password)
 	    throws SQLException;
 
-    Student readStudent(Connection conn, int idStudent) throws SQLException;
+    Student readStudent(Connection conn, User user) throws SQLException;
 
-    Teacher readTeacher(Connection conn, int idTeacher) throws SQLException;
+    Teacher readTeacher(Connection conn, User user) throws SQLException;
 
-    Admin readAdmin(Connection conn, int idAdmin) throws SQLException;
+    Admin readAdmin(Connection conn, User user) throws SQLException;
 
 }

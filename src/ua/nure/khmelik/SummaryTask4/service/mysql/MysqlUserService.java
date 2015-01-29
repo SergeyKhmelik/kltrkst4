@@ -32,157 +32,95 @@ public class MysqlUserService implements UserService {
 
     @Override
     public ArrayList<Teacher> readTeachers() throws SQLException {
-	ArrayList<Teacher> result = null;
-	try {
-	    result = transactionManager
-		    .doTransaction(new Operation<ArrayList<Teacher>>() {
+	return transactionManager
+		.doTransaction(new Operation<ArrayList<Teacher>>() {
 
-			@Override
-			public ArrayList<Teacher> execute(Connection conn)
-				throws SQLException {
-			    return userDao.readTeachers(conn);
-			}
-		    });
-
-	} catch (NoSuchRoleException | NoSuchUserException e) {
-	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
-	    // THIS METHOD...
-	    LOGGER.error("Something caused custom exceptions in non authorization service.");
-	}
-	return result;
+		    @Override
+		    public ArrayList<Teacher> execute(Connection conn)
+			    throws SQLException {
+			return userDao.readTeachers(conn);
+		    }
+		});
     }
 
     @Override
     public ArrayList<Student> readStudents() throws SQLException {
-	ArrayList<Student> result = null;
-	try {
-	    result = transactionManager
-		    .doTransaction(new Operation<ArrayList<Student>>() {
+	return transactionManager
+		.doTransaction(new Operation<ArrayList<Student>>() {
 
-			@Override
-			public ArrayList<Student> execute(Connection conn)
-				throws SQLException {
-			    return userDao.readStudents(conn);
-			}
-		    });
-
-	} catch (NoSuchRoleException | NoSuchUserException e) {
-	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
-	    // THIS METHOD...
-	    LOGGER.error("Something caused custom exceptions in non authorization service.");
-	}
-	return result;
+		    @Override
+		    public ArrayList<Student> execute(Connection conn)
+			    throws SQLException {
+			return userDao.readStudents(conn);
+		    }
+		});
     }
 
     @Override
     public int addStudent(final Student student) throws SQLException {
-	int result = 0;
-	try {
-	    result = transactionManager.doTransaction(new Operation<Integer>() {
+	return transactionManager.doTransaction(new Operation<Integer>() {
 
-		@Override
-		public Integer execute(Connection conn) throws SQLException,
-			NoSuchRoleException, NoSuchUserException {
-		    userDao.createUser(conn, student);
-		    return userDao.createStudent(conn, student);
-		}
+	    @Override
+	    public Integer execute(Connection conn) throws SQLException {
+		userDao.createUser(conn, student);
+		return userDao.createStudent(conn, student);
+	    }
 
-	    }).intValue();
-	} catch (NoSuchRoleException | NoSuchUserException e) {
-	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
-	    // THIS METHOD...
-	    LOGGER.error("Something caused custom exceptions in non authorization service.");
-	}
-	return result;
+	}).intValue();
     }
 
     @Override
     public int addTeacher(final Teacher teacher) throws SQLException {
-	int result = 0;
-	try {
-	    result = transactionManager.doTransaction(new Operation<Integer>() {
+	return transactionManager.doTransaction(new Operation<Integer>() {
 
-		@Override
-		public Integer execute(Connection conn) throws SQLException,
-			NoSuchRoleException, NoSuchUserException {
-		    userDao.createUser(conn, teacher);
-		    return userDao.createTeacher(conn, teacher);
-		}
+	    @Override
+	    public Integer execute(Connection conn) throws SQLException {
+		userDao.createUser(conn, teacher);
+		return userDao.createTeacher(conn, teacher);
+	    }
 
-	    }).intValue();
-	} catch (NoSuchRoleException | NoSuchUserException e) {
-	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
-	    // THIS METHOD...
-	    LOGGER.error("Something caused custom exceptions in non authorization service.");
-	}
-	return result;
+	}).intValue();
     }
 
     @Override
     public int updateUser(final User user) throws SQLException {
-	int result = 0;
-	try {
-	    result = transactionManager.doTransaction(new Operation<Integer>() {
+	return transactionManager.doTransaction(new Operation<Integer>() {
 
-		@Override
-		public Integer execute(Connection conn) throws SQLException,
-			NoSuchRoleException, NoSuchUserException {
-		    return userDao.updateUser(conn, user);
-		}
+	    @Override
+	    public Integer execute(Connection conn) throws SQLException {
+		return userDao.updateUser(conn, user);
+	    }
 
-	    }).intValue();
-	} catch (NoSuchRoleException | NoSuchUserException e) {
-	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
-	    // THIS METHOD...
-	    LOGGER.error("Something caused custom exceptions in non authorization service.");
-	}
-	return result;
+	}).intValue();
     }
 
     @Override
     public int deleteUser(final int idUser) throws SQLException {
-	int result = 0;
-	try {
-	    result = transactionManager.doTransaction(new Operation<Integer>() {
+	return transactionManager.doTransaction(new Operation<Integer>() {
 
-		@Override
-		public Integer execute(Connection conn) throws SQLException,
-			NoSuchRoleException, NoSuchUserException {
-		    return userDao.deleteUser(conn, idUser);
-		}
+	    @Override
+	    public Integer execute(Connection conn) throws SQLException {
+		return userDao.deleteUser(conn, idUser);
+	    }
 
-	    }).intValue();
-	} catch (NoSuchRoleException | NoSuchUserException e) {
-	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
-	    // THIS METHOD...
-	    LOGGER.error("Something caused custom exceptions in non authorization service.");
-	}
-	return result;
+	}).intValue();
     }
 
     @Override
-    public int blockStudent(final int idStudent, final boolean block) throws SQLException {
-	int result = 0;
-	try {
-	    result = transactionManager.doTransaction(new Operation<Integer>() {
+    public int blockStudent(final int idStudent, final boolean block)
+	    throws SQLException {
+	return transactionManager.doTransaction(new Operation<Integer>() {
 
-		@Override
-		public Integer execute(Connection conn) throws SQLException,
-			NoSuchRoleException, NoSuchUserException {
-		    if (block) {
-			return userDao.blockStudent(conn, idStudent);
-		    } else {
-			return userDao.unblockStudent(conn, idStudent);
-		    }
+	    @Override
+	    public Integer execute(Connection conn) throws SQLException {
+		if (block) {
+		    return userDao.blockStudent(conn, idStudent);
+		} else {
+		    return userDao.unblockStudent(conn, idStudent);
 		}
+	    }
 
-	    }).intValue();
-	} catch (NoSuchRoleException | NoSuchUserException e) {
-	    // THERE IS NO SITUATION, WHEN THESE EXCEPTIONS CAN BE FORCED IN
-	    // THIS METHOD...
-	    LOGGER.error("Something caused custom exceptions in non authorization service.");
-	}
-	return result;
+	}).intValue();
     }
 
 }

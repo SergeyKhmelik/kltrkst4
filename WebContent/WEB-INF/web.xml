@@ -16,23 +16,23 @@
 
 	<servlet>
 		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>ua.nure.khmelik.SummaryTask4.web.LoginServlet</servlet-class>
+		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.LoginServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>LogoutServlet</servlet-name>
-		<servlet-class>ua.nure.khmelik.SummaryTask4.web.LogoutServlet</servlet-class>
+		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.LogoutServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>UserManagement</servlet-name>
-		<servlet-class>ua.nure.khmelik.SummaryTask4.web.UserManagementServlet</servlet-class>
+		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.UserManagementServlet</servlet-class>
 	</servlet>
 
 
 	<servlet>
 		<servlet-name>CourseManagement</servlet-name>
-		<servlet-class>ua.nure.khmelik.SummaryTask4.web.CourseManagementServlet</servlet-class>
+		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.CourseManagementServlet</servlet-class>
 	</servlet>
 
 

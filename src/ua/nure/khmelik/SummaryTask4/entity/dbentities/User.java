@@ -1,6 +1,6 @@
 package ua.nure.khmelik.SummaryTask4.entity.dbentities;
 
-public abstract class User extends Entity {
+public class User extends Entity {
 
     private static final long serialVersionUID = 545796908293501004L;
 
@@ -11,6 +11,20 @@ public abstract class User extends Entity {
     private String patronymic;
     private String email;
     private int idRole;
+
+    public User() {}
+    
+    public User(int id, String login, String password, String name, String sirname,
+	    String patronymic, String email, int idRole) {
+	this.setId(id);
+	this.login = login;
+	this.password = password;
+	this.name = name;
+	this.sirname = sirname;
+	this.patronymic = patronymic;
+	this.email = email;
+	this.idRole = idRole;
+    }
 
     public String getLogin() {
 	return login;

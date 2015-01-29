@@ -2,46 +2,58 @@ package ua.nure.khmelik.SummaryTask4.entity.dbentities;
 
 public class Admin extends User {
 
-	private static final long serialVersionUID = -3936901415577208092L;
+    private static final long serialVersionUID = -3936901415577208092L;
 
-	private int phone;
+    private int phone;
 
-	public int getPhone() {
-		return phone;
-	}
+    public Admin() {
+    }
 
-	public void setPhone(int phone) {
-		this.phone = phone;
-	}
+    public Admin(User user) {
+	this.setId(user.getId());
+	this.setLogin(user.getLogin());
+	this.setPassword(user.getPassword());
+	this.setName(user.getName());
+	this.setPatronymic(user.getPatronymic());
+	this.setSirname(user.getSirname());
+	this.setEmail(user.getEmail());
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+    public int getPhone() {
+	return phone;
+    }
 
-		Admin admin = (Admin) o;
+    public void setPhone(int phone) {
+	this.phone = phone;
+    }
 
-		if (getId() != admin.getId())
-			return false;
-		if (phone != admin.phone)
-			return false;
+    @Override
+    public boolean equals(Object o) {
+	if (this == o)
+	    return true;
+	if (o == null || getClass() != o.getClass())
+	    return false;
 
-		return true;
-	}
+	Admin admin = (Admin) o;
 
-	@Override
-	public int hashCode() {
-		int result = getId();
-		result = 31 * result + phone;
-		return result;
-	}
+	if (getId() != admin.getId())
+	    return false;
+	if (phone != admin.phone)
+	    return false;
 
-	@Override
-	public String toString() {
-	    return super.toString() + " Admin [phone=" + phone + "]";
-	}
-	
-	
+	return true;
+    }
+
+    @Override
+    public int hashCode() {
+	int result = getId();
+	result = 31 * result + phone;
+	return result;
+    }
+
+    @Override
+    public String toString() {
+	return super.toString() + " Admin [phone=" + phone + "]";
+    }
+
 }
