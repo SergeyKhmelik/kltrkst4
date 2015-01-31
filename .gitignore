@@ -13,6 +13,6 @@ hs_err_pid*
 
 ## Eclipse IDE ##
 */bin/
-/.settings/
-.classpath
+##/.settings/
+##.classpath
 ##.project
