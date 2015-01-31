@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.CourseDao;
+import ua.nure.khmelik.SummaryTask4.dao.JournalDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Course;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseTheme;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.StudentCourse;
 import ua.nure.khmelik.SummaryTask4.service.CourseService;
@@ -21,6 +23,7 @@ public class MysqlCourseService implements CourseService {
 
     private TransactionManager transactionManager;
     private CourseDao courseDao;
+    private JournalDao journalDao;
 
     public MysqlCourseService(TransactionManager transactionManager,
 	    CourseDao courseDao) {
@@ -111,20 +114,6 @@ public class MysqlCourseService implements CourseService {
     }
 
     @Override
-    public int addStudent(int idCourse, int idStudent) throws SQLException {
-	final StudentCourse studentCourse;
-	studentCourse = new StudentCourse();
-	studentCourse.setIdCourse(idCourse);
-	studentCourse.setIdStudent(idStudent);
-	return transactionManager.doTransaction(new Operation<Integer>() {
-	    @Override
-	    public Integer execute(Connection conn) throws SQLException {
-		return courseDao.addStudent(conn, studentCourse);
-	    }
-	}).intValue();
-    }
-
-    @Override
     public ArrayList<CourseTheme> getCourseThemes() throws SQLException {
 	return transactionManager
 		.doTransaction(new Operation<ArrayList<CourseTheme>>() {
@@ -135,7 +124,26 @@ public class MysqlCourseService implements CourseService {
 			return courseDao.readCourseThemes(conn);
 		    }
 		});
+    }
 
+    @Override
+    public int addStudent(int idCourse, int idStudent) throws SQLException {
+	final StudentCourse studentCourse;
+	studentCourse = new StudentCourse();
+	studentCourse.setIdCourse(idCourse);
+	studentCourse.setIdStudent(idStudent);
+	return transactionManager.doTransaction(new Operation<Integer>() {
+	    @Override
+	    public Integer execute(Connection conn) throws SQLException {
+		int result = courseDao.addStudent(conn, studentCourse);
+		ArrayList<CourseControlPoint> points = journalDao
+			.getCourseControlPoints(conn,
+				studentCourse.getIdCourse());
+		journalDao.addMarksOnStudentAdd(conn,
+			studentCourse.getIdStudent(), points);
+		return result;
+	    }
+	}).intValue();
     }
 
 }

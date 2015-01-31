@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
@@ -12,6 +13,7 @@ import ua.nure.khmelik.SummaryTask4.dao.JournalDao;
 import ua.nure.khmelik.SummaryTask4.entity.CourseControlPointInfo;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.StudentCourse;
 
 public class MysqlJournalDao implements JournalDao {
 
@@ -24,6 +26,9 @@ public class MysqlJournalDao implements JournalDao {
     private static final String DELETE_COURSE_CP = "DELETE FROM course_controlpoint WHERE idcourse_controlpoint=?";
     private static final String UPDATE_DATE_COUSE_CP = "UPDATE course_controlpoint SET date=? WHERE idcourse_controlpoint=?";
     private static final String UPDATE_MARK = "INSERT INTO mark (idstudent, idcourse_controlpoint, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE value=?";
+    private static final String INSERT_MARKS = "INSERT INTO mark (idstudent, idcourse_controlpoint, value) VALUES (?, ?, ?)";
+    private static final String READ_SRUDENTS_IDS = "SELECT idstudent FROM student_course WHERE idcourse=?";
+    private static final String READ_CCP_IDS = "SELECT idcourse_controlpoint FROM course_controlpoint WHERE idcourse=?";
 
     /**
      * idControlPoint idCourse idCCP Date CName CDescr
@@ -50,7 +55,8 @@ public class MysqlJournalDao implements JournalDao {
 		result.add(currentCCPInfo);
 	    }
 	} catch (SQLException ex) {
-	    LOGGER.error("Cannot read controlpoint entities with idCourse" + idCourse, ex);
+	    LOGGER.error("Cannot read controlpoint entities with idCourse"
+		    + idCourse, ex);
 	    throw ex;
 	}
 	return result;
@@ -74,8 +80,8 @@ public class MysqlJournalDao implements JournalDao {
 		result.add(currentMark);
 	    }
 	} catch (SQLException ex) {
-	    LOGGER.error("Cannot read mark entities with idStudent " + idStudent
-		    + " course " + idCourse, ex);
+	    LOGGER.error("Cannot read mark entities with idStudent "
+		    + idStudent + " course " + idCourse, ex);
 	    throw ex;
 	}
 	return result;
@@ -84,16 +90,23 @@ public class MysqlJournalDao implements JournalDao {
     @Override
     public int createCourseControlPoint(Connection conn,
 	    CourseControlPoint point) throws SQLException {
-	try (PreparedStatement pstm = conn.prepareStatement(CREATE_COURSE_CP)) {
+	int result = 0;
+	try (PreparedStatement pstm = conn.prepareStatement(CREATE_COURSE_CP, Statement.RETURN_GENERATED_KEYS)) {
 	    pstm.setInt(1, point.getIdCourse());
 	    pstm.setInt(2, point.getIdControlPoint());
 	    pstm.setDate(3, point.getDate());
 	    pstm.executeUpdate();
+	    
+	    ResultSet rs = pstm.getGeneratedKeys();
+	    while(rs.next()){
+		result = rs.getInt(1);
+	    }
+	    
 	} catch (SQLException ex) {
 	    LOGGER.error("Cannot create a course controlpoint ", ex);
 	    throw ex;
 	}
-	return point.getIdCourse();
+	return result;
     }
 
     @Override
@@ -150,6 +163,80 @@ public class MysqlJournalDao implements JournalDao {
 	    throw ex;
 	}
 	return mark.getIdCourseControlpoint();
+    }
+
+    @Override
+    public int addMarksOnStudentAdd(Connection conn, int idStudent,
+	    ArrayList<CourseControlPoint> points) throws SQLException {
+	try (PreparedStatement pstm = conn.prepareStatement(INSERT_MARKS)) {
+	    for (CourseControlPoint courseControlPoint : points) {
+		pstm.setInt(1, idStudent);
+		pstm.setInt(2, courseControlPoint.getIdCourseControlPoint());
+		pstm.setInt(3, 0);
+		pstm.addBatch();
+	    }
+	    pstm.executeBatch();
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot add marks on student add. ", ex);
+	    throw ex;
+	}
+	return idStudent;
+    }
+
+    @Override
+    public int addMarksOnCourseControlPointAdd(Connection conn,
+	    int idCourseControlPoint, ArrayList<StudentCourse> students)
+	    throws SQLException {
+	try (PreparedStatement pstm = conn.prepareStatement(INSERT_MARKS)) {
+	    for (StudentCourse student : students) {
+		pstm.setInt(1, student.getIdStudent());
+		pstm.setInt(2, idCourseControlPoint);
+		pstm.setInt(3, 0);
+		pstm.addBatch();
+	    }
+	    pstm.executeBatch();
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot add marks on course control point add. ", ex);
+	    throw ex;
+	}
+	return idCourseControlPoint;
+    }
+
+    @Override
+    public ArrayList<StudentCourse> getCourseStudents(Connection conn,
+	    int idCourse) throws SQLException {
+	ArrayList<StudentCourse> result = new ArrayList<StudentCourse>();
+	try (PreparedStatement pstm = conn.prepareStatement(READ_SRUDENTS_IDS)) {
+	    pstm.setInt(1, idCourse);
+	    ResultSet rs = pstm.executeQuery();
+	    while (rs.next()) {
+		StudentCourse studentCourse = new StudentCourse();
+		studentCourse.setIdStudent(rs.getInt(1));
+		result.add(studentCourse);
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot get course students. ", ex);
+	    throw ex;
+	}
+	return result;
+    }
+
+    @Override
+    public ArrayList<CourseControlPoint> getCourseControlPoints(
+	    Connection conn, int idCourse) throws SQLException {
+	ArrayList<CourseControlPoint> result = new ArrayList<CourseControlPoint>();
+	try (PreparedStatement pstm = conn.prepareStatement(READ_CCP_IDS)){
+	    pstm.setInt(1, idCourse);
+	    ResultSet rs = pstm.executeQuery();
+	    while(rs.next()){
+		CourseControlPoint courseControlPoint = new CourseControlPoint();
+		courseControlPoint.setIdCourseControlPoint(rs.getInt(1));
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot get course control points. ", ex);
+	    throw ex;
+	}
+	return result;
     }
 
 }

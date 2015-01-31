@@ -21,20 +21,22 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
+					<span style="color: red;">${requestScope.loginerror}</span>
 					<h1 class="text-center">Login</h1>
 				</div>
 				<div class="modal-body">
-					<form class="form col-md-12 center-block" action="login"
+					<form class="form col-md-12 center-block" action="loginservlet"
 						method="post">
 
 						<div class="form-group">
 							<input type="text" class="form-control input-lg"
-								placeholder="Login" name="login">
+								placeholder="Login" name="login" />
+								<span style="color: red;">${requestScope.loginvalidation}</span>
 						</div>
 
 						<div class="form-group">
 							<input type="password" class="form-control input-lg"
-								placeholder="Password" name="password">
+								placeholder="Password" name="password" />
 						</div>
 
 						<div class="form-group">

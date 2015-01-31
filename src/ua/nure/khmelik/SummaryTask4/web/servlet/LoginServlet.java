@@ -54,17 +54,25 @@ public class LoginServlet extends HttpServlet {
 	LOGGER.info("Entered login servlet: login=" + login + " password="
 		+ password);
 
+	if (!validate(login, password)) {
+	    request.setAttribute("loginvalidation",
+		    "Login or password cannot be empty.");
+	    request.getRequestDispatcher("/login")
+		    .forward(request, response);
+	    return;
+	}
+
 	User user;
 	ArrayList<Permission> permissions;
+	HttpSession session = request.getSession();
 	try {
 	    user = authorizationService.getUser(login, password);
 
 	    if (user == null) {
 		throw new NoSuchUserException();
 	    }
-	    permissions = permissionService.getPermissions(user.getIdRole());
 
-	    HttpSession session = request.getSession();
+	    permissions = permissionService.getPermissions(user.getIdRole());
 	    session.setAttribute("user", user);
 	    session.setAttribute("permissions", permissions);
 
@@ -75,14 +83,21 @@ public class LoginServlet extends HttpServlet {
 	    response.sendRedirect("main");
 
 	} catch (NoSuchUserException | NoSuchRoleException e) {
-	    LOGGER.info("Wrong username and password.");
-	    response.sendRedirect("");
+	    request.setAttribute("loginerror", e.getMessage());
+	    request.getRequestDispatcher("/login")
+		    .forward(request, response);
 	    return;
 	} catch (SQLException e) {
-	    // REDIRECT NA "SORRY PAGE"
+	    // TODO REDIRECT NA "SORRY PAGE"
 	    LOGGER.error("Exception during users authorization.");
 	    return;
 	}
+    }
 
+    private boolean validate(String login, String password) {
+	if (login == null || password == null || login == "" || password == "") {
+	    return false;
+	}
+	return true;
     }
 }

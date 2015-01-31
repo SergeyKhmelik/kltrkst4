@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 import ua.nure.khmelik.SummaryTask4.constants.Constants;
 import ua.nure.khmelik.SummaryTask4.dao.AuthorizationDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
+import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchUserException;
 import ua.nure.khmelik.SummaryTask4.service.AuthorizationService;
 import ua.nure.khmelik.SummaryTask4.util.Operation;
 import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
@@ -25,16 +26,15 @@ public class MysqlAuthorizationService implements AuthorizationService {
 
     @Override
     public User getUser(final String login, final String password)
-	    throws SQLException {
+	    throws SQLException, NoSuchUserException {
 
-	return (User) transactionManager.doTransaction(new Operation<User>() {
+	User user = (User) transactionManager.doTransaction(new Operation<User>() {
 
 	    public User execute(Connection conn) throws SQLException {
 		User result = authorizationDao.getUser(conn, login, password);
 		// No such user in db
 		if (result != null) {
 		    if (result.getIdRole() == Constants.ROLE_ADMIN) {
-
 			result = authorizationDao.readAdmin(conn, result);
 		    } else if (result.getIdRole() == Constants.ROLE_STUDENT) {
 			result = authorizationDao.readStudent(conn, result);
@@ -45,6 +45,11 @@ public class MysqlAuthorizationService implements AuthorizationService {
 		return result;
 	    }
 	});
+
+	if(user == null){
+	    throw new NoSuchUserException();
+	}
+	return user;
     }
 
 }

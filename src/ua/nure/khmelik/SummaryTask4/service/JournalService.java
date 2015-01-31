@@ -17,5 +17,5 @@ public interface JournalService {
     int setAnotherDate(CourseControlPoint point) throws SQLException;
 
     int updateMark(Mark mark) throws SQLException;
-
+    
 }

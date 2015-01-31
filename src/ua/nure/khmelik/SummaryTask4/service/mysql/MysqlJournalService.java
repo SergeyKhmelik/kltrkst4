@@ -13,6 +13,7 @@ import ua.nure.khmelik.SummaryTask4.entity.Journal;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.StudentCourse;
 import ua.nure.khmelik.SummaryTask4.service.JournalService;
 import ua.nure.khmelik.SummaryTask4.util.Operation;
 import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
@@ -66,10 +67,17 @@ public class MysqlJournalService implements JournalService {
 
     @Override
     public int addCourseControlPoint(final CourseControlPoint point) {
+
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {
-		return journalDao.createCourseControlPoint(conn, point);
+		//Insert control point into course
+		int insertedControlpointId = journalDao.createCourseControlPoint(conn, point);
+		//Get course students
+		ArrayList<StudentCourse> students = journalDao.getCourseStudents(conn, point.getIdCourse());
+		//Add marks
+		journalDao.addMarksOnCourseControlPointAdd(conn, point.getIdControlPoint(), students);
+		return insertedControlpointId;
 	    }
 	}).intValue();
     }
@@ -103,5 +111,5 @@ public class MysqlJournalService implements JournalService {
 	    }
 	}).intValue();
     }
-
+    
 }

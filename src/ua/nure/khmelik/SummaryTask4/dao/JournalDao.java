@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import ua.nure.khmelik.SummaryTask4.entity.CourseControlPointInfo;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.StudentCourse;
 
 public interface JournalDao {
 
@@ -26,5 +27,18 @@ public interface JournalDao {
 	    throws SQLException;
 
     int updateMark(Connection conn, Mark mark) throws SQLException;
+
+    int addMarksOnStudentAdd(Connection conn, int idStudent,
+	    ArrayList<CourseControlPoint> points) throws SQLException;
+
+    int addMarksOnCourseControlPointAdd(Connection conn,
+	    int idCourseControlPoint, ArrayList<StudentCourse> students)
+	    throws SQLException;
+
+    ArrayList<StudentCourse> getCourseStudents(Connection conn, int idCourse)
+	    throws SQLException;
+
+    ArrayList<CourseControlPoint> getCourseControlPoints(Connection conn,
+	    int idCourse) throws SQLException;
 
 }
