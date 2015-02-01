@@ -48,6 +48,9 @@ public class LoginServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 
+		
+		LOGGER.debug("DEPLOYED INTO A SERVLERT 123123123123213123213123");
+		
 		String login = request.getParameter("login");
 		String password = request.getParameter("password");
 
