@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.JournalDao;
 import ua.nure.khmelik.SummaryTask4.dao.UserDao;
-import ua.nure.khmelik.SummaryTask4.entity.Journal;
+import ua.nure.khmelik.SummaryTask4.entity.data.JournalData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
@@ -35,14 +35,14 @@ public class MysqlJournalService implements JournalService {
     }
 
     @Override
-    public Journal getJournal(final int idCourse) {
+    public JournalData getJournal(final int idCourse) {
 
-	return transactionManager.doTransaction(new Operation<Journal>() {
+	return transactionManager.doTransaction(new Operation<JournalData>() {
 
 	    @Override
-	    public Journal execute(Connection conn) throws SQLException {
+	    public JournalData execute(Connection conn) throws SQLException {
 
-		Journal result = new Journal();
+		JournalData result = new JournalData();
 
 		// Read all ccp
 		result.setCoursePoints(journalDao.readControlPoints(conn,

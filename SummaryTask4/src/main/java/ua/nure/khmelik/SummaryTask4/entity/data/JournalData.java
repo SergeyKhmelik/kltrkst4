@@ -1,4 +1,4 @@
-package ua.nure.khmelik.SummaryTask4.entity;
+package ua.nure.khmelik.SummaryTask4.entity.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,19 +12,19 @@ import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
  * @author Sergey Khmelik
  *
  */
-public class Journal {
+public class JournalData {
 
-    ArrayList<CourseControlPointInfo> coursePoints;
+    ArrayList<CourseControlPointData> coursePoints;
     HashMap<Student, ArrayList<Mark>> marks;
 
-    public ArrayList<CourseControlPointInfo> getCoursePoints() {
+    public ArrayList<CourseControlPointData> getCoursePoints() {
 	if(coursePoints == null){
-	    coursePoints = new ArrayList<CourseControlPointInfo>();
+	    coursePoints = new ArrayList<CourseControlPointData>();
 	}
 	return coursePoints;
     }
 
-    public void setCoursePoints(ArrayList<CourseControlPointInfo> coursePoints) {
+    public void setCoursePoints(ArrayList<CourseControlPointData> coursePoints) {
 	this.coursePoints = coursePoints;
     }
 

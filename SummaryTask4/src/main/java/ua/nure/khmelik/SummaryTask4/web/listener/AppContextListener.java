@@ -60,7 +60,7 @@ public class AppContextListener implements ServletContextListener {
 	    AuthorizationService authorizationService = new MysqlAuthorizationService(
 		    transactionManager, authorizationDao);
 	    CourseService courseService = new MysqlCourseService(
-		    transactionManager, courseDao);
+		    transactionManager, courseDao, userDao);
 	    JournalService journalService = new MysqlJournalService(
 		    transactionManager, journalDao, userDao);
 	    PermissionService permissionService = new MysqlPermissionService(

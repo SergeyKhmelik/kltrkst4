@@ -31,4 +31,12 @@ public interface UserDao {
 
     int unblockStudent(Connection conn, int idStudent) throws SQLException;
     
+    Teacher readTeacher(Connection conn, int idTeacher) throws SQLException;
+    
+    Student readStudent(Connection conn, int idStudent) throws SQLException;
+ 
+    int updateTeacher(Connection conn, Teacher teacher) throws SQLException;
+    
+    int updateStudent(Connection conn, Student student) throws SQLException;    
+    
 }

@@ -1,0 +1,80 @@
+package ua.nure.khmelik.SummaryTask4.entity.data;
+
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
+
+public abstract class UserData {
+
+    private int idUser;
+    private String name;
+    private String patronymic;
+    private String sirname;
+    private String email;
+    private String login;
+    private String password;
+    private Role role;
+
+    public int getIdUser() {
+	return idUser;
+    }
+
+    public void setIdUser(int idUser) {
+	this.idUser = idUser;
+    }
+
+    public String getName() {
+	return name;
+    }
+
+    public void setName(String name) {
+	this.name = name;
+    }
+
+    public String getPatronymic() {
+	return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+	this.patronymic = patronymic;
+    }
+
+    public String getSirname() {
+	return sirname;
+    }
+
+    public void setSirname(String sirname) {
+	this.sirname = sirname;
+    }
+
+    public String getEmail() {
+	return email;
+    }
+
+    public void setEmail(String email) {
+	this.email = email;
+    }
+
+    public String getLogin() {
+	return login;
+    }
+
+    public void setLogin(String login) {
+	this.login = login;
+    }
+
+    public String getPassword() {
+	return password;
+    }
+
+    public void setPassword(String password) {
+	this.password = password;
+    }
+
+    public Role getRole() {
+	return role;
+    }
+
+    public void setRole(Role role) {
+	this.role = role;
+    }
+
+}

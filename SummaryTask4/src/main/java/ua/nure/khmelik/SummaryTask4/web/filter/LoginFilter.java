@@ -1,8 +1,6 @@
 package ua.nure.khmelik.SummaryTask4.web.filter;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

@@ -28,15 +28,18 @@ public class MysqlUserDao implements UserDao {
     private static final String DELETE_USER = "DELETE FROM user WHERE iduser=?";
     private static final String BLOCK_STUDENT = "UPDATE student SET isBlocked=1 WHERE iduser=?";
     private static final String UNBLOCK_STUDENT = "UPDATE student SET isBlocked=0 WHERE iduser=?";
-
+    private static final String FIND_TEACHER = "SELECT teacher.iduser, name, patronymic, sirname, login, password, email, experience, specialization FROM user INNER JOIN teacher ON user.iduser=teacher.iduser WHERE user.iduser=?";
+    private static final String FIND_STUDENT = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked FROM user INNER JOIN student ON user.iduser=student.iduser WHERE user.iduser=?";
+    private static final String UPDATE_STUDENT = "UPDATE student SET college=? WHERE iduser=?";
+    private static final String UPDATE_TEACHER = "UPDATE teacher SET experience=?, specialization=? WHERE iduser=?";    
+    
     @Override
     public ArrayList<Student> readStudents(Connection conn) throws SQLException {
 	ArrayList<Student> result = new ArrayList<Student>();
 	try (Statement stm = conn.createStatement()) {
 	    ResultSet rs = stm.executeQuery(FIND_ALL_STUDENTS);
-	    Student currentStudent;
 	    while (rs.next()) {
-		currentStudent = new Student();
+		Student currentStudent = new Student();
 		currentStudent.setId(rs.getInt(1));
 		currentStudent.setName(rs.getString(2));
 		currentStudent.setPatronymic(rs.getString(3));
@@ -63,9 +66,8 @@ public class MysqlUserDao implements UserDao {
 		.prepareStatement(FIND_ALL_STUDENTS_BY_COURSE)) {
 	    pstm.setInt(1, idCourse);
 	    ResultSet rs = pstm.executeQuery();
-	    Student currentStudent;
 	    while (rs.next()) {
-		currentStudent = new Student();
+		Student currentStudent = new Student();
 		currentStudent.setId(rs.getInt(1));
 		currentStudent.setName(rs.getString(2));
 		currentStudent.setPatronymic(rs.getString(3));
@@ -89,9 +91,9 @@ public class MysqlUserDao implements UserDao {
 	ArrayList<Teacher> result = new ArrayList<Teacher>();
 	try (Statement stm = conn.createStatement()) {
 	    ResultSet rs = stm.executeQuery(FIND_ALL_TEACHERS);
-	    Teacher currentTeacher;
+
 	    while (rs.next()) {
-		currentTeacher = new Teacher();
+		Teacher currentTeacher = new Teacher();
 		currentTeacher.setId(rs.getInt(1));
 		currentTeacher.setName(rs.getString(2));
 		currentTeacher.setPatronymic(rs.getString(3));
@@ -219,6 +221,86 @@ public class MysqlUserDao implements UserDao {
 	    throw ex;
 	}
 	return idStudent;
+    }
+
+    @Override
+    public Teacher readTeacher(Connection conn, int idTeacher)
+	    throws SQLException {
+	Teacher result = new Teacher();
+	try (PreparedStatement pstm = conn.prepareStatement(FIND_TEACHER)) {
+	    pstm.setInt(1, idTeacher);
+	    ResultSet rs = pstm.executeQuery(FIND_ALL_TEACHERS);
+	    if (rs.next()) {
+		result.setId(rs.getInt(1));
+		result.setName(rs.getString(2));
+		result.setPatronymic(rs.getString(3));
+		result.setSirname(rs.getString(4));
+		result.setLogin(rs.getString(5));
+		result.setPassword(rs.getString(6));
+		result.setEmail(rs.getString(7));
+		result.setExperience(rs.getInt(8));
+		result.setSpecialization(rs.getString(9));
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read teacher ", ex);
+	    throw ex;
+	}
+	return result;
+    }
+
+    @Override
+    public Student readStudent(Connection conn, int idStudent)
+	    throws SQLException {
+	Student result = new Student();
+	try (PreparedStatement pstm = conn.prepareStatement(FIND_STUDENT)) {
+	    pstm.setInt(1, idStudent);
+	    ResultSet rs = pstm.executeQuery();
+	    if (rs.next()) {
+		result = new Student();
+		result.setId(rs.getInt(1));
+		result.setName(rs.getString(2));
+		result.setPatronymic(rs.getString(3));
+		result.setSirname(rs.getString(4));
+		result.setLogin(rs.getString(5));
+		result.setPassword(rs.getString(6));
+		result.setEmail(rs.getString(7));
+		result.setCollege(rs.getString(8));
+		result.setBlocked(!(rs.getInt(9) == 0));
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read student " + idStudent, ex);
+	    throw ex;
+	}
+	return result;
+    }
+
+    @Override
+    public int updateTeacher(Connection conn, Teacher teacher)
+	    throws SQLException {
+	try (PreparedStatement pstm = conn.prepareStatement(UPDATE_TEACHER)) {
+	    pstm.setInt(1, teacher.getExperience());;
+	    pstm.setString(2, teacher.getSpecialization());
+	    pstm.setInt(3, teacher.getId());
+	    pstm.executeUpdate();
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot update user " + teacher.getId(), ex);
+	    throw ex;
+	}
+	return teacher.getId();
+    }
+
+    @Override
+    public int updateStudent(Connection conn, Student student)
+	    throws SQLException {
+	try (PreparedStatement pstm = conn.prepareStatement(UPDATE_STUDENT)) {
+	    pstm.setString(1, student.getCollege());
+	    pstm.setInt(2, student.getId());
+	    pstm.executeUpdate();
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot update user " + student.getId(), ex);
+	    throw ex;
+	}
+	return student.getId();
     }
 
 }

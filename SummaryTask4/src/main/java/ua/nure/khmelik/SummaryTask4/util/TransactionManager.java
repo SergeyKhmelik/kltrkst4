@@ -19,7 +19,6 @@ public class TransactionManager {
     public TransactionManager() throws NamingException {
 	InitialContext initContext = new InitialContext();
 	ds = (DataSource) initContext.lookup("java:comp/env/jdbc/courses");
-	LOGGER.debug("qwjkeh");
     }
 
     public <T> T doTransaction(Operation<T> operation) {

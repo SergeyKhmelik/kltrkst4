@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.JournalDao;
-import ua.nure.khmelik.SummaryTask4.entity.CourseControlPointInfo;
+import ua.nure.khmelik.SummaryTask4.entity.data.CourseControlPointData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.StudentCourse;
@@ -36,16 +36,16 @@ public class MysqlJournalDao implements JournalDao {
      * @throws SQLException
      */
     @Override
-    public ArrayList<CourseControlPointInfo> readControlPoints(Connection conn,
+    public ArrayList<CourseControlPointData> readControlPoints(Connection conn,
 	    int idCourse) throws SQLException {
-	ArrayList<CourseControlPointInfo> result = new ArrayList<CourseControlPointInfo>();
+	ArrayList<CourseControlPointData> result = new ArrayList<CourseControlPointData>();
 
 	try (PreparedStatement pstm = conn.prepareStatement(READ_COURSE_POINTS)) {
 	    pstm.setInt(1, idCourse);
 	    ResultSet rs = pstm.executeQuery();
-	    CourseControlPointInfo currentCCPInfo;
+	    CourseControlPointData currentCCPInfo;
 	    while (rs.next()) {
-		currentCCPInfo = new CourseControlPointInfo();
+		currentCCPInfo = new CourseControlPointData();
 		currentCCPInfo.setIdCourseControlPoint(rs.getInt(1));
 		currentCCPInfo.setIdControlPoint(rs.getInt(2));
 		currentCCPInfo.setIdCourse(rs.getInt(3));

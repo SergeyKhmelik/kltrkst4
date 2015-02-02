@@ -1,9 +1,9 @@
-package ua.nure.khmelik.SummaryTask4.entity;
+package ua.nure.khmelik.SummaryTask4.entity.data;
 
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 
 
-public class CourseControlPointInfo extends CourseControlPoint {
+public class CourseControlPointData extends CourseControlPoint {
 
 	private String courseName;
 	private String courseDescription;

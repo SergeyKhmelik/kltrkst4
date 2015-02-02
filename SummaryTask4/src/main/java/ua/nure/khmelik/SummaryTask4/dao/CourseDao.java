@@ -12,6 +12,9 @@ public interface CourseDao {
 
     ArrayList<Course> readIncomingCourses(Connection conn) throws SQLException;
 
+    ArrayList<Course> readIncomingCoursesWithoutTeacher(Connection conn)
+	    throws SQLException;
+
     ArrayList<Course> readIncomingCourses(Connection conn, int idTeacher)
 	    throws SQLException;
 
@@ -21,7 +24,8 @@ public interface CourseDao {
     ArrayList<Course> readCurrentCourses(Connection conn, int idTeacher)
 	    throws SQLException;
 
-    ArrayList<CourseTheme> readCourseThemes(Connection conn) throws SQLException;
+    ArrayList<CourseTheme> readCourseThemes(Connection conn)
+	    throws SQLException;
 
     int createCourse(Connection conn, Course course) throws SQLException;
 
@@ -29,6 +33,9 @@ public interface CourseDao {
 
     int deleteCourse(Connection conn, int idCourse) throws SQLException;
 
-    int addStudent(Connection conn, StudentCourse studentCourse) throws SQLException;
-    
+    int addStudent(Connection conn, StudentCourse studentCourse)
+	    throws SQLException;
+
+    CourseTheme readTheme(Connection conn, int idTheme) throws SQLException;
+
 }

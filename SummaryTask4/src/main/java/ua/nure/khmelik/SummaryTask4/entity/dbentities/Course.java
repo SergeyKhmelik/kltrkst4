@@ -28,6 +28,10 @@ public class Course extends Entity {
 		this.start = start;
 	}
 
+	public void setStart(java.util.Date start){
+	    this.start = new java.sql.Date(start.getTime());
+	}
+	
 	public Date getEnd() {
 		return end;
 	}
@@ -36,6 +40,10 @@ public class Course extends Entity {
 		this.end = end;
 	}
 
+	public void setEnd(java.util.Date end){
+	    this.start = new java.sql.Date(end.getTime());
+	}
+	
 	public int getIdTeacher() {
 		return idTeacher;
 	}

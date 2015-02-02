@@ -8,6 +8,8 @@ import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.CourseDao;
 import ua.nure.khmelik.SummaryTask4.dao.JournalDao;
+import ua.nure.khmelik.SummaryTask4.dao.UserDao;
+import ua.nure.khmelik.SummaryTask4.entity.data.CourseData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Course;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseTheme;
@@ -24,81 +26,116 @@ public class MysqlCourseService implements CourseService {
     private TransactionManager transactionManager;
     private CourseDao courseDao;
     private JournalDao journalDao;
+    private UserDao userDao;
 
     public MysqlCourseService(TransactionManager transactionManager,
-	    CourseDao courseDao) {
+	    CourseDao courseDao, UserDao userDao) {
 	this.transactionManager = transactionManager;
 	this.courseDao = courseDao;
+	this.userDao = userDao;
     }
 
     @Override
-    public ArrayList<Course> getIncomingCourses() throws SQLException {
+    public ArrayList<CourseData> getIncomingCourses() throws SQLException {
 	return transactionManager
-		.doTransaction(new Operation<ArrayList<Course>>() {
+		.doTransaction(new Operation<ArrayList<CourseData>>() {
 
 		    @Override
-		    public ArrayList<Course> execute(Connection conn)
+		    public ArrayList<CourseData> execute(Connection conn)
 			    throws SQLException {
-			return courseDao.readIncomingCourses(conn);
+			ArrayList<CourseData> result = new ArrayList<CourseData>();
+			ArrayList<Course> courses = courseDao.readIncomingCourses(conn);
+			for(Course course: courses){
+			    CourseData courseData = convertCourseBeanToData(course);
+			    courseData.setTheme(courseDao.readTheme(conn, course.getIdTheme()));
+			    courseData.setTeacher(userDao.readTeacher(conn, course.getIdTeacher()));
+			    result.add(courseData);
+			}
+			return result;
 		    }
 		});
     }
 
     @Override
-    public ArrayList<Course> getIncomingCourses(final int idTeacher) {
+    public ArrayList<CourseData> getIncomingCourses(final int idTeacher) {
 	return transactionManager
-		.doTransaction(new Operation<ArrayList<Course>>() {
+		.doTransaction(new Operation<ArrayList<CourseData>>() {
 
 		    @Override
-		    public ArrayList<Course> execute(Connection conn)
+		    public ArrayList<CourseData> execute(Connection conn)
 			    throws SQLException {
-			return courseDao.readIncomingCourses(conn, idTeacher);
+			ArrayList<CourseData> result = new ArrayList<CourseData>();
+			ArrayList<Course> courses = courseDao.readIncomingCourses(conn, idTeacher);
+			for(Course course: courses){
+			    CourseData courseData  = convertCourseBeanToData(course);
+			    courseData.setTheme(courseDao.readTheme(conn, course.getIdTheme()));
+			    courseData.setTeacher(userDao.readTeacher(conn, course.getIdTeacher()));
+			    result.add(courseData);
+			}
+			return result;
 		    }
 		});
     }
 
     @Override
-    public ArrayList<Course> getPassedCourses(final int idStudent) {
+    public ArrayList<CourseData> getPassedCourses(final int idStudent) {
 	return transactionManager
-		.doTransaction(new Operation<ArrayList<Course>>() {
+		.doTransaction(new Operation<ArrayList<CourseData>>() {
 
 		    @Override
-		    public ArrayList<Course> execute(Connection conn)
+		    public ArrayList<CourseData> execute(Connection conn)
 			    throws SQLException {
-			return courseDao.readPassedCourses(conn, idStudent);
+			ArrayList<CourseData> result = new ArrayList<CourseData>();
+			ArrayList<Course> courses = courseDao.readPassedCourses(conn, idStudent);
+			for(Course course: courses){
+			    CourseData courseData  = convertCourseBeanToData(course);
+			    courseData.setTheme(courseDao.readTheme(conn, course.getIdTheme()));
+			    courseData.setTeacher(userDao.readTeacher(conn, course.getIdTeacher()));
+			    result.add(courseData);
+			}
+			return result;
 		    }
 		});
     }
 
     @Override
-    public ArrayList<Course> getCurrentCourses(final int idTeacher) {
+    public ArrayList<CourseData> getCurrentCourses(final int idTeacher) {
 	return transactionManager
-		.doTransaction(new Operation<ArrayList<Course>>() {
+		.doTransaction(new Operation<ArrayList<CourseData>>() {
 
 		    @Override
-		    public ArrayList<Course> execute(Connection conn)
+		    public ArrayList<CourseData> execute(Connection conn)
 			    throws SQLException {
-			return courseDao.readCurrentCourses(conn, idTeacher);
+			ArrayList<CourseData> result = new ArrayList<CourseData>();
+			ArrayList<Course> courses = courseDao.readCurrentCourses(conn, idTeacher);
+			for(Course course: courses){
+			    CourseData courseData  = convertCourseBeanToData(course);
+			    courseData.setTheme(courseDao.readTheme(conn, course.getIdTheme()));
+			    courseData.setTeacher(userDao.readTeacher(conn, course.getIdTeacher()));
+			    result.add(courseData);
+			}
+			return result;
 		    }
 		});
     }
 
     @Override
-    public int createCourse(final Course course) throws SQLException {
+    public int createCourse(final CourseData courseData) throws SQLException {
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {
-		return courseDao.createCourse(conn, course);
+		
+		return courseDao.createCourse(conn, convertCourseDataToBean(courseData));
 	    }
 	}).intValue();
     }
 
     @Override
-    public int updateCourse(final Course course) {
+    public int updateCourse(final CourseData courseData) {
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {
-		return courseDao.updateCourse(conn, course);
+		return courseDao.updateCourse(conn, convertCourseDataToBean(courseData));
 	    }
 	}).intValue();
     }
@@ -144,4 +181,46 @@ public class MysqlCourseService implements CourseService {
 	}).intValue();
     }
 
+    @Override
+    public ArrayList<CourseData> getIncomingCoursesWithoutTeacher()
+	    throws SQLException {
+	return transactionManager
+		.doTransaction(new Operation<ArrayList<CourseData>>() {
+
+		    @Override
+		    public ArrayList<CourseData> execute(Connection conn)
+			    throws SQLException {
+			ArrayList<CourseData> result = new ArrayList<CourseData>();
+			ArrayList<Course> courses = courseDao.readIncomingCoursesWithoutTeacher(conn);
+			for(Course course: courses){
+			    CourseData courseData = convertCourseBeanToData(course);
+			    courseData.setTheme(courseDao.readTheme(conn, course.getIdTheme()));
+			    courseData.setTeacher(userDao.readTeacher(conn, course.getIdTeacher()));
+			    result.add(courseData);
+			}
+			return result;
+		    }
+		});
+    }
+    
+    private Course convertCourseDataToBean(CourseData courseData){
+	Course course = new Course();
+	course.setId(courseData.getIdCourse());
+	course.setName(courseData.getName());
+	course.setStart(courseData.getStart());
+	course.setEnd(courseData.getEnd());
+	course.setIdTheme(courseData.getTeacher().getId());
+	course.setIdTheme(courseData.getTheme().getId());
+	return course;
+    }
+    
+    private CourseData convertCourseBeanToData(Course course){
+	 CourseData courseData = new CourseData();
+	    courseData.setIdCourse(course.getId());
+	    courseData.setName(course.getName());
+	    courseData.setStart(course.getStart());
+	    courseData.setEnd(course.getEnd());
+	    return courseData;
+    }
+    
 }

@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.PermissionDao;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Permission;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.RolePermission;
 
 public class MysqlPermissionDao implements PermissionDao {
@@ -22,7 +23,8 @@ public class MysqlPermissionDao implements PermissionDao {
     private static final String FIND_PERMITIONS_BY_ROLEID = "SELECT * FROM permission WHERE idpermission IN (SELECT idpermission FROM role_permission WHERE idrole=?)";
     private static final String ADD_PERMISSION_TO_ROLE = "INSERT INTO role_permission VALUES (?, ?)";
     private static final String REMOVE_PERMISSION_FROM_ROLE = "DELETE FROM role_permission WHERE idrole=? AND idpermission=?";
-
+    private static final String FIND_ROLE_BY_ID = "SELECT * FROM role WHERE idrole=?";
+    
     @Override
     public ArrayList<Permission> readPermissions(Connection conn)
 	    throws SQLException {
@@ -99,6 +101,24 @@ public class MysqlPermissionDao implements PermissionDao {
 	    throw ex;
 	}
 	return rolePermission.getIdPermission();
+    }
+
+    @Override
+    public Role readRole(Connection conn, int idRole) throws SQLException {
+	Role role = new Role();
+	try(PreparedStatement pstm = conn.prepareStatement(FIND_ROLE_BY_ID)){
+	    pstm.setInt(1, idRole);
+	    ResultSet rs = pstm.executeQuery();
+	    if(rs.next()){
+		role.setId(rs.getInt(1));
+		role.setName(rs.getString(2));
+		role.setDescription(rs.getString(3));
+	    }
+	}catch (SQLException ex) {
+	    LOGGER.error("Cannot read role by id " + idRole, ex);
+	    throw ex;
+	}
+	return role;
     }
 
 }

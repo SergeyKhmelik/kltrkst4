@@ -4,14 +4,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ua.nure.khmelik.SummaryTask4.entity.CourseControlPointInfo;
+import ua.nure.khmelik.SummaryTask4.entity.data.CourseControlPointData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseControlPoint;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Mark;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.StudentCourse;
 
 public interface JournalDao {
 
-    ArrayList<CourseControlPointInfo> readControlPoints(Connection conn,
+    ArrayList<CourseControlPointData> readControlPoints(Connection conn,
 	    int idCourse) throws SQLException;
 
     ArrayList<Mark> readMarks(Connection conn, int idStudent, int idCourse)

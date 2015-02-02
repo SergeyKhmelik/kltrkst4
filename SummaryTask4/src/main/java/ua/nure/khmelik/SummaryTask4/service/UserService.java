@@ -3,21 +3,22 @@ package ua.nure.khmelik.SummaryTask4.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
+import ua.nure.khmelik.SummaryTask4.entity.data.StudentData;
+import ua.nure.khmelik.SummaryTask4.entity.data.TeacherData;
 
 public interface UserService {
 
-	ArrayList<Teacher> readTeachers() throws SQLException;
+	ArrayList<TeacherData> readTeachers() throws SQLException;
 	
-	ArrayList<Student> readStudents() throws SQLException;
+	ArrayList<StudentData> readStudents() throws SQLException;
 	
-	int addStudent(Student student) throws SQLException;
+	int addStudent(StudentData student) throws SQLException;
 	
-	int addTeacher(Teacher teacher) throws SQLException;
+	int addTeacher(TeacherData teacher) throws SQLException;
 	
-	int updateUser(User user) throws SQLException;
+	int updateStudent(StudentData student) throws SQLException;
+	
+	int updateTeacher(TeacherData teacher) throws SQLException;
 	
 	int deleteUser(int idUser) throws SQLException;
 	

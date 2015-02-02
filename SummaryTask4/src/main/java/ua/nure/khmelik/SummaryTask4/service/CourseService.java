@@ -3,24 +3,26 @@ package ua.nure.khmelik.SummaryTask4.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.Course;
+import ua.nure.khmelik.SummaryTask4.entity.data.CourseData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseTheme;
 
 public interface CourseService {
 
-    ArrayList<Course> getIncomingCourses() throws SQLException;
+    ArrayList<CourseData> getIncomingCourses() throws SQLException;
 
-    ArrayList<Course> getIncomingCourses(int idTeacher) throws SQLException;
+    ArrayList<CourseData> getIncomingCourses(int idTeacher) throws SQLException;
 
-    ArrayList<Course> getPassedCourses(int idStudent) throws SQLException;
+    ArrayList<CourseData> getIncomingCoursesWithoutTeacher() throws SQLException;    
+    
+    ArrayList<CourseData> getPassedCourses(int idStudent) throws SQLException;
 
-    ArrayList<Course> getCurrentCourses(int idTeacher) throws SQLException;
+    ArrayList<CourseData> getCurrentCourses(int idTeacher) throws SQLException;
     
     ArrayList<CourseTheme> getCourseThemes() throws SQLException;
 
-    int createCourse(Course course) throws SQLException;
+    int createCourse(CourseData course) throws SQLException;
 
-    int updateCourse(Course course) throws SQLException;
+    int updateCourse(CourseData course) throws SQLException;
 
     int deleteCourse(int idCourse) throws SQLException;
     
