@@ -22,83 +22,78 @@ import ua.nure.khmelik.SummaryTask4.service.PermissionService;
 
 public class LoginServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -9056876894273126770L;
+    private static final long serialVersionUID = -9056876894273126770L;
 
-	private static final Logger LOGGER = Logger.getLogger(LoginServlet.class);
+    private static final Logger LOGGER = Logger.getLogger(LoginServlet.class);
 
-	private AuthorizationService authorizationService;
-	private PermissionService permissionService;
+    private AuthorizationService authorizationService;
+    private PermissionService permissionService;
 
-	@Override
-	public void init() throws ServletException {
-		super.init();
-		authorizationService = (AuthorizationService) getServletContext()
-				.getAttribute("authorizationService");
-		permissionService = (PermissionService) getServletContext()
-				.getAttribute("permissionService");
+    @Override
+    public void init() throws ServletException {
+	authorizationService = (AuthorizationService) getServletContext()
+		.getAttribute("authorizationService");
+	permissionService = (PermissionService) getServletContext()
+		.getAttribute("permissionService");
 
-		if (authorizationService == null || permissionService == null) {
-			LOGGER.error("Could not get services from appcontext");
-			throw new UnavailableException("Couldn`t get DAO");
-		}
+	if (authorizationService == null || permissionService == null) {
+	    LOGGER.error("Could not get services from appcontext");
+	    throw new UnavailableException(
+		    "Couldn`t get authorization and permission services.");
+	}
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+	    HttpServletResponse response) throws ServletException, IOException {
+	response.setContentType("text/html");
+
+	String login = request.getParameter("login");
+	String password = request.getParameter("password");
+
+	LOGGER.info("Entered login servlet: login=" + login + " password="
+		+ password);
+
+	User user;
+	ArrayList<Permission> permissions;
+	HttpSession session = request.getSession();
+
+	if (!validate(login, password)) {
+	    session.setAttribute("loginvalidation",
+		    "Login or password cannot be empty.");
+	    response.sendRedirect("login");
+	    return;
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
+	try {
+	    user = authorizationService.getUser(login, password);
 
-		
-		LOGGER.debug("DEPLOYED INTO A SERVLERT 123123123123213123213123");
-		
-		String login = request.getParameter("login");
-		String password = request.getParameter("password");
+	    if (user == null) {
+		throw new NoSuchUserException();
+	    }
 
-		LOGGER.info("Entered login servlet: login=" + login + " password="
-				+ password);
+	    permissions = permissionService.getPermissions(user.getIdRole());
+	    session.setAttribute("user", user);
+	    session.setAttribute("permissions", permissions);
 
-		if (!validate(login, password)) {
-			request.setAttribute("loginvalidation",
-					"Login or password cannot be empty.");
-			request.getRequestDispatcher("/login").forward(request, response);
-			return;
-		}
-
-		User user;
-		ArrayList<Permission> permissions;
-		HttpSession session = request.getSession();
-		try {
-			user = authorizationService.getUser(login, password);
-
-			if (user == null) {
-				throw new NoSuchUserException();
-			}
-
-			permissions = permissionService.getPermissions(user.getIdRole());
-			session.setAttribute("user", user);
-			session.setAttribute("permissions", permissions);
-
-			// request.getRequestDispatcher("/mainjsp").forward(request,
-			// response);
-			LOGGER.info("User " + user.getLogin() + "(id:" + user.getId()
-					+ ") logged in. ");
-			response.sendRedirect("main");
-
-		} catch (NoSuchUserException | NoSuchRoleException e) {
-			request.setAttribute("loginerror", e.getMessage());
-			request.getRequestDispatcher("/login").forward(request, response);
-			return;
-		} catch (SQLException e) {
-			// TODO REDIRECT NA "SORRY PAGE"
-			LOGGER.error("Exception during users authorization.");
-			return;
-		}
+	    LOGGER.info("User " + user.getLogin() + "(id:" + user.getId()
+		    + ") logged in. ");
+	    response.sendRedirect("main");
+	} catch (NoSuchUserException | NoSuchRoleException e) {
+	    session.setAttribute("loginerror", e.getMessage());
+	    response.sendRedirect("login");
+	    return;
+	} catch (SQLException e) {
+	    // TODO REDIRECT NA "SORRY PAGE"
+	    LOGGER.error("Exception during users authorization.");
+	    return;
 	}
+    }
 
-	private boolean validate(String login, String password) {
-		if (login == null || password == null || login == "" || password == "") {
-			return false;
-		}
-		return true;
+    private boolean validate(String login, String password) {
+	if (login == null || password == null || login == "" || password == "") {
+	    return false;
 	}
+	return true;
+    }
 }

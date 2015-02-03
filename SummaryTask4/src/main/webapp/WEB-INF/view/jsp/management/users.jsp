@@ -2,15 +2,13 @@
 <%@ include file="/WEB-INF/view/jspf/directive/taglib.jspf"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" media="screen"
-	href="css/bootstrap.min.css" />
-<title>User Management</title>
-</head>
-<body>
 
-	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
+<jsp:include page="/WEB-INF/view/jspf/head.jspf">
+	<jsp:param name="title" value="UserManagement" />
+</jsp:include>
+
+<body>
+	<jsp:include page="/WEB-INF/view/jspf/header.jspf"></jsp:include>
 
 	<div class="container">
 
@@ -18,25 +16,26 @@
 		<div id="content">
 
 
-			<h1>students</h1>
-			<table border="1px">
+			<table class="table table-hover">
+				<caption>Students</caption>
 				<thead>
 					<tr>
-						<td>id</td>
-						<td>Name</td>
-						<td>Patronymic</td>
-						<td>Sirname</td>
-						<td>Email</td>
-						<td>Login</td>
-						<td>Password</td>
-						<td>College</td>
-						<td><button onclick="">Create</button></td>
+						<th>id</th>
+						<th>Name</th>
+						<th>Patronymic</th>
+						<th>Sirname</th>
+						<th>Email</th>
+						<th>Login</th>
+						<th>Password</th>
+						<th>College</th>
+						<th>Blocked</th>
+						<th><jsp:include page="/WEB-INF/view/jspf/popups/StudentRegister.jspf" /></th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="student" items="${requestScope.students}">
 						<tr>
-							<td>${student.id}</td>
+							<td>${student.idUser}</td>
 							<td>${student.name}</td>
 							<td>${student.patronymic}</td>
 							<td>${student.sirname}</td>
@@ -44,36 +43,40 @@
 							<td>${student.login}</td>
 							<td>${student.password}</td>
 							<td>${student.college}</td>
+							<td>${student.blocked}</td>
 							<td>
-								<button onclick="update(${student.id})">udpate</button>
-								<button onclick="delete(${student.id})">remove</button>
-								<button onclick="block(${student.id})">block</button>
+								<button type="button" class="btn btn-default"
+									onclick="block(${student.idUser})">Block</button>
+								<button type="button" class="btn btn-default"
+									onclick="update(${student.idUser})">Update</button>
+								<button type="button" class="btn btn-default"
+									onclick="delete(${student.idUser})">X</button>
 							</td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 
-			<h1>teachers</h1>
-			<table border="1px">
+			<table class="table table-hover">
+				<caption>Teachers</caption>
 				<thead>
 					<tr>
-						<td>id</td>
-						<td>Name</td>
-						<td>Patronymic</td>
-						<td>Sirname</td>
-						<td>Email</td>
-						<td>Login</td>
-						<td>Password</td>
-						<td>Specialization</td>
-						<td>Experience</td>
-						<td><button onclick="">Create</button></td>
+						<th>id</th>
+						<th>Name</th>
+						<th>Patronymic</th>
+						<th>Sirname</th>
+						<th>Email</th>
+						<th>Login</th>
+						<th>Password</th>
+						<th>Specialization</th>
+						<th>Experience</th>
+						<th><jsp:include page="/WEB-INF/view/jspf/popups/StudentRegister.jspf" /></th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="teacher" items="${requestScope.teachers}">
 						<tr>
-							<td>${teacher.id}</td>
+							<td>${teacher.idUser}</td>
 							<td>${teacher.name}</td>
 							<td>${teacher.patronymic}</td>
 							<td>${teacher.sirname}</td>
@@ -83,8 +86,10 @@
 							<td>${teacher.specialization}</td>
 							<td>${teacher.experience}</td>
 							<td>
-								<button onclick="update(${student.id})">udpate</button>
-								<button onclick="delete(${student.id})">remove</button>
+								<button type="button" class="btn btn-default"
+									onclick="update(${teacher.idUser})">Update</button>
+								<button type="button" class="btn btn-default"
+									onclick="delete(${teacher.idUser})">x</button>
 							</td>
 						</tr>
 					</c:forEach>
@@ -94,6 +99,7 @@
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/view/jspf/footer.jspf"%>
+	<jsp:include page="/WEB-INF/view/jspf/footer.jspf"></jsp:include>
+
 </body>
 </html>

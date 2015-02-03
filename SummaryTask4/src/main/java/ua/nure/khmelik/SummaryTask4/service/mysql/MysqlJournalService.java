@@ -35,7 +35,7 @@ public class MysqlJournalService implements JournalService {
     }
 
     @Override
-    public JournalData getJournal(final int idCourse) {
+    public JournalData getJournal(final int idCourse) throws SQLException {
 
 	return transactionManager.doTransaction(new Operation<JournalData>() {
 
@@ -66,7 +66,7 @@ public class MysqlJournalService implements JournalService {
     }
 
     @Override
-    public int addCourseControlPoint(final CourseControlPoint point) {
+    public int addCourseControlPoint(final CourseControlPoint point) throws SQLException {
 
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
@@ -83,7 +83,7 @@ public class MysqlJournalService implements JournalService {
     }
 
     @Override
-    public int deleteCourseControlPoint(final int idPoint) {
+    public int deleteCourseControlPoint(final int idPoint) throws SQLException {
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {
@@ -93,7 +93,7 @@ public class MysqlJournalService implements JournalService {
     }
 
     @Override
-    public int setAnotherDate(final CourseControlPoint point) {
+    public int setAnotherDate(final CourseControlPoint point) throws SQLException {
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {
@@ -103,7 +103,7 @@ public class MysqlJournalService implements JournalService {
     }
 
     @Override
-    public int updateMark(final Mark mark) {
+    public int updateMark(final Mark mark) throws SQLException {
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {

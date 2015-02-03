@@ -21,7 +21,7 @@ public class TransactionManager {
 	ds = (DataSource) initContext.lookup("java:comp/env/jdbc/courses");
     }
 
-    public <T> T doTransaction(Operation<T> operation) {
+    public <T> T doTransaction(Operation<T> operation) throws SQLException {
 	T result = null;
 	Connection connection = null;
 	try {
@@ -34,6 +34,7 @@ public class TransactionManager {
 	    try {
 		connection.rollback();
 		LOGGER.error("Connection rollback caused by SQLException.", e);
+		throw e;
 	    } catch (SQLException e1) {
 		LOGGER.error("Cannot rollback the connection.", e1);		
 	    }
@@ -42,7 +43,8 @@ public class TransactionManager {
 		connection.close();
 		LOGGER.trace("Connection returned to the pool.");
 	    } catch (SQLException e) {
-		LOGGER.error("Cannot close the connection.", e);		
+		LOGGER.error("Cannot close the connection.", e);
+		throw e;
 	    }
 	}
 	return result;

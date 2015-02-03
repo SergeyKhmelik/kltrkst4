@@ -28,7 +28,7 @@ public class MysqlPermissionService implements PermissionService {
     }
 
     @Override
-    public ArrayList<Permission> getPermissions() {
+    public ArrayList<Permission> getPermissions() throws SQLException {
 	return transactionManager
 		.doTransaction(new Operation<ArrayList<Permission>>() {
 
@@ -41,7 +41,7 @@ public class MysqlPermissionService implements PermissionService {
     }
 
     @Override
-    public ArrayList<Permission> getPermissions(final int idRole) {
+    public ArrayList<Permission> getPermissions(final int idRole) throws SQLException {
 	return transactionManager
 		.doTransaction(new Operation<ArrayList<Permission>>() {
 
@@ -54,7 +54,7 @@ public class MysqlPermissionService implements PermissionService {
     }
 
     @Override
-    public int addPermissionToRole(int idPermission, int idRole) {
+    public int addPermissionToRole(int idPermission, int idRole) throws SQLException {
 	final RolePermission rolePermission;
 	rolePermission = new RolePermission();
 	rolePermission.setIdRole(idRole);
@@ -69,7 +69,7 @@ public class MysqlPermissionService implements PermissionService {
     }
 
     @Override
-    public int removePermissionFromRole(int idPermission, int idRole) {
+    public int removePermissionFromRole(int idPermission, int idRole) throws SQLException {
 	final RolePermission rolePermission;
 	rolePermission = new RolePermission();
 	rolePermission.setIdRole(idRole);

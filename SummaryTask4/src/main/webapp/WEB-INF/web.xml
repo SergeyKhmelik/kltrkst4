@@ -8,6 +8,12 @@
 		<welcome-file>/WEB-INF/view/jsp/main.jsp</welcome-file>
 	</welcome-file-list>
 
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jspf</url-pattern>
+		</jsp-property-group>
+	</jsp-config>
+
 	<listener>
 		<listener-class>ua.nure.khmelik.SummaryTask4.web.listener.AppContextListener</listener-class>
 	</listener>

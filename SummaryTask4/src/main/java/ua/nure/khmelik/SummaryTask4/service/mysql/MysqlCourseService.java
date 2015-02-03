@@ -57,7 +57,7 @@ public class MysqlCourseService implements CourseService {
     }
 
     @Override
-    public ArrayList<CourseData> getIncomingCourses(final int idTeacher) {
+    public ArrayList<CourseData> getIncomingCourses(final int idTeacher) throws SQLException {
 	return transactionManager
 		.doTransaction(new Operation<ArrayList<CourseData>>() {
 
@@ -78,7 +78,7 @@ public class MysqlCourseService implements CourseService {
     }
 
     @Override
-    public ArrayList<CourseData> getPassedCourses(final int idStudent) {
+    public ArrayList<CourseData> getPassedCourses(final int idStudent) throws SQLException {
 	return transactionManager
 		.doTransaction(new Operation<ArrayList<CourseData>>() {
 
@@ -99,7 +99,7 @@ public class MysqlCourseService implements CourseService {
     }
 
     @Override
-    public ArrayList<CourseData> getCurrentCourses(final int idTeacher) {
+    public ArrayList<CourseData> getCurrentCourses(final int idTeacher) throws SQLException {
 	return transactionManager
 		.doTransaction(new Operation<ArrayList<CourseData>>() {
 
@@ -131,7 +131,7 @@ public class MysqlCourseService implements CourseService {
     }
 
     @Override
-    public int updateCourse(final CourseData courseData) {
+    public int updateCourse(final CourseData courseData) throws SQLException {
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {
@@ -141,7 +141,7 @@ public class MysqlCourseService implements CourseService {
     }
 
     @Override
-    public int deleteCourse(final int idCourse) {
+    public int deleteCourse(final int idCourse) throws SQLException {
 	return transactionManager.doTransaction(new Operation<Integer>() {
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {

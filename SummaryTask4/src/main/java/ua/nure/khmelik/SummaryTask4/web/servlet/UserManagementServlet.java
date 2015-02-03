@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import ua.nure.khmelik.SummaryTask4.entity.data.StudentData;
+import ua.nure.khmelik.SummaryTask4.entity.data.TeacherData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 import ua.nure.khmelik.SummaryTask4.service.UserService;
@@ -43,9 +45,9 @@ public class UserManagementServlet extends HttpServlet {
 	LOGGER.info("Entered usermanagement servlet");
 	
 	try{
-	    ArrayList<Teacher> teachers = userService.readTeachers();
-	    ArrayList<Student> students = userService.readStudents();
-	    request.setAttribute("teachers", teachers);
+	    ArrayList<TeacherData> teachers = userService.readTeachers();
+	    ArrayList<StudentData> students = userService.readStudents();
+	    request.setAttribute("teachers", teachers);	
 	    request.setAttribute("students", students);
 	    request.getRequestDispatcher("/users").forward(request, response);
 	} catch (SQLException ex){

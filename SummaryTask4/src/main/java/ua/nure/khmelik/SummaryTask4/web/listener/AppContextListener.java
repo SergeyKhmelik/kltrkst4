@@ -40,7 +40,7 @@ public class AppContextListener implements ServletContextListener {
 	ServletContext servletContext = servletContextEvent.getServletContext();
 
 	initLog4J(servletContext);
-	
+
 	try {
 	    // DAO
 	    AuthorizationDao authorizationDao = DaoFactory.getDaoFactory(
@@ -66,10 +66,11 @@ public class AppContextListener implements ServletContextListener {
 	    PermissionService permissionService = new MysqlPermissionService(
 		    transactionManager, permissionDao);
 	    UserService userService = new MysqlUserService(transactionManager,
-		    userDao);
+		    userDao, permissionDao);
 
 	    // Put services into appContext
-	    servletContext.setAttribute("authorizationService", authorizationService);
+	    servletContext.setAttribute("authorizationService",
+		    authorizationService);
 	    servletContext.setAttribute("courseService", courseService);
 	    servletContext.setAttribute("journalService", journalService);
 	    servletContext.setAttribute("permissionService", permissionService);

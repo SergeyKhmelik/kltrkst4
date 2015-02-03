@@ -27,26 +27,31 @@ public class MysqlAuthorizationService implements AuthorizationService {
     @Override
     public User getUser(final String login, final String password)
 	    throws SQLException, NoSuchUserException {
+	
+	User user = (User) transactionManager
+		.doTransaction(new Operation<User>() {
 
-	User user = (User) transactionManager.doTransaction(new Operation<User>() {
-
-	    public User execute(Connection conn) throws SQLException {
-		User result = authorizationDao.getUser(conn, login, password);
-		// No such user in db
-		if (result != null) {
-		    if (result.getIdRole() == Constants.ROLE_ADMIN) {
-			result = authorizationDao.readAdmin(conn, result);
-		    } else if (result.getIdRole() == Constants.ROLE_STUDENT) {
-			result = authorizationDao.readStudent(conn, result);
-		    } else if (result.getIdRole() == Constants.ROLE_TEACHER) {
-			result = authorizationDao.readTeacher(conn, result);
+		    public User execute(Connection conn) throws SQLException {
+			User result = authorizationDao.getUser(conn, login,
+				password);
+			// No such user in db
+			if (result != null) {
+			    if (result.getIdRole() == Constants.ROLE_ADMIN) {
+				result = authorizationDao.readAdmin(conn,
+					result);
+			    } else if (result.getIdRole() == Constants.ROLE_STUDENT) {
+				result = authorizationDao.readStudent(conn,
+					result);
+			    } else if (result.getIdRole() == Constants.ROLE_TEACHER) {
+				result = authorizationDao.readTeacher(conn,
+					result);
+			    }
+			}
+			return result;
 		    }
-		}
-		return result;
-	    }
-	});
+		});
 
-	if(user == null){
+	if (user == null) {
 	    throw new NoSuchUserException();
 	}
 	return user;

@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 public class LoginFilter implements Filter {
 
 	private static final String LOGIN_PAGE = "login";
-	private static final String CSS_JPG_PNG_GIF_JS = ".*(css|jpg|png|gif|js)";
+	private static final String CSS_JPG_PNG_GIF_JS = ".*(css|jpg|png|gif|js|jspf)";
 	private static final String USER = "user";
 	private static final Logger LOGGER = Logger.getLogger(LoginFilter.class);
 

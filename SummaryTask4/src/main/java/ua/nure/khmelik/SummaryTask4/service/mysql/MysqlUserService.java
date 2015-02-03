@@ -29,9 +29,10 @@ public class MysqlUserService implements UserService {
     private PermissionDao permissionDao;
 
     public MysqlUserService(TransactionManager transactionManager,
-	    UserDao userDao) {
+	    UserDao userDao, PermissionDao permissionDao) {
 	this.transactionManager = transactionManager;
 	this.userDao = userDao;
+	this.permissionDao = permissionDao;
     }
 
     @Override
@@ -45,6 +46,7 @@ public class MysqlUserService implements UserService {
 			ArrayList<TeacherData> teacherDatas = new ArrayList<TeacherData>();
 			ArrayList<Teacher> teachers = userDao
 				.readTeachers(conn);
+			System.out.println("TEACHERI SUK" + teachers);
 			Role role = null;
 			for (Teacher teacher : teachers) {
 			    TeacherData teacherData = convertTeacherBeanToData(teacher);
@@ -79,6 +81,7 @@ public class MysqlUserService implements UserService {
 					student.getIdRole());
 			    }
 			    studentData.setRole(role);
+			    studentDatas.add(studentData);
 			}
 			return studentDatas;
 		    }

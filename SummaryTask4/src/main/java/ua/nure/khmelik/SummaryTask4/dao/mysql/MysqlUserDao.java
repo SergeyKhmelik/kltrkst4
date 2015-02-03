@@ -18,9 +18,9 @@ public class MysqlUserDao implements UserDao {
 
     private static final Logger LOGGER = Logger.getLogger(MysqlUserDao.class);
 
-    private static final String FIND_ALL_STUDENTS = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked FROM user INNER JOIN student ON user.iduser=student.iduser";
-    private static final String FIND_ALL_STUDENTS_BY_COURSE = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked FROM user INNER JOIN student ON user.iduser=student.iduser WHERE student.iduser IN (select idstudent FROM student_course WHERE idcourse=?)";
-    private static final String FIND_ALL_TEACHERS = "SELECT teacher.iduser, name, patronymic, sirname, login, password, email, experience, specialization FROM user INNER JOIN teacher ON user.iduser=teacher.iduser";
+    private static final String FIND_ALL_STUDENTS = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked, idrole FROM user INNER JOIN student ON user.iduser=student.iduser";
+    private static final String FIND_ALL_STUDENTS_BY_COURSE = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked, idrole FROM user INNER JOIN student ON user.iduser=student.iduser WHERE student.iduser IN (select idstudent FROM student_course WHERE idcourse=?)";
+    private static final String FIND_ALL_TEACHERS = "SELECT teacher.iduser, name, patronymic, sirname, login, password, email, experience, specialization, idrole FROM user INNER JOIN teacher ON user.iduser=teacher.iduser";
     private static final String CREATE_USER = "INSERT INTO user (login, password, idrole, name, sirname, patronymic, email) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String CREATE_STUDENT = "INSERT INTO student (iduser, isBlocked, college) VALUES (?, ?, ?)";
     private static final String CREATE_TEACHER = "INSERT INTO teacher (iduser, specialization, experience) VALUES (?, ?, ?)";
@@ -28,8 +28,8 @@ public class MysqlUserDao implements UserDao {
     private static final String DELETE_USER = "DELETE FROM user WHERE iduser=?";
     private static final String BLOCK_STUDENT = "UPDATE student SET isBlocked=1 WHERE iduser=?";
     private static final String UNBLOCK_STUDENT = "UPDATE student SET isBlocked=0 WHERE iduser=?";
-    private static final String FIND_TEACHER = "SELECT teacher.iduser, name, patronymic, sirname, login, password, email, experience, specialization FROM user INNER JOIN teacher ON user.iduser=teacher.iduser WHERE user.iduser=?";
-    private static final String FIND_STUDENT = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked FROM user INNER JOIN student ON user.iduser=student.iduser WHERE user.iduser=?";
+    private static final String FIND_TEACHER = "SELECT teacher.iduser, name, patronymic, sirname, login, password, email, experience, specialization, idrole FROM user INNER JOIN teacher ON user.iduser=teacher.iduser WHERE user.iduser=?";
+    private static final String FIND_STUDENT = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked, idrole FROM user INNER JOIN student ON user.iduser=student.iduser WHERE user.iduser=?";
     private static final String UPDATE_STUDENT = "UPDATE student SET college=? WHERE iduser=?";
     private static final String UPDATE_TEACHER = "UPDATE teacher SET experience=?, specialization=? WHERE iduser=?";    
     
@@ -49,6 +49,7 @@ public class MysqlUserDao implements UserDao {
 		currentStudent.setEmail(rs.getString(7));
 		currentStudent.setCollege(rs.getString(8));
 		currentStudent.setBlocked(!(rs.getInt(9) == 0));
+		currentStudent.setIdRole(rs.getInt(10));
 		result.add(currentStudent);
 	    }
 	} catch (SQLException ex) {
@@ -77,6 +78,7 @@ public class MysqlUserDao implements UserDao {
 		currentStudent.setEmail(rs.getString(7));
 		currentStudent.setCollege(rs.getString(8));
 		currentStudent.setBlocked(!(rs.getInt(9) == 0));
+		currentStudent.setIdRole(rs.getInt(10));
 		result.add(currentStudent);
 	    }
 	} catch (SQLException ex) {
@@ -91,7 +93,6 @@ public class MysqlUserDao implements UserDao {
 	ArrayList<Teacher> result = new ArrayList<Teacher>();
 	try (Statement stm = conn.createStatement()) {
 	    ResultSet rs = stm.executeQuery(FIND_ALL_TEACHERS);
-
 	    while (rs.next()) {
 		Teacher currentTeacher = new Teacher();
 		currentTeacher.setId(rs.getInt(1));
@@ -103,6 +104,7 @@ public class MysqlUserDao implements UserDao {
 		currentTeacher.setEmail(rs.getString(7));
 		currentTeacher.setExperience(rs.getInt(8));
 		currentTeacher.setSpecialization(rs.getString(9));
+		currentTeacher.setIdRole(rs.getInt(10));
 		result.add(currentTeacher);
 	    }
 	} catch (SQLException ex) {
@@ -240,6 +242,7 @@ public class MysqlUserDao implements UserDao {
 		result.setEmail(rs.getString(7));
 		result.setExperience(rs.getInt(8));
 		result.setSpecialization(rs.getString(9));
+		result.setIdRole(rs.getInt(10));
 	    }
 	} catch (SQLException ex) {
 	    LOGGER.error("Cannot read teacher ", ex);
@@ -266,6 +269,7 @@ public class MysqlUserDao implements UserDao {
 		result.setEmail(rs.getString(7));
 		result.setCollege(rs.getString(8));
 		result.setBlocked(!(rs.getInt(9) == 0));
+		result.setIdRole(rs.getInt(10));
 	    }
 	} catch (SQLException ex) {
 	    LOGGER.error("Cannot read student " + idStudent, ex);
