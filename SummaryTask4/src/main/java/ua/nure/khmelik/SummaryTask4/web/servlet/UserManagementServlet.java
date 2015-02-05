@@ -14,14 +14,11 @@ import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.entity.data.StudentData;
 import ua.nure.khmelik.SummaryTask4.entity.data.TeacherData;
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 import ua.nure.khmelik.SummaryTask4.service.UserService;
 
 public class UserManagementServlet extends HttpServlet {
 
     private static final long serialVersionUID = 4201954460980180457L;
-
     private static final Logger LOGGER = Logger.getLogger(UserManagementServlet.class);
 
     private UserService userService;
@@ -51,8 +48,8 @@ public class UserManagementServlet extends HttpServlet {
 	    request.setAttribute("students", students);
 	    request.getRequestDispatcher("/users").forward(request, response);
 	} catch (SQLException ex){
-	    // REDIRECT NA "SORRY PAGE"
 	    LOGGER.error("Exception during users authorization.");
+	    response.sendRedirect("error");
 	    return;
 	}	
     }

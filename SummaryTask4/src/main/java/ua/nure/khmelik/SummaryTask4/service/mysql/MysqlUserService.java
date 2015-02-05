@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.PermissionDao;
 import ua.nure.khmelik.SummaryTask4.dao.UserDao;
+import ua.nure.khmelik.SummaryTask4.entity.data.RoleData;
 import ua.nure.khmelik.SummaryTask4.entity.data.StudentData;
 import ua.nure.khmelik.SummaryTask4.entity.data.TeacherData;
 import ua.nure.khmelik.SummaryTask4.entity.data.UserData;
@@ -15,6 +16,7 @@ import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
+import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchRoleException;
 import ua.nure.khmelik.SummaryTask4.service.UserService;
 import ua.nure.khmelik.SummaryTask4.util.Operation;
 import ua.nure.khmelik.SummaryTask4.util.TransactionManager;
@@ -46,7 +48,6 @@ public class MysqlUserService implements UserService {
 			ArrayList<TeacherData> teacherDatas = new ArrayList<TeacherData>();
 			ArrayList<Teacher> teachers = userDao
 				.readTeachers(conn);
-			System.out.println("TEACHERI SUK" + teachers);
 			Role role = null;
 			for (Teacher teacher : teachers) {
 			    TeacherData teacherData = convertTeacherBeanToData(teacher);
@@ -172,6 +173,60 @@ public class MysqlUserService implements UserService {
 	}).intValue();
     }
 
+    @Override
+    public RoleData readRole(final String roleName) throws SQLException,
+	    NoSuchRoleException {
+	RoleData result = transactionManager
+		.doTransaction(new Operation<RoleData>() {
+
+		    @Override
+		    public RoleData execute(Connection conn)
+			    throws SQLException {
+			RoleData roleData = new RoleData();
+			Role roleBean = permissionDao.readRole(conn, roleName);
+			if (roleBean != null) {
+			    roleData.setIdRole(roleBean.getId());
+			    roleData.setName(roleName);
+			    roleData.setDescription(roleBean.getDescription());
+			} else {
+			    return null;
+			}
+			return roleData;
+		    }
+		});
+	if (result == null) {
+	    throw new NoSuchRoleException(roleName);
+	}
+	return result;
+    }
+
+    @Override
+    public RoleData readRole(final int idRole) throws SQLException,
+	    NoSuchRoleException {
+	RoleData result = transactionManager
+		.doTransaction(new Operation<RoleData>() {
+
+		    @Override
+		    public RoleData execute(Connection conn)
+			    throws SQLException {
+			RoleData roleData = new RoleData();
+			Role roleBean = permissionDao.readRole(conn, idRole);
+			if (roleBean != null) {
+			    roleData.setIdRole(idRole);
+			    roleData.setName(roleBean.getName());
+			    roleData.setDescription(roleBean.getDescription());
+			} else {
+			    return null;
+			}
+			return roleData;
+		    }
+		});
+	if (result == null) {
+	    throw new NoSuchRoleException(idRole);
+	}
+	return result;
+    }
+
     private TeacherData convertTeacherBeanToData(Teacher teacherBean) {
 	TeacherData teacherData = new TeacherData();
 	setUserInfoFromBeanToData(teacherBean, teacherData);
@@ -225,4 +280,5 @@ public class MysqlUserService implements UserService {
 	userBean.setLogin(userData.getLogin());
 	userBean.setPassword(userData.getPassword());
     }
+
 }

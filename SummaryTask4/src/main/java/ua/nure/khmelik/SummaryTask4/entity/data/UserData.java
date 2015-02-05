@@ -77,4 +77,19 @@ public abstract class UserData {
 	this.role = role;
     }
 
+    public void setRole(RoleData role) {
+	this.role = new Role();
+	this.role.setId(role.getIdRole());
+	this.role.setName(role.getName());
+	this.role.setDescription(role.getDescription());
+    }
+
+    @Override
+    public String toString() {
+	return "UserData [idUser=" + idUser + ", name=" + name
+		+ ", patronymic=" + patronymic + ", sirname=" + sirname
+		+ ", email=" + email + ", login=" + login + ", password="
+		+ password + ", role=" + role + "]";
+    }
+
 }

@@ -34,7 +34,7 @@ public class MysqlAuthorizationService implements AuthorizationService {
 		    public User execute(Connection conn) throws SQLException {
 			User result = authorizationDao.getUser(conn, login,
 				password);
-			// No such user in db
+			
 			if (result != null) {
 			    if (result.getIdRole() == Constants.ROLE_ADMIN) {
 				result = authorizationDao.readAdmin(conn,

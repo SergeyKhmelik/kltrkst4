@@ -23,8 +23,9 @@ import ua.nure.khmelik.SummaryTask4.service.PermissionService;
 public class LoginServlet extends HttpServlet {
 
     private static final long serialVersionUID = -9056876894273126770L;
-
     private static final Logger LOGGER = Logger.getLogger(LoginServlet.class);
+
+    private static final String LOGPASS_VALIDATION_ERROR_MESSAGE = "Login or password cannot be empty.";
 
     private AuthorizationService authorizationService;
     private PermissionService permissionService;
@@ -60,7 +61,7 @@ public class LoginServlet extends HttpServlet {
 
 	if (!validate(login, password)) {
 	    session.setAttribute("loginvalidation",
-		    "Login or password cannot be empty.");
+		    LOGPASS_VALIDATION_ERROR_MESSAGE);
 	    response.sendRedirect("login");
 	    return;
 	}
@@ -68,24 +69,22 @@ public class LoginServlet extends HttpServlet {
 	try {
 	    user = authorizationService.getUser(login, password);
 
-	    if (user == null) {
-		throw new NoSuchUserException();
-	    }
-
 	    permissions = permissionService.getPermissions(user.getIdRole());
 	    session.setAttribute("user", user);
 	    session.setAttribute("permissions", permissions);
 
 	    LOGGER.info("User " + user.getLogin() + "(id:" + user.getId()
 		    + ") logged in. ");
+
 	    response.sendRedirect("main");
+	} catch (SQLException e) {
+	    LOGGER.error("SQLException during users authorization.");
+	    response.sendRedirect("error");
+	    return;
 	} catch (NoSuchUserException | NoSuchRoleException e) {
+	    LOGGER.error("NoSuchUser or NoSuchRole exception during users authorization.");
 	    session.setAttribute("loginerror", e.getMessage());
 	    response.sendRedirect("login");
-	    return;
-	} catch (SQLException e) {
-	    // TODO REDIRECT NA "SORRY PAGE"
-	    LOGGER.error("Exception during users authorization.");
 	    return;
 	}
     }

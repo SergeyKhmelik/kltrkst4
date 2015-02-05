@@ -15,14 +15,26 @@ import org.apache.log4j.Logger;
 import ua.nure.khmelik.SummaryTask4.entity.data.StudentData;
 import ua.nure.khmelik.SummaryTask4.entity.data.TeacherData;
 import ua.nure.khmelik.SummaryTask4.entity.data.UserData;
+import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchRoleException;
 import ua.nure.khmelik.SummaryTask4.service.UserService;
 
 public class UserRegistrationServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 2000495712214199248L;
     private static final Logger LOGGER = Logger
 	    .getLogger(UserRegistrationServlet.class);
-    private static final String STUDENT = null;
-    private static final String TEACHER = null;
+
+    private static final String SPECIALIZATION_PATTERN = "^[\\p{L}{3,}...]+$";
+    private static final String COLLEGE_PATTERN = "[\\p{L}{3,}...]+";
+    private static final String PASSWORD_PATTERN = "^[a-zA-Z0-9]{4,20}$";
+    private static final String LOGIN_PATTERN = "^[a-z0-9_-]{3,15}$";
+    private static final String EMAIL_PATTERN = "^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$";
+    private static final String NAME_PATTERN = "^[\\p{L}{2,}...]+$";
+    private static final String STUDENT_ROLE = "student";
+    private static final String TEACHER_ROLE = "teacher";
+    private static final String INSERT_COMMAND = "insert";
+    private static final String UPDATE_COMMAND = "update";
+
     private UserService userService;
 
     @Override
@@ -42,39 +54,66 @@ public class UserRegistrationServlet extends HttpServlet {
 	response.setContentType("text/html");
 
 	String role = request.getParameter("role");
+	
+	String command = request.getParameter("command");
+	
 	HttpSession session = request.getSession();
 	try {
-	    if (role == STUDENT) {
-		StudentData studentData = new StudentData();
-		getUserFromRequest(request, studentData);
-		studentData.setCollege(request.getParameter("college"));
-		studentData.setBlocked(true);
-		if (!validateStudent(studentData, session)) {
-		    // TODO error validating popup
-		    return;
+	    if(INSERT_COMMAND.equals(command)){						//IF INSERT
+		if (STUDENT_ROLE.equals(role)) {						//INSERT STUDENT
+		    StudentData studentData = getStudentFromRequest(request);
+		    if (validateStudent(studentData, session)) {
+			userService.addStudent(studentData);
+		    }
+		} else if (TEACHER_ROLE.equals(role)) {						//INSERT TEACHER
+		    TeacherData teacherData = getTeacherFromRequest(request);
+		    if (validateTeacher(teacherData, session)) {
+			userService.addTeacher(teacherData);
+		    }
 		}
-		userService.addStudent(studentData);
-	    } else if (role == TEACHER) {
-		TeacherData teacherData = new TeacherData();
-		getUserFromRequest(request, teacherData);
-		teacherData.setExperience(Integer.parseInt(request
-			.getParameter("experience")));
-		teacherData.setSirname(request.getParameter("specialization"));
-		if (!validateTeacher(teacherData, session)) {
-		    // TODO error validating popup
-		    return;
+	    } else if (UPDATE_COMMAND.equals(command)){					//IF UPDATE
+		if (STUDENT_ROLE.equals(role)){							//UPDATE STUDENT
+		    StudentData studentData = getStudentFromRequest(request);
+		    if (validateStudent(studentData, session)) {
+			userService.updateStudent(studentData);
+		    }
+		} else if (TEACHER_ROLE.equals(role)) {						//UPDATE TEACHER
+		    TeacherData teacherData = getTeacherFromRequest(request);
+		    if (validateTeacher(teacherData, session)) {
+			userService.updateTeacher(teacherData);
+		    }
 		}
-		userService.addTeacher(teacherData);
 	    }
-	    response.sendRedirect("/userManagement");
+	    response.sendRedirect("userManagement");
 
 	} catch (SQLException e) {
-	    // TODO Auto-generated catch block
+	    LOGGER.error("SQLException during users authorization.");
+	    response.sendRedirect("error");
+	} catch (NoSuchRoleException e) {
+	    // TODO NO SUCH ROLE HOW TO?
 	    e.printStackTrace();
 	}
-
     }
 
+    private StudentData getStudentFromRequest(HttpServletRequest request) throws SQLException, NoSuchRoleException{
+	StudentData studentData = new StudentData();
+	studentData.setRole(userService.readRole(STUDENT_ROLE));
+	getUserFromRequest(request, studentData);
+	studentData.setCollege(request.getParameter("college"));
+	studentData.setBlocked(true);
+	return studentData;
+    }
+    
+    private TeacherData getTeacherFromRequest(HttpServletRequest request) throws SQLException, NoSuchRoleException{
+	TeacherData teacherData = new TeacherData();
+	teacherData.setRole(userService.readRole(TEACHER_ROLE));
+	getUserFromRequest(request, teacherData);
+	teacherData.setExperience(Integer.parseInt(request
+		.getParameter("experience")));
+	teacherData.setSirname(request.getParameter("specialization"));
+	return teacherData;
+    }
+    
     private void getUserFromRequest(HttpServletRequest request,
 	    UserData userData) {
 	userData.setLogin(request.getParameter("login"));
@@ -106,40 +145,90 @@ public class UserRegistrationServlet extends HttpServlet {
     private boolean validateUser(UserData userData, HttpSession session) {
 	boolean result = true;
 	result = result && validateName(userData.getName(), session);
+	LOGGER.error("NAME VALIDATION!"
+		+ validateName(userData.getName(), session));
 	result = result && validateName(userData.getPatronymic(), session);
+	LOGGER.error("Patron VALIDATION!"
+		+ validateName(userData.getPatronymic(), session));
 	result = result && validateName(userData.getSirname(), session);
-	result = result && validateName(userData.getLogin(), session);
+	LOGGER.error("sirname VALIDATION!"
+		+ validateName(userData.getSirname(), session));
+	result = result && validateLogin(userData.getLogin(), session);
+	LOGGER.error("login VALIDATION!"
+		+ validateLogin(userData.getLogin(), session));
 	result = result && validateEmail(userData.getEmail(), session);
+	LOGGER.error("email VALIDATION!"
+		+ validateEmail(userData.getEmail(), session));
 	result = result && validatePassword(userData.getPassword(), session);
+	LOGGER.error("password VALIDATION!"
+		+ validatePassword(userData.getPassword(), session));
 	return result;
     }
 
     private boolean validateName(String userName, HttpSession session) {
-	return false;
+	if (!userName.matches(NAME_PATTERN)) {
+	    session.setAttribute("nameValidationError",
+		    "User name/patronymic/sirname should contain 2 or more symbols.");
+	    return false;
+	}
+	return true;
     }
 
     private boolean validateEmail(String userEmail, HttpSession session) {
-	return false;
+	if (!userEmail.matches(EMAIL_PATTERN)) {
+	    session.setAttribute("emailValidationError",
+		    "Email should contain 2 or more symbols.");
+	    return false;
+	}
+	return true;
+    }
+
+    private boolean validateLogin(String userLogin, HttpSession session) {
+	if (!userLogin.matches(LOGIN_PATTERN)) {
+	    session.setAttribute("loginValidationError",
+		    "User login should be 3-15 symbols without  or more symbols.");
+	    return false;
+	}
+	return true;
     }
 
     private boolean validatePassword(String userPassword, HttpSession session) {
-	return false;
+	if (!userPassword.matches(PASSWORD_PATTERN)) {
+	    session.setAttribute(
+		    "passwordValidationError",
+		    "Password should contain only letters or numbers."
+			    + " It shoul be more than 3 and less then 20 symbols long.");
+	    return false;
+	}
+	return true;
     }
 
     private boolean validateCollege(String college, HttpSession session) {
-	// TODO Auto-generated method stub
-	return false;
+	if (!college.matches(COLLEGE_PATTERN)) {
+	    session.setAttribute("collegeValidationError",
+		    "College name should contain 2 or more symbols.");
+	    return false;
+	}
+	return true;
     }
 
     private boolean validateSpecialization(String specialization,
 	    HttpSession session) {
-	// TODO Auto-generated method stub
-	return false;
+	if (!specialization.matches(SPECIALIZATION_PATTERN)) {
+	    session.setAttribute("nameValidationError",
+		    "Teacher`s specialization should contain 2 or more symbols.");
+	    return false;
+	}
+	return true;
     }
 
     private boolean validateExperience(int experience, HttpSession session) {
-	// TODO Auto-generated method stub
-	return false;
+	if (experience < 0) {
+	    session.setAttribute("experienceValidationError",
+		    "Experience should be >= 0.");
+	    return false;
+	}
+	return true;
     }
 
 }

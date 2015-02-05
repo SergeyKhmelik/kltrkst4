@@ -1,13 +1,13 @@
 <button type="button" class="btn btn-default" data-toggle="modal"
-	data-target="#studentCreate">create</button>
+	data-target="#teacherCreate">create</button>
 
-<div id="studentCreate" class="modal fade" tabindex="-1" role="dialog"
+<div id="teacherCreate" class="modal fade" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true"
 	style="display: none;">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="text-center">Add student</h1>
+				<h1 class="text-center">Add teacher</h1>
 			</div>
 			<div class="modal-body">
 				<form class="form col-md-12 center-block" action="userRegister"
@@ -44,11 +44,16 @@
 
 					<div class="form-group">
 						<input type="text" class="form-control input-lg"
-							placeholder="College" name="college" />
+							placeholder="Specialization" name="specialization" />
+					</div>
+
+					<div class="form-group">
+						<input type="number" class="form-control input-lg"
+							placeholder="Experience" name="experience" />
 					</div>
 
 					<div class="form-group" hidden="true">
-						<input type="text" class="form-control input-lg" name="role" value="student">
+						<input type="text" class="form-control input-lg" name="role" value="teacher">
 					</div>
 
 					<div class="form-group" hidden="true">

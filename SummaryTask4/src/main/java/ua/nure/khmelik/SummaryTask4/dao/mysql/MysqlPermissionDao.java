@@ -23,6 +23,7 @@ public class MysqlPermissionDao implements PermissionDao {
     private static final String FIND_PERMITIONS_BY_ROLEID = "SELECT * FROM permission WHERE idpermission IN (SELECT idpermission FROM role_permission WHERE idrole=?)";
     private static final String ADD_PERMISSION_TO_ROLE = "INSERT INTO role_permission VALUES (?, ?)";
     private static final String REMOVE_PERMISSION_FROM_ROLE = "DELETE FROM role_permission WHERE idrole=? AND idpermission=?";
+    private static final String FIND_ROLE_BY_NAME = "SELECT * FROM role WHERE name=?";
     private static final String FIND_ROLE_BY_ID = "SELECT * FROM role WHERE idrole=?";
     
     @Override
@@ -103,22 +104,42 @@ public class MysqlPermissionDao implements PermissionDao {
 	return rolePermission.getIdPermission();
     }
 
-    @Override
-    public Role readRole(Connection conn, int idRole) throws SQLException {
-	Role role = new Role();
-	try(PreparedStatement pstm = conn.prepareStatement(FIND_ROLE_BY_ID)){
-	    pstm.setInt(1, idRole);
+@Override
+    public Role readRole(Connection conn, String roleName) throws SQLException {
+	Role result = null;
+	try (PreparedStatement pstm = conn.prepareStatement(FIND_ROLE_BY_NAME)) {
+	    pstm.setString(1, roleName);
 	    ResultSet rs = pstm.executeQuery();
-	    if(rs.next()){
-		role.setId(rs.getInt(1));
-		role.setName(rs.getString(2));
-		role.setDescription(rs.getString(3));
+	    if (rs.next()) {
+		result = new Role();
+		result.setId(rs.getInt(1));
+		result.setName(rs.getString(2));
+		result.setDescription(rs.getString(3));
 	    }
-	}catch (SQLException ex) {
-	    LOGGER.error("Cannot read role by id " + idRole, ex);
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read role with name " + roleName, ex);
 	    throw ex;
 	}
-	return role;
+	return result;
+    }
+
+    @Override
+    public Role readRole(Connection conn, int idRole) throws SQLException {
+	Role result = null;
+	try (PreparedStatement pstm = conn.prepareStatement(FIND_ROLE_BY_NAME)) {
+	    pstm.setInt(1, idRole);
+	    ResultSet rs = pstm.executeQuery();
+	    if (rs.next()) {
+		result = new Role();
+		result.setId(rs.getInt(1));
+		result.setName(rs.getString(2));
+		result.setDescription(rs.getString(3));
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read role with id " + idRole, ex);
+	    throw ex;
+	}
+	return result;
     }
 
 }

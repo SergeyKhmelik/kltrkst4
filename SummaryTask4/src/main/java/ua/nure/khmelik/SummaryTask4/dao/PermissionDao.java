@@ -15,12 +15,14 @@ public interface PermissionDao {
     ArrayList<Permission> readPermissions(Connection conn, int idRole)
 	    throws SQLException;
 
-    Role readRole(Connection conn, int idRole) throws SQLException;
-    
     int createRolePermission(Connection conn, RolePermission rolePermission)
 	    throws SQLException;
 
     int deleteRolePermission(Connection conn, RolePermission rolePermission)
 	    throws SQLException;
 
+    Role readRole(Connection conn, String roleName) throws SQLException;
+
+    Role readRole(Connection conn, int idRole) throws SQLException;
+    
 }

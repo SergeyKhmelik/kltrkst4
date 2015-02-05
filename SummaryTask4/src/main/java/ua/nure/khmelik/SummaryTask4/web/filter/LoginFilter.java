@@ -55,7 +55,7 @@ public class LoginFilter implements Filter {
 	}
 
 	private boolean matchesURL(String requestURL) {
-		return (matchesExcludePatterns(requestURL) || matchesUploadingComponents(requestURL));
+		return (matchesExcludePatterns(requestURL) || matchesUploadingComponents(requestURL) || matchesErrorPage(requestURL));
 	}
 
 	private boolean matchesExcludePatterns(String requestURL) {
@@ -66,4 +66,8 @@ public class LoginFilter implements Filter {
 		return requestURL.matches(CSS_JPG_PNG_GIF_JS);
 	}
 
+	private boolean matchesErrorPage(String requestURL){
+	    return requestURL.contains("error");
+	}
+	
 }

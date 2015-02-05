@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.UserDao;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
@@ -31,8 +32,8 @@ public class MysqlUserDao implements UserDao {
     private static final String FIND_TEACHER = "SELECT teacher.iduser, name, patronymic, sirname, login, password, email, experience, specialization, idrole FROM user INNER JOIN teacher ON user.iduser=teacher.iduser WHERE user.iduser=?";
     private static final String FIND_STUDENT = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked, idrole FROM user INNER JOIN student ON user.iduser=student.iduser WHERE user.iduser=?";
     private static final String UPDATE_STUDENT = "UPDATE student SET college=? WHERE iduser=?";
-    private static final String UPDATE_TEACHER = "UPDATE teacher SET experience=?, specialization=? WHERE iduser=?";    
-    
+    private static final String UPDATE_TEACHER = "UPDATE teacher SET experience=?, specialization=? WHERE iduser=?";
+
     @Override
     public ArrayList<Student> readStudents(Connection conn) throws SQLException {
 	ArrayList<Student> result = new ArrayList<Student>();
@@ -282,7 +283,8 @@ public class MysqlUserDao implements UserDao {
     public int updateTeacher(Connection conn, Teacher teacher)
 	    throws SQLException {
 	try (PreparedStatement pstm = conn.prepareStatement(UPDATE_TEACHER)) {
-	    pstm.setInt(1, teacher.getExperience());;
+	    pstm.setInt(1, teacher.getExperience());
+	    ;
 	    pstm.setString(2, teacher.getSpecialization());
 	    pstm.setInt(3, teacher.getId());
 	    pstm.executeUpdate();

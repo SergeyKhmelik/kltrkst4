@@ -27,21 +27,29 @@ public class TransactionManager {
 	try {
 	    connection = ds.getConnection();
 	    LOGGER.trace("Connection is taken from the pool.");
-	    
+	    if (connection == null) {
+		throw new SQLException();
+	    }
 	    result = operation.execute(connection);
 	    connection.commit();
 	} catch (SQLException e) {
 	    try {
-		connection.rollback();
-		LOGGER.error("Connection rollback caused by SQLException.", e);
-		throw e;
+		if (connection != null) {
+		    LOGGER.error("Connection rollback caused by SQLException.",
+			    e);
+		    connection.rollback();
+		}
 	    } catch (SQLException e1) {
-		LOGGER.error("Cannot rollback the connection.", e1);		
+		LOGGER.error("Cannot rollback the connection.", e1);
+		throw e1;
 	    }
+	    throw e;
 	} finally {
 	    try {
-		connection.close();
-		LOGGER.trace("Connection returned to the pool.");
+		if (connection != null) {
+		    LOGGER.trace("Connection returned to the pool.");
+		    connection.close();
+		}
 	    } catch (SQLException e) {
 		LOGGER.error("Cannot close the connection.", e);
 		throw e;

@@ -55,7 +55,7 @@ public class AppContextListener implements ServletContextListener {
 		    .getUserDao();
 
 	    TransactionManager transactionManager = new TransactionManager();
-
+	    
 	    // Services
 	    AuthorizationService authorizationService = new MysqlAuthorizationService(
 		    transactionManager, authorizationDao);

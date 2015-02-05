@@ -21,4 +21,10 @@ public class StudentData extends UserData {
 	this.college = college;
     }
 
+    @Override
+    public String toString() {
+	return super.toString() + "StudentData [blocked=" + blocked
+		+ ", college=" + college + "]";
+    }
+
 }

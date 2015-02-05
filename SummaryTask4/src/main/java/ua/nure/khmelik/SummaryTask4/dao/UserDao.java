@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
@@ -30,13 +31,14 @@ public interface UserDao {
     int blockStudent(Connection conn, int idStudent) throws SQLException;
 
     int unblockStudent(Connection conn, int idStudent) throws SQLException;
-    
+
     Teacher readTeacher(Connection conn, int idTeacher) throws SQLException;
-    
+
     Student readStudent(Connection conn, int idStudent) throws SQLException;
- 
+
     int updateTeacher(Connection conn, Teacher teacher) throws SQLException;
-    
-    int updateStudent(Connection conn, Student student) throws SQLException;    
-    
+
+    int updateStudent(Connection conn, Student student) throws SQLException;
+
+
 }

@@ -26,7 +26,7 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
     @Override
     public User getUser(Connection conn, String login, String password)
 	    throws SQLException {
-	User result;
+	User result = null;
 	try (PreparedStatement pstm = conn
 		.prepareStatement(FIND_USER_BY_LOGIN_PASSWORD)) {
 	    pstm.setString(1, login);
@@ -42,9 +42,7 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 		result.setIdRole(rs.getInt(6));
 		result.setLogin(login);
 		result.setPassword(password);
-	    } else {
-		return null;
-	    };
+	    }
 	} catch (SQLException e) {
 	    LOGGER.error("Cannot read user info ", e);
 	    throw e;
