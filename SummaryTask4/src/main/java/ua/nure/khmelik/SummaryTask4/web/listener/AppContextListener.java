@@ -40,45 +40,46 @@ public class AppContextListener implements ServletContextListener {
 	ServletContext servletContext = servletContextEvent.getServletContext();
 
 	initLog4J(servletContext);
-
+	TransactionManager transactionManager;
 	try {
-	    // DAO
-	    AuthorizationDao authorizationDao = DaoFactory.getDaoFactory(
-		    DaoFactory.MYSQL).getAuthorizationDao();
-	    CourseDao courseDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
-		    .getCourseDao();
-	    JournalDao journalDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
-		    .getJournalDao();
-	    PermissionDao permissionDao = DaoFactory.getDaoFactory(
-		    DaoFactory.MYSQL).getPermissionDao();
-	    UserDao userDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
-		    .getUserDao();
-
-	    TransactionManager transactionManager = new TransactionManager();
-	    
-	    // Services
-	    AuthorizationService authorizationService = new MysqlAuthorizationService(
-		    transactionManager, authorizationDao);
-	    CourseService courseService = new MysqlCourseService(
-		    transactionManager, courseDao, userDao);
-	    JournalService journalService = new MysqlJournalService(
-		    transactionManager, journalDao, userDao);
-	    PermissionService permissionService = new MysqlPermissionService(
-		    transactionManager, permissionDao);
-	    UserService userService = new MysqlUserService(transactionManager,
-		    userDao, permissionDao);
-
-	    // Put services into appContext
-	    servletContext.setAttribute("authorizationService",
-		    authorizationService);
-	    servletContext.setAttribute("courseService", courseService);
-	    servletContext.setAttribute("journalService", journalService);
-	    servletContext.setAttribute("permissionService", permissionService);
-	    servletContext.setAttribute("userService", userService);
-	    LOGGER.info("App context initialized");
+	    transactionManager = new TransactionManager();
 	} catch (NamingException e) {
 	    LOGGER.error("Cannot get connection from the pool.", e);
+	    throw new RuntimeException("NamingException", e);
 	}
+
+	// DAO
+	AuthorizationDao authorizationDao = DaoFactory.getDaoFactory(
+		DaoFactory.MYSQL).getAuthorizationDao();
+	CourseDao courseDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
+		.getCourseDao();
+	JournalDao journalDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
+		.getJournalDao();
+	PermissionDao permissionDao = DaoFactory
+		.getDaoFactory(DaoFactory.MYSQL).getPermissionDao();
+	UserDao userDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL)
+		.getUserDao();
+
+	// Services
+	AuthorizationService authorizationService = new MysqlAuthorizationService(
+		transactionManager, authorizationDao, permissionDao);
+	CourseService courseService = new MysqlCourseService(
+		transactionManager, courseDao, userDao);
+	JournalService journalService = new MysqlJournalService(
+		transactionManager, journalDao, userDao);
+	PermissionService permissionService = new MysqlPermissionService(
+		transactionManager, permissionDao);
+	UserService userService = new MysqlUserService(transactionManager,
+		userDao, permissionDao);
+
+	// Put services into appContext
+	servletContext.setAttribute("authorizationService",
+		authorizationService);
+	servletContext.setAttribute("courseService", courseService);
+	servletContext.setAttribute("journalService", journalService);
+	servletContext.setAttribute("permissionService", permissionService);
+	servletContext.setAttribute("userService", userService);
+	LOGGER.info("App context initialized");
     }
 
     private void initLog4J(ServletContext servletContext) {

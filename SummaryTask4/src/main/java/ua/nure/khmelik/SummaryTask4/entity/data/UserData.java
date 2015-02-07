@@ -1,6 +1,7 @@
 package ua.nure.khmelik.SummaryTask4.entity.data;
 
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
 
 public abstract class UserData {
 
@@ -12,6 +13,19 @@ public abstract class UserData {
     private String login;
     private String password;
     private Role role;
+
+    public UserData() {
+    }
+    
+    public UserData(User user) {
+	this.idUser = user.getId();
+	this.name = user.getName();
+	this.patronymic = user.getPatronymic();
+	this.sirname = user.getSirname();
+	this.email = user.getEmail();
+	this.login = user.getLogin();
+	this.password = user.getPassword();
+    }
 
     public int getIdUser() {
 	return idUser;

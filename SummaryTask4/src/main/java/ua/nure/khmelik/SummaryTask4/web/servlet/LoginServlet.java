@@ -13,8 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import ua.nure.khmelik.SummaryTask4.entity.data.UserData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Permission;
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
 import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchRoleException;
 import ua.nure.khmelik.SummaryTask4.exceptions.NoSuchUserException;
 import ua.nure.khmelik.SummaryTask4.service.AuthorizationService;
@@ -55,10 +55,10 @@ public class LoginServlet extends HttpServlet {
 	LOGGER.info("Entered login servlet: login=" + login + " password="
 		+ password);
 
-	User user;
+	UserData user;
 	ArrayList<Permission> permissions;
-	HttpSession session = request.getSession();
 
+	HttpSession session = request.getSession();
 	if (!validate(login, password)) {
 	    session.setAttribute("loginvalidation",
 		    LOGPASS_VALIDATION_ERROR_MESSAGE);
@@ -69,11 +69,13 @@ public class LoginServlet extends HttpServlet {
 	try {
 	    user = authorizationService.getUser(login, password);
 
-	    permissions = permissionService.getPermissions(user.getIdRole());
+	    permissions = permissionService.getPermissions(user.getRole()
+		    .getId());
+
 	    session.setAttribute("user", user);
 	    session.setAttribute("permissions", permissions);
 
-	    LOGGER.info("User " + user.getLogin() + "(id:" + user.getId()
+	    LOGGER.info("User " + user.getLogin() + "(id:" + user.getIdUser()
 		    + ") logged in. ");
 
 	    response.sendRedirect("main");
@@ -95,4 +97,5 @@ public class LoginServlet extends HttpServlet {
 	}
 	return true;
     }
+
 }

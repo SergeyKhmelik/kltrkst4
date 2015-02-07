@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.UserDao;
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
@@ -33,6 +32,8 @@ public class MysqlUserDao implements UserDao {
     private static final String FIND_STUDENT = "SELECT student.iduser, name, patronymic, sirname, login, password, email, college, isBlocked, idrole FROM user INNER JOIN student ON user.iduser=student.iduser WHERE user.iduser=?";
     private static final String UPDATE_STUDENT = "UPDATE student SET college=? WHERE iduser=?";
     private static final String UPDATE_TEACHER = "UPDATE teacher SET experience=?, specialization=? WHERE iduser=?";
+    private static final String VALIDATE_LOGIN = "SELECT * FROM user WHERE login=?";
+    private static final String VALIDATE_EMAIL = "SELECT * FROM user WHERE email=?";
 
     @Override
     public ArrayList<Student> readStudents(Connection conn) throws SQLException {
@@ -307,6 +308,32 @@ public class MysqlUserDao implements UserDao {
 	    throw ex;
 	}
 	return student.getId();
+    }
+
+    @Override
+    public boolean validateUserLogin(Connection conn, String login)
+	    throws SQLException {
+	try (PreparedStatement pstm = conn.prepareStatement(VALIDATE_LOGIN)) {
+	    pstm.setString(1, login);
+	    ResultSet rs = pstm.executeQuery();
+	    if (rs.next()) {
+		return false;
+	    }
+	}
+	return true;
+    }
+
+    @Override
+    public boolean validateUserEmail(Connection conn, String email)
+	    throws SQLException {
+	try (PreparedStatement pstm = conn.prepareStatement(VALIDATE_EMAIL)) {
+	    pstm.setString(1, email);
+	    ResultSet rs = pstm.executeQuery();
+	    if (rs.next()) {
+		return false;
+	    }
+	}
+	return true;
     }
 
 }

@@ -29,5 +29,9 @@ public interface UserService {
 	RoleData readRole(String roleName) throws SQLException, NoSuchRoleException;
 	
 	RoleData readRole(int roleId) throws SQLException, NoSuchRoleException;
+
+	boolean validateUserLoginOnDuplicate(String login) throws SQLException;
+	
+	boolean validateUserEmailOnDuplicate(String email) throws SQLException;
 	
 }

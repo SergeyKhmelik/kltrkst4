@@ -56,6 +56,11 @@
 		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.DeleteServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>UpdateServlet</servlet-name>
+		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.UpdateDataServlet</servlet-class>
+	</servlet>
+
 	<!-- JSP declaration -->
 
 	<servlet>
@@ -81,6 +86,11 @@
 	<servlet>
 		<servlet-name>error.jsp</servlet-name>
 		<jsp-file>/WEB-INF/view/jsp/error.jsp</jsp-file>
+	</servlet>
+
+	<servlet>
+		<servlet-name>updateForm.jsp</servlet-name>
+		<jsp-file>/WEB-INF/view/jsp/updateForm.jsp</jsp-file>
 	</servlet>
 
 	<!-- MAPPING -->
@@ -117,6 +127,11 @@
 		<servlet-name>DeleteServlet</servlet-name>
 		<url-pattern>/delete</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>UpdateServlet</servlet-name>
+		<url-pattern>/update</url-pattern>
+	</servlet-mapping>
 
 	<!-- JSP mapping -->
 
@@ -143,6 +158,11 @@
 	<servlet-mapping>
 		<servlet-name>error.jsp</servlet-name>
 		<url-pattern>/error</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>updateForm.jsp</servlet-name>
+		<url-pattern>/updateForm</url-pattern>
 	</servlet-mapping>
 
 	<!-- FILTERS -->

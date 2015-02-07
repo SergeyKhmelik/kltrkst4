@@ -33,7 +33,7 @@
 			</ul>
 			
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="profile?id=${sessionScope.user.id}">${sessionScope.user.name} ${sessionScope.user.sirname}</a>
+				<li><a href="profile?id=${sessionScope.user.idUser}">${sessionScope.user.name} ${sessionScope.user.sirname}</a>
 				<li><a href="logout">Logout</a></li>
 			</ul>
 		</div>

@@ -54,30 +54,33 @@ public class UserRegistrationServlet extends HttpServlet {
 	response.setContentType("text/html");
 
 	String role = request.getParameter("role");
-	
 	String command = request.getParameter("command");
-	
+
 	HttpSession session = request.getSession();
 	try {
-	    if(INSERT_COMMAND.equals(command)){						//IF INSERT
-		if (STUDENT_ROLE.equals(role)) {						//INSERT STUDENT
+	    if (INSERT_COMMAND.equals(command)) { // IF INSERT
+		if (STUDENT_ROLE.equals(role)) { // INSERT STUDENT
 		    StudentData studentData = getStudentFromRequest(request);
-		    if (validateStudent(studentData, session)) {
+		    if (validateStudent(studentData, session)
+			    && validateUserOnDuplicateInsert(studentData,
+				    session)) {
 			userService.addStudent(studentData);
 		    }
-		} else if (TEACHER_ROLE.equals(role)) {						//INSERT TEACHER
+		} else if (TEACHER_ROLE.equals(role)) { // INSERT TEACHER
 		    TeacherData teacherData = getTeacherFromRequest(request);
-		    if (validateTeacher(teacherData, session)) {
+		    if (validateTeacher(teacherData, session)
+			    && validateUserOnDuplicateInsert(teacherData,
+				    session)) {
 			userService.addTeacher(teacherData);
 		    }
 		}
-	    } else if (UPDATE_COMMAND.equals(command)){					//IF UPDATE
-		if (STUDENT_ROLE.equals(role)){							//UPDATE STUDENT
+	    } else if (UPDATE_COMMAND.equals(command)) { // IF UPDATE
+		if (STUDENT_ROLE.equals(role)) { // UPDATE STUDENT
 		    StudentData studentData = getStudentFromRequest(request);
 		    if (validateStudent(studentData, session)) {
 			userService.updateStudent(studentData);
 		    }
-		} else if (TEACHER_ROLE.equals(role)) {						//UPDATE TEACHER
+		} else if (TEACHER_ROLE.equals(role)) { // UPDATE TEACHER
 		    TeacherData teacherData = getTeacherFromRequest(request);
 		    if (validateTeacher(teacherData, session)) {
 			userService.updateTeacher(teacherData);
@@ -85,17 +88,17 @@ public class UserRegistrationServlet extends HttpServlet {
 		}
 	    }
 	    response.sendRedirect("userManagement");
-
 	} catch (SQLException e) {
 	    LOGGER.error("SQLException during users authorization.");
 	    response.sendRedirect("error");
 	} catch (NoSuchRoleException e) {
-	    // TODO NO SUCH ROLE HOW TO?
-	    e.printStackTrace();
+	    LOGGER.error("No such role exception during users authorization.");
+	    response.sendRedirect("error");
 	}
     }
 
-    private StudentData getStudentFromRequest(HttpServletRequest request) throws SQLException, NoSuchRoleException{
+    private StudentData getStudentFromRequest(HttpServletRequest request)
+	    throws SQLException, NoSuchRoleException {
 	StudentData studentData = new StudentData();
 	studentData.setRole(userService.readRole(STUDENT_ROLE));
 	getUserFromRequest(request, studentData);
@@ -103,8 +106,9 @@ public class UserRegistrationServlet extends HttpServlet {
 	studentData.setBlocked(true);
 	return studentData;
     }
-    
-    private TeacherData getTeacherFromRequest(HttpServletRequest request) throws SQLException, NoSuchRoleException{
+
+    private TeacherData getTeacherFromRequest(HttpServletRequest request)
+	    throws SQLException, NoSuchRoleException {
 	TeacherData teacherData = new TeacherData();
 	teacherData.setRole(userService.readRole(TEACHER_ROLE));
 	getUserFromRequest(request, teacherData);
@@ -113,7 +117,7 @@ public class UserRegistrationServlet extends HttpServlet {
 	teacherData.setSirname(request.getParameter("specialization"));
 	return teacherData;
     }
-    
+
     private void getUserFromRequest(HttpServletRequest request,
 	    UserData userData) {
 	userData.setLogin(request.getParameter("login"));
@@ -229,6 +233,22 @@ public class UserRegistrationServlet extends HttpServlet {
 	    return false;
 	}
 	return true;
+    }
+
+    private boolean validateUserOnDuplicateInsert(UserData userData,
+	    HttpSession session) throws SQLException {
+	boolean result = true;
+	if (!userService.validateUserLoginOnDuplicate(userData.getLogin())) {
+	    session.setAttribute("loginDuplicateInsert",
+		    "This login is already in use.");
+	    result = false;
+	}
+	if (!userService.validateUserEmailOnDuplicate(userData.getEmail())) {
+	    session.setAttribute("",
+		    "This email is already in use.");
+	    result = false;
+	}
+	return result;
     }
 
 }

@@ -195,7 +195,7 @@ public class MysqlUserService implements UserService {
 		    }
 		});
 	if (result == null) {
-	    throw new NoSuchRoleException(roleName);
+	    throw new NoSuchRoleException();
 	}
 	return result;
     }
@@ -222,11 +222,39 @@ public class MysqlUserService implements UserService {
 		    }
 		});
 	if (result == null) {
-	    throw new NoSuchRoleException(idRole);
+	    throw new NoSuchRoleException();
 	}
 	return result;
     }
 
+    @Override
+    public boolean validateUserLoginOnDuplicate(final String login) throws SQLException {
+	Boolean result = transactionManager.doTransaction(new Operation<Boolean>(){
+
+	    @Override
+	    public Boolean execute(Connection conn) throws SQLException {
+		boolean result = userDao.validateUserLogin(conn, login);
+		return Boolean.valueOf(result);
+	    }
+	    
+	});
+	return result.booleanValue();
+    }
+
+    @Override
+    public boolean validateUserEmailOnDuplicate(final String email) throws SQLException {
+	Boolean result = transactionManager.doTransaction(new Operation<Boolean>(){
+
+	    @Override
+	    public Boolean execute(Connection conn) throws SQLException {
+		boolean result = userDao.validateUserLogin(conn, email);
+		return Boolean.valueOf(result);
+	    }
+	    
+	});
+	return result.booleanValue();
+    }
+    
     private TeacherData convertTeacherBeanToData(Teacher teacherBean) {
 	TeacherData teacherData = new TeacherData();
 	setUserInfoFromBeanToData(teacherBean, teacherData);
@@ -280,5 +308,6 @@ public class MysqlUserService implements UserService {
 	userBean.setLogin(userData.getLogin());
 	userBean.setPassword(userData.getPassword());
     }
+
 
 }

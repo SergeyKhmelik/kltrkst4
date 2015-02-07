@@ -59,7 +59,8 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 	    pstm.setInt(1, user.getId());
 	    ResultSet rs = pstm.executeQuery();
 	    if (rs.next()) {
-		result = new Student(user);
+		result = new Student();
+		result.setId(user.getId());
 		result.setBlocked(!(rs.getInt(2) == 0));
 		result.setCollege(rs.getString(3));
 	    }
@@ -79,7 +80,8 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 	    pstm.setInt(1, user.getId());
 	    ResultSet rs = pstm.executeQuery();
 	    if (rs.next()) {
-		result = new Teacher(user);
+		result = new Teacher();
+		result.setId(user.getId());
 		result.setSpecialization(rs.getString(2));
 		result.setExperience(rs.getInt(3));
 	    }
@@ -98,7 +100,8 @@ public class MysqlAuthorizationDao implements AuthorizationDao {
 	    pstm.setInt(1, user.getId());
 	    ResultSet rs = pstm.executeQuery();
 	    if (rs.next()) {
-		result = new Admin(user);
+		result = new Admin();
+		result.setId(user.getId());
 		result.setPhone(rs.getInt(2));
 	    }
 	} catch (SQLException e) {

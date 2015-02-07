@@ -126,7 +126,7 @@ public class MysqlPermissionDao implements PermissionDao {
     @Override
     public Role readRole(Connection conn, int idRole) throws SQLException {
 	Role result = null;
-	try (PreparedStatement pstm = conn.prepareStatement(FIND_ROLE_BY_NAME)) {
+	try (PreparedStatement pstm = conn.prepareStatement(FIND_ROLE_BY_ID)) {
 	    pstm.setInt(1, idRole);
 	    ResultSet rs = pstm.executeQuery();
 	    if (rs.next()) {

@@ -19,6 +19,8 @@
 <span>${sessionScope.emailValidationError}</span>
 <span>${sessionScope.collegeValidationError}</span>
 <span>${sessionScope.experienceValidationError}</span>
+<span>${sessionScope.loginDuplicateInsert}</span>
+<span>${sessionScope.emailDuplicateInsert}</span>
 
 			<table class="table table-hover">
 				<caption>Students<br/>${requestScope.students[0].role.description}</caption>
@@ -49,12 +51,35 @@
 							<td >${student.college}</td>
 							<td >${student.blocked}</td>
 							<td>
-								<button type="button" class="btn btn-default"
-									onclick="block(${student.idUser})">block</button>
-								<button type="button" class="btn btn-default"
-									onclick="update(${student.idUser})">update</button>
-								<button type="button" class="btn btn-default"
-									onclick="delete(${student.idUser})">delete</button>
+								<form action="delete" method="post">
+									<input type="text" hidden="true" name="id" value="${student.idUser}" />
+									<input type="text" hidden="true" name="object" value="user" />
+									<input type="text" hidden="true" name="command" value="block" />
+									<button type="submit" class="btn btn-default">block</button>
+								</form>
+
+								<form action="delete" method="post">
+									<input type="text" hidden="true" name="id" value="${student.idUser}" />
+									<input type="text" hidden="true" name="object" value="user" />
+									<input type="text" hidden="true" name="command" value="delete" />
+									<button type="submit" class="btn btn-default">delete</button>
+								</form>
+
+								<form action="update" method="post">
+									<input type="text" hidden="true" name="role" value="student" />
+									<input type="text" hidden="true" name="command" value="update" />
+									<input type="text" hidden="true" name="id" value="${student.idUser}" />
+									<input type="text" hidden="true" name="name" value="${student.name}" />
+									<input type="text" hidden="true" name="sirname" value="${student.sirname}" />
+									<input type="text" hidden="true" name="patronymic" value="${student.patronymic}" />
+									<input type="text" hidden="true" name="login" value="${student.login}" />
+									<input type="text" hidden="true" name="password" value="${student.password}" />
+									<input type="text" hidden="true" name="email" value="${student.email}" />
+									<input type="text" hidden="true" name="blocked" value="${student.blocked}" />
+									<input type="text" hidden="true" name="college" value="${student.college}" />
+									<button type="submit" class="btn btn-default">update</button>
+								</form>
+
 							</td>
 						</tr>
 					</c:forEach>
@@ -90,10 +115,27 @@
 							<td>${teacher.specialization}</td>
 							<td>${teacher.experience}</td>
 							<td>
-								<button type="button" class="btn btn-default"
-									onclick="update(${teacher.idUser})">update</button>
-								<button type="button" class="btn btn-default"
-									onclick="delete(${teacher.idUser})">delete</button>
+								<form action="delete" method="post">
+									<input type="text" hidden="true" name="id" value="${teacher.idUser}" />
+									<input type="text" hidden="true" name="object" value="user" />
+									<input type="text" hidden="true" name="command" value="delete" />
+									<button type="submit" class="btn btn-default">delete</button>
+								</form>
+
+								<form action="updateForm" method="post">
+									<input type="text" hidden="true" name="role" value="teacher" />
+									<input type="text" hidden="true" name="command" value="update" />
+									<input type="text" hidden="true" name="id" value="${teacher.idUser}" />
+									<input type="text" hidden="true" name="name" value="${teacher.name}" />
+									<input type="text" hidden="true" name="sirname" value="${teacher.sirname}" />
+									<input type="text" hidden="true" name="patronymic" value="${teacher.patronymic}" />
+									<input type="text" hidden="true" name="login" value="${teacher.login}" />
+									<input type="text" hidden="true" name="password" value="${teacher.password}" />
+									<input type="text" hidden="true" name="email" value="${teacher.email}" />
+									<input type="text" hidden="true" name="specialization" value="${teacher.specialization}" />
+									<input type="text" hidden="true" name="experience" value="${teacher.experience}" />
+									<button type="submit" class="btn btn-default">update</button>
+								</form>
 							</td>
 						</tr>
 					</c:forEach>

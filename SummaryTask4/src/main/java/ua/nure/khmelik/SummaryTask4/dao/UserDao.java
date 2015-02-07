@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Student;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Teacher;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
@@ -40,5 +39,8 @@ public interface UserDao {
 
     int updateStudent(Connection conn, Student student) throws SQLException;
 
-
+    boolean validateUserLogin(Connection conn, String login) throws SQLException;
+    
+    boolean validateUserEmail(Connection conn, String email) throws SQLException;
+    
 }

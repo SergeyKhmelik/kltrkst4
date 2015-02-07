@@ -20,8 +20,8 @@ public class DeleteServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(DeleteServlet.class);
     private static final String USER_OBJECT = "user";
     private static final String COURSE_OBJECT = "course";
-    private static final Object BLOCK_COMMAND = null;
-    private static final Object DELETE_COMMAND = null;
+    private static final Object BLOCK_COMMAND = "block";
+    private static final Object DELETE_COMMAND = "delete";
 
     private UserService userService;
     private CourseService courseService;
@@ -52,13 +52,16 @@ public class DeleteServlet extends HttpServlet {
 			    .parseInt(request.getParameter("id"));
 		    int block = Integer.parseInt(request.getParameter("block"));
 		    userService.blockStudent(idStudent, block == 0);
+		    response.sendRedirect("userManagement");
 		} else if (DELETE_COMMAND.equals(command)) {
 		    userService.deleteUser(Integer.parseInt(request
 			    .getParameter("id")));
+		    response.sendRedirect("userManagement");
 		}
 	    } else if (COURSE_OBJECT.equals(deletingObject)) {
 		courseService.deleteCourse(Integer.parseInt(request
 			.getParameter("id")));
+		    response.sendRedirect("courseManagement");
 	    }
 	} catch (NumberFormatException | SQLException e) {
 	    LOGGER.error("SQLException while deliting " + deletingObject);

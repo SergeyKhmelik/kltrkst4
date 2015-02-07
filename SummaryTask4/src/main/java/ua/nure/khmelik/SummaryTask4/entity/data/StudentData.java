@@ -1,9 +1,18 @@
 package ua.nure.khmelik.SummaryTask4.entity.data;
 
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.User;
+
 public class StudentData extends UserData {
 
     private boolean blocked;
     private String college;
+
+    public StudentData() {
+    }
+
+    public StudentData(User user) {
+	super(user);
+    }
 
     public boolean isBlocked() {
 	return blocked;

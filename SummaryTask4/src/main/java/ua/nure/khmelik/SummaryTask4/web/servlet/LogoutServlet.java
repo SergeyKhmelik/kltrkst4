@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 public class LogoutServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 1518525500547803791L;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
