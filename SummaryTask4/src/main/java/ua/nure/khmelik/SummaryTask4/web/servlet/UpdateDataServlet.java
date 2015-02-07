@@ -14,6 +14,8 @@ import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
 
 public class UpdateDataServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 3750742488559984799L;
+
     private static final String USER_UPDATE = "user";
     private static final Object STUDENT_ROLE = "student";
     private static final Object TEACHER_ROLE = "teacher";

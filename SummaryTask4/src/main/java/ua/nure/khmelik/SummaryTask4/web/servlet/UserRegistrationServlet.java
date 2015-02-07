@@ -52,10 +52,12 @@ public class UserRegistrationServlet extends HttpServlet {
 	    HttpServletResponse response) throws ServletException, IOException {
 
 	response.setContentType("text/html");
-
+	
 	String role = request.getParameter("role");
 	String command = request.getParameter("command");
-
+	
+	LOGGER.debug("Update/insert servlet started with command " + command);
+	
 	HttpSession session = request.getSession();
 	try {
 	    if (INSERT_COMMAND.equals(command)) { // IF INSERT
@@ -244,7 +246,7 @@ public class UserRegistrationServlet extends HttpServlet {
 	    result = false;
 	}
 	if (!userService.validateUserEmailOnDuplicate(userData.getEmail())) {
-	    session.setAttribute("",
+	    session.setAttribute("emailDuplicateInsert",
 		    "This email is already in use.");
 	    result = false;
 	}

@@ -23,7 +23,10 @@
 <span>${sessionScope.emailDuplicateInsert}</span>
 
 			<table class="table table-hover">
-				<caption>Students<br/>${requestScope.students[0].role.description}</caption>
+				<caption>
+					<p>Students</p>
+					<br/>${requestScope.students[0].role.description}
+				</caption>
 				<thead>
 					<tr>
 						<th data-field="id" data-align="center" data-sortable="true">id</th>
@@ -35,7 +38,9 @@
 						<th data-field="password" data-align="center"  data-sortable="true">Password</th>
 						<th data-field="college" data-align="center"  data-sortable="true">College</th>
 						<th data-field="blocked" data-align="center"  data-sortable="true">Blocked</th>
-						<th data-field="action" data-align="center"><jsp:include page="/WEB-INF/view/jspf/popups/StudentRegister.jspf" /></th>
+						<th data-field="action" data-align="center">
+							<jsp:include page="/WEB-INF/view/jspf/popups/StudentRegister.jspf" />
+						</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -55,6 +60,7 @@
 									<input type="text" hidden="true" name="id" value="${student.idUser}" />
 									<input type="text" hidden="true" name="object" value="user" />
 									<input type="text" hidden="true" name="command" value="block" />
+									<input type="text" hidden="true" name="block" value="${student.blocked}" />
 									<button type="submit" class="btn btn-default">block</button>
 								</form>
 
@@ -67,7 +73,6 @@
 
 								<form action="update" method="post">
 									<input type="text" hidden="true" name="role" value="student" />
-									<input type="text" hidden="true" name="command" value="update" />
 									<input type="text" hidden="true" name="id" value="${student.idUser}" />
 									<input type="text" hidden="true" name="name" value="${student.name}" />
 									<input type="text" hidden="true" name="sirname" value="${student.sirname}" />
@@ -87,7 +92,10 @@
 			</table>
 
 			<table class="table table-hover">
-				<caption>Teachers<br/>${requestScope.teachers[0].role.description}</caption>
+				<caption>
+					<p>Teachers</p>
+					<br/>${requestScope.teachers[0].role.description}
+				</caption>
 				<thead>
 					<tr>
 						<th>id</th>
@@ -124,7 +132,6 @@
 
 								<form action="updateForm" method="post">
 									<input type="text" hidden="true" name="role" value="teacher" />
-									<input type="text" hidden="true" name="command" value="update" />
 									<input type="text" hidden="true" name="id" value="${teacher.idUser}" />
 									<input type="text" hidden="true" name="name" value="${teacher.name}" />
 									<input type="text" hidden="true" name="sirname" value="${teacher.sirname}" />

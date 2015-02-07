@@ -15,82 +15,79 @@
 			<div class="modal-content">
 			
 				<div class="modal-header">
-					<h1 class="text-center">Update ${requestScope.user.role.name}</h1>
+					<h1 class="text-center">Update</h1>
 				</div>
 				
-				<div class="modal-body">
-					<form class="form col-md-12 center-block" action="userRegister"
-						method="post">
+					<div class="modal-body">
+						<form class="form col-md-12 center-block" action="userRegister"
+							method="post">	
 
-					<div class="form-group">
-						<input type="text" class="form-control input-lg"
-							value="${requestScope.user.name }" name="name" />
-					</div>
-
-					<div class="form-group">
-						<input type="text" class="form-control input-lg"
-							value="${requestScope.user.patronymic}" name="patronymic" />
-					</div>
-
-					<div class="form-group">
-						<input type="text" class="form-control input-lg"
-							value="${requestScope.user.sirname }" name="sirname" />
-					</div>
-
-					<div class="form-group">
-						<input type="text" class="form-control input-lg"
-							value="${requestScope.user.login }" name="login" />
-					</div>
-
-					<div class="form-group">
-						<input type="text" class="form-control input-lg"
-							value="${requestScope.user.password }" name="password" />
-					</div>
-
-					<div class="form-group">
-						<span class="input-group-addon" id="basic-addon1">@
-						<input type="text" class="form-control" value="${requestScope.user.email }" 
-						aria-describedby="basic-addon1" name="email"/></span> 
-					</div>
-
-					<c:if test="${requestScope.user.role.name eq 'student'}">
 						<div class="form-group">
 							<input type="text" class="form-control input-lg"
-								value="${requestScope.user.college}" name="college" />
+								value="${param.name}" name="name" />
 						</div>
-					</c:if>
-					
-					<c:if test="${requestScope.user.role.name eq 'teacher'}">
+	
 						<div class="form-group">
 							<input type="text" class="form-control input-lg"
-								value="${requestScope.user.specialization}" name="specialization" />
+								value="${param.patronymic}" name="patronymic" />
+						</div>
+	
+						<div class="form-group">
+							<input type="text" class="form-control input-lg"
+								value="${param.sirname}" name="sirname" />
+						</div>
+	
+						<div class="form-group">
+							<input type="text" class="form-control input-lg"
+								value="${param.login}" name="login" />
 						</div>
 
 						<div class="form-group">
-							<input type="number" class="form-control input-lg"
-								value="${requestScope.user.experience}" name="experience" />
+							<input type="text" class="form-control input-lg"
+								value="${param.password}" name="password" />
 						</div>
-					</c:if>
+
+						<div class="form-group">
+							<span class="input-group-addon" id="basic-addon1">@
+							<input type="text" class="form-control" value="${param.email }" 
+							aria-describedby="basic-addon1" name="email"/></span> 
+						</div>
+
+						<c:if test="${param.role eq 'student'}">
+							<div class="form-group">
+								<input type="text" class="form-control input-lg"
+									value="${param.college}" name="college" />
+							</div>
+						</c:if>
 					
-					<div class="form-group" hidden="true">
-						<input type="text" class="form-control input-lg" name="role" value="${requestScope.user.role.name}">
-					</div>
+						<c:if test="${param.role eq 'teacher'}">
+							<div class="form-group">
+								<input type="text" class="form-control input-lg"
+									value="${param.specialization}" name="specialization" />
+							</div>
 
-					<div class="form-group" hidden="true">
-						<input type="text" class="form-control input-lg" name="command" value="update">
-					</div>
-
-					<div class="form-group" hidden="true">
-						<input type="text" class="form-control input-lg" name="id" value="${requestScope.user.idUser}">
-					</div>
+							<div class="form-group">
+								<input type="number" class="form-control input-lg"
+									value="${param.experience}" name="experience" />
+							</div>
+						</c:if>
 					
+						<div class="form-group" hidden="true">
+							<input type="text" class="form-control input-lg" name="role" value="${param.role}">
+						</div>
 
-					<div class="form-group">
-						<button type="submit" class="btn btn-primary btn-lg btn-block">Update</button>
-					</div>
+						<div class="form-group" hidden="true">
+							<input type="text" class="form-control input-lg" name="command" value="update">
+						</div>
 
-				</form>
-
+						<div class="form-group" hidden="true">
+							<input type="text" class="form-control input-lg" name="id" value="${param.id}">
+						</div>
+					
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary btn-lg btn-block">Update</button>
+						</div>
+					</form>
 				</div>
 				<div class="modal-footer">
 					<div class="col-md-12"></div>

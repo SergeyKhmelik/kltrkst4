@@ -42,16 +42,18 @@ public class DeleteServlet extends HttpServlet {
 
 	response.setContentType("text/html");
 
-	String deletingObject = request.getParameter("object");
 	String command = request.getParameter("command");
-
+	String deletingObject = request.getParameter("object");
+	LOGGER.debug("Delete servlet started with command " + command + "."
+		+ " Object is " + deletingObject);
+	
 	try {
 	    if (USER_OBJECT.equals(deletingObject)) {
 		if (BLOCK_COMMAND.equals(command)) {
-		    int idStudent = Integer
-			    .parseInt(request.getParameter("id"));
-		    int block = Integer.parseInt(request.getParameter("block"));
-		    userService.blockStudent(idStudent, block == 0);
+		    LOGGER.error(request.getParameter("id"));
+		    int idStudent = Integer.parseInt(request.getParameter("id"));
+		    boolean block = Boolean.parseBoolean(request.getParameter("block"));
+		    userService.blockStudent(idStudent, block);
 		    response.sendRedirect("userManagement");
 		} else if (DELETE_COMMAND.equals(command)) {
 		    userService.deleteUser(Integer.parseInt(request
@@ -63,8 +65,11 @@ public class DeleteServlet extends HttpServlet {
 			.getParameter("id")));
 		    response.sendRedirect("courseManagement");
 	    }
-	} catch (NumberFormatException | SQLException e) {
+	} catch (SQLException e) {
 	    LOGGER.error("SQLException while deliting " + deletingObject);
+	    response.sendRedirect("error");
+	} catch (NumberFormatException e) {
+	    LOGGER.error("NumberFormatException while deliting " + deletingObject);
 	    response.sendRedirect("error");
 	}
     }
