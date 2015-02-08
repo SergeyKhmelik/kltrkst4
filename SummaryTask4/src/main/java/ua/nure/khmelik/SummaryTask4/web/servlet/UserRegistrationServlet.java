@@ -51,41 +51,52 @@ public class UserRegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
 	    HttpServletResponse response) throws ServletException, IOException {
 
-	response.setContentType("text/html");
-	
 	String role = request.getParameter("role");
 	String command = request.getParameter("command");
-	
-	LOGGER.debug("Update/insert servlet started with command " + command);
-	
+
+	LOGGER.debug("Update/insert servlet started with command " + command
+		+ " and request encoding " + request.getCharacterEncoding());
+
 	HttpSession session = request.getSession();
 	try {
 	    if (INSERT_COMMAND.equals(command)) { // IF INSERT
 		if (STUDENT_ROLE.equals(role)) { // INSERT STUDENT
 		    StudentData studentData = getStudentFromRequest(request);
-		    if (validateStudent(studentData, session)
-			    && validateUserOnDuplicateInsert(studentData,
-				    session)) {
+		    LOGGER.error(studentData);
+		    if (validateStudent(studentData, session)) {
 			userService.addStudent(studentData);
-		    }
+		    } else {
+			request.getRequestDispatcher("update").forward(request, response);
+			return;
+		    }  
 		} else if (TEACHER_ROLE.equals(role)) { // INSERT TEACHER
 		    TeacherData teacherData = getTeacherFromRequest(request);
-		    if (validateTeacher(teacherData, session)
-			    && validateUserOnDuplicateInsert(teacherData,
-				    session)) {
+		    if (validateTeacher(teacherData, session)) {
 			userService.addTeacher(teacherData);
+		    } else {
+			request.getRequestDispatcher("update").forward(request, response);
+			return;
 		    }
 		}
 	    } else if (UPDATE_COMMAND.equals(command)) { // IF UPDATE
 		if (STUDENT_ROLE.equals(role)) { // UPDATE STUDENT
 		    StudentData studentData = getStudentFromRequest(request);
+		    studentData.setIdUser(Integer.parseInt(request.getParameter("id")));
 		    if (validateStudent(studentData, session)) {
+			LOGGER.debug("updating student " + studentData);
 			userService.updateStudent(studentData);
+		    } else {
+			request.getRequestDispatcher("update").forward(request, response);
+			return;
 		    }
 		} else if (TEACHER_ROLE.equals(role)) { // UPDATE TEACHER
 		    TeacherData teacherData = getTeacherFromRequest(request);
+		    teacherData.setIdUser(Integer.parseInt(request.getParameter("id")));
 		    if (validateTeacher(teacherData, session)) {
 			userService.updateTeacher(teacherData);
+		    } else {
+			request.getRequestDispatcher("update").forward(request, response);
+			return;
 		    }
 		}
 	    }
@@ -130,14 +141,14 @@ public class UserRegistrationServlet extends HttpServlet {
 	userData.setEmail(request.getParameter("email"));
     }
 
-    private boolean validateStudent(StudentData studentData, HttpSession session) {
+    private boolean validateStudent(StudentData studentData, HttpSession session) throws SQLException {
 	boolean result = true;
 	result = result && validateUser(studentData, session);
 	result = result && validateCollege(studentData.getCollege(), session);
 	return result;
     }
 
-    private boolean validateTeacher(TeacherData teacherData, HttpSession session) {
+    private boolean validateTeacher(TeacherData teacherData, HttpSession session) throws SQLException {
 	boolean result = true;
 	result = result && validateUser(teacherData, session);
 	result = result
@@ -148,26 +159,35 @@ public class UserRegistrationServlet extends HttpServlet {
 	return result;
     }
 
-    private boolean validateUser(UserData userData, HttpSession session) {
+    private boolean validateUser(UserData userData, HttpSession session) throws SQLException {
 	boolean result = true;
 	result = result && validateName(userData.getName(), session);
 	LOGGER.error("NAME VALIDATION!"
-		+ validateName(userData.getName(), session));
+		+ validateName(userData.getName(), session) + " "
+		+ userData.getName());
 	result = result && validateName(userData.getPatronymic(), session);
 	LOGGER.error("Patron VALIDATION!"
-		+ validateName(userData.getPatronymic(), session));
+		+ validateName(userData.getPatronymic(), session) + " "
+		+ userData.getPatronymic());
 	result = result && validateName(userData.getSirname(), session);
 	LOGGER.error("sirname VALIDATION!"
-		+ validateName(userData.getSirname(), session));
+		+ validateName(userData.getSirname(), session) + " "
+		+ userData.getSirname());
 	result = result && validateLogin(userData.getLogin(), session);
 	LOGGER.error("login VALIDATION!"
-		+ validateLogin(userData.getLogin(), session));
+		+ validateLogin(userData.getLogin(), session) + " "
+		+ userData.getLogin());
 	result = result && validateEmail(userData.getEmail(), session);
 	LOGGER.error("email VALIDATION!"
-		+ validateEmail(userData.getEmail(), session));
+		+ validateEmail(userData.getEmail(), session) + " "
+		+ userData.getEmail());
 	result = result && validatePassword(userData.getPassword(), session);
 	LOGGER.error("password VALIDATION!"
-		+ validatePassword(userData.getPassword(), session));
+		+ validatePassword(userData.getPassword(), session) + " "
+		+ userData.getPassword());
+	result = result && validateUserOnDuplicateInsert(userData, session);
+	LOGGER.error("duplications VALIDATION!"
+		+ validateUserOnDuplicateInsert(userData, session));
 	return result;
     }
 
@@ -240,12 +260,12 @@ public class UserRegistrationServlet extends HttpServlet {
     private boolean validateUserOnDuplicateInsert(UserData userData,
 	    HttpSession session) throws SQLException {
 	boolean result = true;
-	if (!userService.validateUserLoginOnDuplicate(userData.getLogin())) {
+	if (!userService.validateUserLoginOnDuplicate(userData.getLogin(), userData.getIdUser())) {
 	    session.setAttribute("loginDuplicateInsert",
 		    "This login is already in use.");
 	    result = false;
 	}
-	if (!userService.validateUserEmailOnDuplicate(userData.getEmail())) {
+	if (!userService.validateUserEmailOnDuplicate(userData.getEmail(), userData.getIdUser())) {
 	    session.setAttribute("emailDuplicateInsert",
 		    "This email is already in use.");
 	    result = false;

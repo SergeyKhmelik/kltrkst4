@@ -9,6 +9,7 @@
 </jsp:include>
 
 <body>
+
 	<div id="loginModal" class="modal show" tabindex="-1" role="dialog"
 		aria-hidden="true">
 		<div class="modal-dialog">
@@ -23,40 +24,61 @@
 							method="post">	
 
 						<div class="form-group">
+							 
 							<input type="text" class="form-control input-lg"
 								value="${param.name}" name="name" />
+								<span  style="color:red">${sessionScope.nameValidationError}</span>
+								<c:remove var="nameValidationError" scope="session"/>
 						</div>
 	
 						<div class="form-group">
 							<input type="text" class="form-control input-lg"
 								value="${param.patronymic}" name="patronymic" />
+								<span  style="color:red">${sessionScope.nameValidationError}</span>
+								<c:remove var="nameValidationError" scope="session"/>
 						</div>
 	
 						<div class="form-group">
 							<input type="text" class="form-control input-lg"
 								value="${param.sirname}" name="sirname" />
+								<span  style="color:red">${sessionScope.nameValidationError}</span>
+								<c:remove var="nameValidationError" scope="session"/>
 						</div>
 	
 						<div class="form-group">
 							<input type="text" class="form-control input-lg"
 								value="${param.login}" name="login" />
+							<span  style="color:red">${sessionScope.nameValidationError}</span>
+							<c:remove var="nameValidationError" scope="session"/>
+							<span  style="color:red">${sessionScope.loginDuplicateInsert}</span>
+							<c:remove var="loginDuplicateInsert" scope="session"/>							
 						</div>
 
 						<div class="form-group">
 							<input type="text" class="form-control input-lg"
 								value="${param.password}" name="password" />
+							<span  style="color:red">${sessionScope.passwordValidationError}</span>
+							<c:remove var="passwordValidationError" scope="session"/>			
 						</div>
 
 						<div class="form-group">
 							<span class="input-group-addon" id="basic-addon1">@
 							<input type="text" class="form-control" value="${param.email }" 
 							aria-describedby="basic-addon1" name="email"/></span> 
+							
+							<span  style="color:red">${sessionScope.emailValidationError}</span>
+							<c:remove var="emailValidationError" scope="session"/>
+			
+							<span  style="color:red">${sessionScope.emailDuplicateInsert}</span>
+							<c:remove var="emailDuplicateInsert" scope="session"/>		
 						</div>
 
 						<c:if test="${param.role eq 'student'}">
 							<div class="form-group">
 								<input type="text" class="form-control input-lg"
 									value="${param.college}" name="college" />
+							<span  style="color:red">${sessionScope.collegeValidationError}</span>
+							<c:remove var="collegeValidationError" scope="session"/>
 							</div>
 						</c:if>
 					
@@ -69,6 +91,8 @@
 							<div class="form-group">
 								<input type="number" class="form-control input-lg"
 									value="${param.experience}" name="experience" />
+								<span  style="color:red">${sessionScope.experienceValidationError}</span>
+								<c:remove var="experienceValidationError" scope="session"/>
 							</div>
 						</c:if>
 					

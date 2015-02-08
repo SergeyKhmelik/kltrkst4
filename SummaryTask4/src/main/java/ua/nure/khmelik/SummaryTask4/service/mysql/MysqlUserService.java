@@ -135,7 +135,7 @@ public class MysqlUserService implements UserService {
 
 	    @Override
 	    public Integer execute(Connection conn) throws SQLException {
-		if (block) {
+		if (!block) {
 		    return userDao.blockStudent(conn, idStudent);
 		} else {
 		    return userDao.unblockStudent(conn, idStudent);
@@ -228,12 +228,12 @@ public class MysqlUserService implements UserService {
     }
 
     @Override
-    public boolean validateUserLoginOnDuplicate(final String login) throws SQLException {
+    public boolean validateUserLoginOnDuplicate(final String login, final int idUser) throws SQLException {
 	Boolean result = transactionManager.doTransaction(new Operation<Boolean>(){
 
 	    @Override
 	    public Boolean execute(Connection conn) throws SQLException {
-		boolean result = userDao.validateUserLogin(conn, login);
+		boolean result = userDao.validateUserLogin(conn, login, idUser);
 		return Boolean.valueOf(result);
 	    }
 	    
@@ -242,12 +242,12 @@ public class MysqlUserService implements UserService {
     }
 
     @Override
-    public boolean validateUserEmailOnDuplicate(final String email) throws SQLException {
+    public boolean validateUserEmailOnDuplicate(final String email, final int idUser) throws SQLException {
 	Boolean result = transactionManager.doTransaction(new Operation<Boolean>(){
 
 	    @Override
 	    public Boolean execute(Connection conn) throws SQLException {
-		boolean result = userDao.validateUserLogin(conn, email);
+		boolean result = userDao.validateUserLogin(conn, email, idUser);
 		return Boolean.valueOf(result);
 	    }
 	    

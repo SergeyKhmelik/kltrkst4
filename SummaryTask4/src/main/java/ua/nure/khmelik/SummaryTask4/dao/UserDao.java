@@ -39,8 +39,8 @@ public interface UserDao {
 
     int updateStudent(Connection conn, Student student) throws SQLException;
 
-    boolean validateUserLogin(Connection conn, String login) throws SQLException;
+    boolean validateUserLogin(Connection conn, String login, int idUser) throws SQLException;
     
-    boolean validateUserEmail(Connection conn, String email) throws SQLException;
+    boolean validateUserEmail(Connection conn, String email, int idUser) throws SQLException;
     
 }

@@ -7,5 +7,6 @@
 			driverClassName="com.mysql.jdbc.Driver"
 			defaultAutoCommit="false"
 			defaultTransactionIsolation="READ_COMMITTED"
-			url="jdbc:mysql://localhost:3306/coursesdb"/>
+			url="jdbc:mysql://localhost:3306/coursesdb"
+			connectionProperties="useUnicode=yes;characterEncoding=utf8;"/>
 </Context>

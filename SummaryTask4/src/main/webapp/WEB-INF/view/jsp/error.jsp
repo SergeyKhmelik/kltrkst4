@@ -13,7 +13,7 @@
         <div class="col-md-12">
             <div class="error-template">
                 <h1>Oops!</h1>
-                <h2>Server offline error</h2>
+                <h2>Server error</h2>
                 <div class="error-details">
                     Sorry, an error has occured due to server issues. Please try again later!
                 </div>
