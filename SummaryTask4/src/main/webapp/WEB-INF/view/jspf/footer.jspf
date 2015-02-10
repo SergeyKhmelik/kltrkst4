@@ -1,21 +1,2 @@
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript">
-	function HeaderController($scope, $location) {
-		$scope.isActive = function(viewLocation) {
-			return viewLocation === $location.path();
-		};
-	}
-</script>
-
-<script type="text/javascript">
-	function HeaderController($scope, $location) {
-		$scope.getClass = function(path) {
-			if ($location.path().substr(0, path.length) == path) {
-				return "active"
-			} else {
-				return ""
-			}
-		}
-	}
-</script>

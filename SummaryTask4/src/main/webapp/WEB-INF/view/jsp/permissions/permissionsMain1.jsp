@@ -9,6 +9,7 @@
 
 <body>
 	<jsp:include page="/WEB-INF/view/jspf/header.jspf"></jsp:include>
+
 	<div class="container">
 		<div id="content">
 			<div class="tabbable tabs-left">
@@ -24,11 +25,12 @@
 						</c:choose>
 					</c:forEach>
 				</ul>
+				
 				<div class="tab-content">
 					<c:forEach var="role" items="${requestScope.roles}">
 						<c:choose>
 							<c:when test="${role.idRole eq requestScope.roles[0].idRole}">
-								<div class="tab-pane fade in active" id="${role.name}">
+								<div class="tab-pane fade active" id="${role.name}">
 							</c:when>
 							<c:otherwise>
 								<div class="tab-pane fade" id="${role.name}">						
@@ -39,9 +41,7 @@
 								<div class="col-sm-10">
 								  	<p>${role.description}</p>
 									<div class="dropdown">
-									  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-									    Add permission
-									    <span class="caret"></span>
+									  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">Add permission<span class="caret"></span>
 									  </button>
 									  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 										<c:forEach var="missingPermission" items="${role.missingPermissions }">
@@ -82,6 +82,6 @@
 		</div>	
 	</div>
 
-		<jsp:include page="/WEB-INF/view/jspf/footer.jspf"></jsp:include>
+	<jsp:include page="/WEB-INF/view/jspf/footer.jspf"></jsp:include>
 </body>
 </html>

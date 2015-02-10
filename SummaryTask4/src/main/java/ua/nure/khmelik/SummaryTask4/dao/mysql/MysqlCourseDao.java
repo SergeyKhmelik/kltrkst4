@@ -20,13 +20,18 @@ public class MysqlCourseDao implements CourseDao {
 
     private static final String FIND_COURSE_THEMES = "SELECT * FROM course_theme";
     private static final String FIND_COURSE_THEME = "SELECT * FROM course_theme WHERE idcourse_theme=?";
+   
     private static final String FIND_INCOMING_COURSES = "SELECT * FROM course WHERE start>?";
-    private static final String FIND_CURRENT_COURSES = "SELECT * FROM course WHERE start<? AND end>?";
-    private static final String FIND_PASSED_COURSES = "SELECT * FROM course WHERE end<?";
-    private static final String FIND_INCOMING_COURSES_WITH_NO_TEACHER = "SELECT * FROM course WHERE start>? AND idteacher=NULL";
     private static final String FIND_INCOMING_COURSES_BY_TID = "SELECT * FROM course WHERE start>? AND idteacher=?";
-    private static final String FIND_STUDENT_PASSED_COURSES = "SELECT * FROM course WHERE end<? AND idcourse IN (SELECT idcourse FROM student_course WHERE idstudent=?)";
+
+    private static final String FIND_CURRENT_COURSES = "SELECT * FROM course WHERE start<? AND end>?";
     private static final String FIND_TEACHER_CURRENT_COURSES = "SELECT * FROM course WHERE idteacher=? AND start<? AND end>?";
+    private static final String FIND_STUDENT_CURRENT_COURSES = "SELECT * FROM course WHERE start<? AND end>? AND idcourse IN (SELECT idcourse FROM student_course WHERE idstudent=?)";
+    
+    private static final String FIND_PASSED_COURSES = "SELECT * FROM course WHERE end<?";
+    private static final String FIND_STUDENT_PASSED_COURSES = "SELECT * FROM course WHERE end<? AND idcourse IN (SELECT idcourse FROM student_course WHERE idstudent=?)";
+    private static final String FIND_TEACHER_PASSED_COURSES = "SELECT * FROM course WHERE end<? AND idteacher=? ";
+    
     private static final String CREATE_COURSE = "INSERT INTO course (name, start, end, idtheme) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_COURSE = "UPDATE course SET name=?, start=?, end=? WHERE idcourse=?";
     private static final String DELETE_COURSE = "DELETE FROM course WHERE idcourse=?";
@@ -85,40 +90,16 @@ public class MysqlCourseDao implements CourseDao {
     }
 
     @Override
-    public ArrayList<Course> readPassedCourses(Connection conn)
-	    throws SQLException {
+    public ArrayList<Course> readCurrentStudentsCourses(Connection conn,
+	    int idStudent) throws SQLException {
 	ArrayList<Course> result = new ArrayList<Course>();
 	try (PreparedStatement pstm = conn
-		.prepareStatement(FIND_PASSED_COURSES)) {
+		.prepareStatement(FIND_STUDENT_CURRENT_COURSES)) {
 	    java.util.Date now = new java.util.Date();
 	    pstm.setDate(1, new java.sql.Date(now.getTime()));
-	    ResultSet rs = pstm.executeQuery();
-	    while (rs.next()) {
-		Course currentCourse = new Course();
-		currentCourse.setId(rs.getInt(1));
-		currentCourse.setName(rs.getString(2));
-		currentCourse.setStart(rs.getDate(3));
-		currentCourse.setEnd(rs.getDate(4));
-		currentCourse.setIdTheme(rs.getInt(5));
-		currentCourse.setIdTeacher(rs.getInt(6));
-		result.add(currentCourse);
-	    }
-	} catch (SQLException ex) {
-	    LOGGER.error("Cannot read incoming course entities ", ex);
-	    throw ex;
-	}
-	return result;
-    }
- 
-    public ArrayList<Course> readIncomingCourses(Connection conn, int idTeacher)
-	    throws SQLException {
-	ArrayList<Course> result = new ArrayList<Course>();
+	    pstm.setDate(2, new java.sql.Date(now.getTime()));
+	    pstm.setInt(3, idStudent);
 
-	try (PreparedStatement pstm = conn
-		.prepareStatement(FIND_INCOMING_COURSES_BY_TID)) {
-	    java.util.Date now = new java.util.Date();
-	    pstm.setDate(1, new java.sql.Date(now.getTime()));
-	    pstm.setInt(2, idTeacher);
 	    ResultSet rs = pstm.executeQuery();
 
 	    while (rs.next()) {
@@ -132,42 +113,14 @@ public class MysqlCourseDao implements CourseDao {
 		result.add(currentCourse);
 	    }
 	} catch (SQLException ex) {
-	    LOGGER.error("Cannot read incoming course entities where idTeacher="
-		    + idTeacher, ex);
-	    throw ex;
-	}
-	return result;
-    }
-
-    public ArrayList<Course> readPassedCourses(Connection conn, int idStudent)
-	    throws SQLException {
-	ArrayList<Course> result = new ArrayList<Course>();
-	try (PreparedStatement pstm = conn
-		.prepareStatement(FIND_STUDENT_PASSED_COURSES)) {
-	    java.util.Date now = new java.util.Date();
-	    pstm.setDate(1, new java.sql.Date(now.getTime()));
-	    pstm.setInt(2, idStudent);
-	    ResultSet rs = pstm.executeQuery();
-
-	    while (rs.next()) {
-		Course currentCourse = new Course();
-		currentCourse.setId(rs.getInt(1));
-		currentCourse.setName(rs.getString(2));
-		currentCourse.setStart(rs.getDate(3));
-		currentCourse.setEnd(rs.getDate(4));
-		currentCourse.setIdTheme(rs.getInt(5));
-		currentCourse.setIdTeacher(rs.getInt(6));
-		result.add(currentCourse);
-	    }
-	} catch (SQLException ex) {
-	    LOGGER.error("Cannot read passed course entities where idStudent="
+	    LOGGER.error("Cannot read current course entities where idStudent="
 		    + idStudent, ex);
 	    throw ex;
 	}
 	return result;
     }
-
-    public ArrayList<Course> readCurrentCourses(Connection conn, int idTeacher)
+    
+    public ArrayList<Course> readCurrentTeachersCourses(Connection conn, int idTeacher)
 	    throws SQLException {
 	ArrayList<Course> result = new ArrayList<Course>();
 	try (PreparedStatement pstm = conn
@@ -196,7 +149,90 @@ public class MysqlCourseDao implements CourseDao {
 	}
 	return result;
     }
+    
+    @Override
+    public ArrayList<Course> readPassedCourses(Connection conn)
+	    throws SQLException {
+	ArrayList<Course> result = new ArrayList<Course>();
+	try (PreparedStatement pstm = conn
+		.prepareStatement(FIND_PASSED_COURSES)) {
+	    java.util.Date now = new java.util.Date();
+	    pstm.setDate(1, new java.sql.Date(now.getTime()));
+	    ResultSet rs = pstm.executeQuery();
+	    while (rs.next()) {
+		Course currentCourse = new Course();
+		currentCourse.setId(rs.getInt(1));
+		currentCourse.setName(rs.getString(2));
+		currentCourse.setStart(rs.getDate(3));
+		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
+		result.add(currentCourse);
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read incoming course entities ", ex);
+	    throw ex;
+	}
+	return result;
+    }
 
+    public ArrayList<Course> readPassedStudentsCourses(Connection conn, int idStudent)
+	    throws SQLException {
+	ArrayList<Course> result = new ArrayList<Course>();
+	try (PreparedStatement pstm = conn
+		.prepareStatement(FIND_STUDENT_PASSED_COURSES)) {
+	    java.util.Date now = new java.util.Date();
+	    pstm.setDate(1, new java.sql.Date(now.getTime()));
+	    pstm.setInt(2, idStudent);
+	    ResultSet rs = pstm.executeQuery();
+
+	    while (rs.next()) {
+		Course currentCourse = new Course();
+		currentCourse.setId(rs.getInt(1));
+		currentCourse.setName(rs.getString(2));
+		currentCourse.setStart(rs.getDate(3));
+		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
+		result.add(currentCourse);
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read passed course entities where idStudent="
+		    + idStudent, ex);
+	    throw ex;
+	}
+	return result;
+    }
+
+    @Override
+    public ArrayList<Course> readPassedTeachersCourses(Connection conn,
+	    int idTeacher) throws SQLException {
+	ArrayList<Course> result = new ArrayList<Course>();
+	try (PreparedStatement pstm = conn
+		.prepareStatement(FIND_TEACHER_PASSED_COURSES)) {
+	    java.util.Date now = new java.util.Date();
+	    pstm.setDate(1, new java.sql.Date(now.getTime()));
+	    pstm.setInt(2, idTeacher);
+	    ResultSet rs = pstm.executeQuery();
+
+	    while (rs.next()) {
+		Course currentCourse = new Course();
+		currentCourse.setId(rs.getInt(1));
+		currentCourse.setName(rs.getString(2));
+		currentCourse.setStart(rs.getDate(3));
+		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
+		result.add(currentCourse);
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read passed course entities where idTeacher="
+		    + idTeacher, ex);
+	    throw ex;
+	}
+	return result;
+    }
+    
     @Override
     public ArrayList<CourseTheme> readCourseThemes(Connection conn)
 	    throws SQLException {
@@ -217,6 +253,25 @@ public class MysqlCourseDao implements CourseDao {
 	return result;
     }
 
+    @Override
+    public CourseTheme readTheme(Connection conn, int idTheme)
+	    throws SQLException {
+	CourseTheme result = new CourseTheme();
+	try (PreparedStatement pstm = conn.prepareStatement(FIND_COURSE_THEME)) {
+	    pstm.setInt(1, idTheme);
+	    ResultSet rs = pstm.executeQuery();
+	    if (rs.next()) {
+		result.setId(rs.getInt(1));
+		result.setName(rs.getString(2));
+		result.setDescription(rs.getString(3));
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read course theme entity ", ex);
+	    throw ex;
+	}
+	return result;
+    }
+    
     public int createCourse(Connection conn, Course course) throws SQLException {
 	int idCourse = 0;
 	try (PreparedStatement pstm = conn.prepareStatement(CREATE_COURSE,
@@ -276,53 +331,6 @@ public class MysqlCourseDao implements CourseDao {
 	    throw ex;
 	}
 	return studentCourse.getIdStudent();
-    }
-
-    @Override
-    public ArrayList<Course> readIncomingCoursesWithoutTeacher(Connection conn)
-	    throws SQLException {
-	ArrayList<Course> result = new ArrayList<Course>();
-	try (PreparedStatement pstm = conn
-		.prepareStatement(FIND_INCOMING_COURSES_WITH_NO_TEACHER)) {
-	    java.util.Date now = new java.util.Date();
-	    pstm.setDate(1, new java.sql.Date(now.getTime()));
-	    ResultSet rs = pstm.executeQuery();
-	    while (rs.next()) {
-		Course currentCourse = new Course();
-		currentCourse.setId(rs.getInt(1));
-		currentCourse.setName(rs.getString(2));
-		currentCourse.setStart(rs.getDate(3));
-		currentCourse.setEnd(rs.getDate(4));
-		currentCourse.setIdTheme(rs.getInt(5));
-		currentCourse.setIdTeacher(rs.getInt(6));
-		result.add(currentCourse);
-	    }
-	} catch (SQLException ex) {
-	    LOGGER.error("Cannot read incoming course entities ", ex);
-	    throw ex;
-	}
-	return result;
-    }
-
-    @Override
-    public CourseTheme readTheme(Connection conn, int idTheme)
-	    throws SQLException {
-	CourseTheme result = new CourseTheme();
-	try (PreparedStatement pstm = conn.prepareStatement(FIND_COURSE_THEME)) {
-	    pstm.setInt(1, idTheme);
-	    ResultSet rs = pstm.executeQuery();
-	    LOGGER.info("reading theme" + idTheme);
-	    if (rs.next()) {
-		result.setId(rs.getInt(1));
-		result.setName(rs.getString(2));
-		result.setDescription(rs.getString(3));
-	    }
-	    LOGGER.info("read " + result);
-	} catch (SQLException ex) {
-	    LOGGER.error("Cannot read course theme entity ", ex);
-	    throw ex;
-	}
-	return result;
     }
   
 }

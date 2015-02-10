@@ -133,7 +133,7 @@
 
 	<servlet-mapping>
 		<servlet-name>CourseManagement</servlet-name>
-		<url-pattern>/courseManagement</url-pattern>
+		<url-pattern>/courses</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -202,7 +202,7 @@
 
 	<servlet-mapping>
 		<servlet-name>courses.jsp</servlet-name>
-		<url-pattern>/courses</url-pattern>
+		<url-pattern>/coursesjsp</url-pattern>
 	</servlet-mapping>
 
 

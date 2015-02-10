@@ -51,7 +51,7 @@ public class UserRegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
 	    HttpServletResponse response) throws ServletException, IOException {
 
-	String role = request.getParameter("role");
+	RoleName role = RoleName.valueOf(request.getParameter("role"));
 	String command = request.getParameter("command");
 
 	LOGGER.debug("Update/insert servlet started with command " + command
@@ -60,7 +60,7 @@ public class UserRegistrationServlet extends HttpServlet {
 	HttpSession session = request.getSession();
 	try {
 	    if (INSERT_COMMAND.equals(command)) { // IF INSERT
-		if (STUDENT_ROLE.equals(role)) { // INSERT STUDENT
+		if (RoleName.STUDENT.equals(role)) { // INSERT STUDENT
 		    StudentData studentData = getStudentFromRequest(request);
 		    LOGGER.error(studentData);
 		    if (validateStudent(studentData, session)) {
@@ -69,7 +69,7 @@ public class UserRegistrationServlet extends HttpServlet {
 			response.sendRedirect("userManagement");
 			return;
 		    }  
-		} else if (TEACHER_ROLE.equals(role)) { // INSERT TEACHER
+		} else if (RoleName.TEACHER.equals(role)) { // INSERT TEACHER
 		    TeacherData teacherData = getTeacherFromRequest(request);
 		    if (validateTeacher(teacherData, session)) {
 			userService.addTeacher(teacherData);
@@ -79,7 +79,7 @@ public class UserRegistrationServlet extends HttpServlet {
 		    }
 		}
 	    } else if (UPDATE_COMMAND.equals(command)) { // IF UPDATE
-		if (STUDENT_ROLE.equals(role)) { // UPDATE STUDENT
+		if (RoleName.STUDENT.equals(role)) { // UPDATE STUDENT
 		    StudentData studentData = getStudentFromRequest(request);
 		    studentData.setIdUser(Integer.parseInt(request.getParameter("id")));
 		    if (validateStudent(studentData, session)) {
@@ -89,7 +89,7 @@ public class UserRegistrationServlet extends HttpServlet {
 			request.getRequestDispatcher("update").forward(request, response);
 			return;
 		    }
-		} else if (TEACHER_ROLE.equals(role)) { // UPDATE TEACHER
+		} else if (RoleName.TEACHER.equals(role)) { // UPDATE TEACHER
 		    TeacherData teacherData = getTeacherFromRequest(request);
 		    teacherData.setIdUser(Integer.parseInt(request.getParameter("id")));
 		    if (validateTeacher(teacherData, session)) {

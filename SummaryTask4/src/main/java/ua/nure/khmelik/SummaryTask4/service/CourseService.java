@@ -8,20 +8,16 @@ import ua.nure.khmelik.SummaryTask4.entity.dbentities.CourseTheme;
 
 public interface CourseService {
 
-    ArrayList<CourseData> getIncomingCourses() throws SQLException;
-
-    ArrayList<CourseData> getCurrentCourses() throws SQLException;
-
     ArrayList<CourseData> getPassedCourses() throws SQLException;
+    ArrayList<CourseData> getPassedStudentsCourses(int idStudent) throws SQLException;    
+    ArrayList<CourseData> getPassedTeachersCourses(int idTeacher) throws SQLException;
     
-    ArrayList<CourseData> getIncomingCourses(int idTeacher) throws SQLException;
-
-    ArrayList<CourseData> getIncomingCoursesWithoutTeacher() throws SQLException;    
+    ArrayList<CourseData> getCurrentCourses() throws SQLException;
+    ArrayList<CourseData> getCurrentStudentsCourses(int idStudent) throws SQLException;
+    ArrayList<CourseData> getCurrentTeachersCourses(int idTeacher) throws SQLException;
     
-    ArrayList<CourseData> getPassedCourses(int idStudent) throws SQLException;
-
-    ArrayList<CourseData> getCurrentCourses(int idTeacher) throws SQLException;
-    
+    ArrayList<CourseData> getIncomingCourses() throws SQLException;  
+     
     ArrayList<CourseTheme> getCourseThemes() throws SQLException;
 
     int createCourse(CourseData course) throws SQLException;
