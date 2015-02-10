@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.service.CourseService;
+import ua.nure.khmelik.SummaryTask4.service.PermissionService;
 import ua.nure.khmelik.SummaryTask4.service.UserService;
 
 public class DeleteServlet extends HttpServlet {
@@ -20,17 +21,22 @@ public class DeleteServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(DeleteServlet.class);
     private static final String USER_OBJECT = "user";
     private static final String COURSE_OBJECT = "course";
+    private static final String PERMISSION_OBJECT = "permission";
     private static final Object BLOCK_COMMAND = "block";
     private static final Object DELETE_COMMAND = "delete";
 
     private UserService userService;
     private CourseService courseService;
-
+    private PermissionService permissionServise;
+    
     @Override
     public void init() throws ServletException {
 	userService = (UserService) getServletContext().getAttribute(
 		"userService");
-	if (userService == null) {
+	courseService = (CourseService) getServletContext().getAttribute("courseService");
+	permissionServise = (PermissionService) getServletContext().getAttribute("permissionService");
+	
+	if (userService == null || permissionServise == null) {
 	    LOGGER.error("Could not get services from appcontext");
 	    throw new UnavailableException("Couldn`t get user service.");
 	}
@@ -60,11 +66,23 @@ public class DeleteServlet extends HttpServlet {
 			    .getParameter("id")));
 		    response.sendRedirect("userManagement");
 		}
-	    } else if (COURSE_OBJECT.equals(deletingObject)) {
+		return;
+	    }
+	    
+	    if (COURSE_OBJECT.equals(deletingObject)) {
 		courseService.deleteCourse(Integer.parseInt(request
 			.getParameter("id")));
 		    response.sendRedirect("courseManagement");
+		    return;
 	    }
+	    	    
+	    if(PERMISSION_OBJECT.equals(deletingObject)){
+		int idPermission = Integer.parseInt(request.getParameter("idPermission"));
+		int idRole = Integer.parseInt(request.getParameter("idRole"));
+		permissionServise.removePermissionFromRole(idPermission, idRole);
+		response.sendRedirect("permissionManagement");
+	    }
+	    
 	} catch (SQLException e) {
 	    LOGGER.error("SQLException while deliting " + deletingObject);
 	    response.sendRedirect("error");

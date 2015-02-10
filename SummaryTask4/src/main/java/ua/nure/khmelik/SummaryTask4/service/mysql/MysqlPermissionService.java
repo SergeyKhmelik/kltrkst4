@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import ua.nure.khmelik.SummaryTask4.dao.PermissionDao;
+import ua.nure.khmelik.SummaryTask4.entity.data.RoleData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Permission;
+import ua.nure.khmelik.SummaryTask4.entity.dbentities.Role;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.RolePermission;
 import ua.nure.khmelik.SummaryTask4.service.PermissionService;
 import ua.nure.khmelik.SummaryTask4.util.Operation;
@@ -81,6 +83,31 @@ public class MysqlPermissionService implements PermissionService {
 		return permissionDao.deleteRolePermission(conn, rolePermission);
 	    }
 	}).intValue();
+    }
+
+    @Override
+    public ArrayList<RoleData> getRoles() throws SQLException {
+	ArrayList<RoleData> result = transactionManager.doTransaction(new Operation<ArrayList<RoleData>>(){
+
+	    @Override
+	    public ArrayList<RoleData> execute(Connection conn)
+		    throws SQLException {
+		ArrayList<RoleData> result = new ArrayList<RoleData>();
+		
+		ArrayList<Role> roles = permissionDao.readRoles(conn);
+		for(Role role: roles){
+		    RoleData roleData = new RoleData();
+		    roleData.setIdRole(role.getId());
+		    roleData.setName(role.getName());
+		    roleData.setDescription(role.getDescription());
+		    roleData.setPermissions(permissionDao.readPermissions(conn, role.getId()));
+		    roleData.setMissingPermissions(permissionDao.readMissingPermissions(conn,role.getId()));
+		    result.add(roleData);
+		}
+		return result;
+	    }
+	});
+	return result;
     }
 
 }

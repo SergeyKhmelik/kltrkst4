@@ -12,9 +12,29 @@
 
 	<div class="container">
 
-		<!-------->
 		<div id="content">
 
+			<span style="color: red">${sessionScope.nameValidationError}</span>
+			<c:remove var="nameValidationError" scope="session" />
+			<span style="color: red">${sessionScope.nameValidationError}</span>
+			<c:remove var="nameValidationError" scope="session" />
+			<span style="color: red">${sessionScope.nameValidationError}</span>
+			<c:remove var="nameValidationError" scope="session" />
+			<span style="color: red">${sessionScope.loginDuplicateInsert}</span>
+			<c:remove var="loginDuplicateInsert" scope="session" />
+			<span style="color: red">${sessionScope.passwordValidationError}</span>
+			<c:remove var="passwordValidationError" scope="session" />
+			<span style="color: red">${sessionScope.emailValidationError}</span>
+			<c:remove var="emailValidationError" scope="session" />
+
+			<span style="color: red">${sessionScope.emailDuplicateInsert}</span>
+			<c:remove var="emailDuplicateInsert" scope="session" />
+			<span style="color: red">${sessionScope.collegeValidationError}</span>
+			<c:remove var="collegeValidationError" scope="session" />
+			<span style="color: red">${sessionScope.experienceValidationError}</span>
+			<c:remove var="experienceValidationError" scope="session" />
+			
+			
 			<div role="tabpanel">
 
 				<!-- Nav tabs -->
@@ -34,20 +54,15 @@
 							<thead>
 								<tr>
 									<th data-field="name" data-align="center" data-sortable="true">Name</th>
-									<th data-field="patronymic" data-align="center"
-										data-sortable="true">Patronymic</th>
-									<th data-field="sirname" data-align="center"
-										data-sortable="true">Sirname</th>
+									<th data-field="patronymic" data-align="center" data-sortable="true">Patronymic</th>
+									<th data-field="sirname" data-align="center" data-sortable="true">Sirname</th>
 									<th data-field="email" data-align="center" data-sortable="true">Email</th>
 									<th data-field="login" data-align="center" data-sortable="true">Login</th>
-									<th data-field="password" data-align="center"
-										data-sortable="true">Password</th>
-									<th data-field="college" data-align="center"
-										data-sortable="true">College</th>
-									<th data-field="blocked" data-align="center"
-										data-sortable="true">Blocked</th>
-									<th data-field="action" data-align="center"><jsp:include
-											page="/WEB-INF/view/jspf/popups/StudentRegister.jspf" /></th>
+									<th data-field="college" data-align="center" data-sortable="true">College</th>
+									<th data-field="blocked" data-align="center" data-sortable="true">Blocked</th>
+									<th data-field="action" data-align="center">
+										<jsp:include page="/WEB-INF/view/jspf/popups/StudentRegister.jspf" />
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -58,7 +73,6 @@
 										<td>${student.sirname}</td>
 										<td>${student.email}</td>
 										<td>${student.login}</td>
-										<td>${student.password}</td>
 										<td>${student.college}</td>
 										<td>${student.blocked}</td>
 										<td>
@@ -66,12 +80,10 @@
 	    										<div class="row">
 	    											<div class="col-md-3 col-md-offset-1">
 														<form action="delete" method="post">
-															<input type="text" hidden="true" name="id"
-																value="${student.idUser}" /> <input type="text"
-																hidden="true" name="object" value="user" /> <input
-																type="text" hidden="true" name="command" value="block" />
-															<input type="text" hidden="true" name="block"
-																value="${student.blocked}" />
+															<input type="text" hidden="true" name="id" value="${student.idUser}" />
+															<input type="text" hidden="true" name="object" value="user" />
+															<input type="text" hidden="true" name="command" value="block" />
+															<input type="text" hidden="true" name="block" value="${student.blocked}" />
 															<button type="submit" class="btn btn-default">block</button>
 														</form>
 													</div>
@@ -120,7 +132,6 @@
 									<th>Sirname</th>
 									<th>Email</th>
 									<th>Login</th>
-									<th>Password</th>
 									<th>Specialization</th>
 									<th>Experience</th>
 									<th><jsp:include
@@ -135,7 +146,6 @@
 										<td>${teacher.sirname}</td>
 										<td>${teacher.email}</td>
 										<td>${teacher.login}</td>
-										<td>${teacher.password}</td>
 										<td>${teacher.specialization}</td>
 										<td>${teacher.experience}</td>
 										<td>

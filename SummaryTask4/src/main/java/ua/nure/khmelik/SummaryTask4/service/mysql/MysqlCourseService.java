@@ -55,7 +55,7 @@ public class MysqlCourseService implements CourseService {
 		    }
 		});
     }
-
+    
     @Override
     public ArrayList<CourseData> getIncomingCourses(final int idTeacher) throws SQLException {
 	return transactionManager
@@ -78,6 +78,27 @@ public class MysqlCourseService implements CourseService {
     }
 
     @Override
+    public ArrayList<CourseData> getPassedCourses() throws SQLException {
+	return transactionManager
+		.doTransaction(new Operation<ArrayList<CourseData>>() {
+
+		    @Override
+		    public ArrayList<CourseData> execute(Connection conn)
+			    throws SQLException {
+			ArrayList<CourseData> result = new ArrayList<CourseData>();
+			ArrayList<Course> courses = courseDao.readPassedCourses(conn);
+			for(Course course: courses){
+			    CourseData courseData = convertCourseBeanToData(course);
+			    courseData.setTheme(courseDao.readTheme(conn, course.getIdTheme()));
+			    courseData.setTeacher(userDao.readTeacher(conn, course.getIdTeacher()));
+			    result.add(courseData);
+			}
+			return result;
+		    }
+		});
+    }
+    
+    @Override
     public ArrayList<CourseData> getPassedCourses(final int idStudent) throws SQLException {
 	return transactionManager
 		.doTransaction(new Operation<ArrayList<CourseData>>() {
@@ -99,6 +120,27 @@ public class MysqlCourseService implements CourseService {
     }
 
     @Override
+    public ArrayList<CourseData> getCurrentCourses() throws SQLException {
+	return transactionManager
+		.doTransaction(new Operation<ArrayList<CourseData>>() {
+
+		    @Override
+		    public ArrayList<CourseData> execute(Connection conn)
+			    throws SQLException {
+			ArrayList<CourseData> result = new ArrayList<CourseData>();
+			ArrayList<Course> courses = courseDao.readCurrentCourses(conn);
+			for(Course course: courses){
+			    CourseData courseData = convertCourseBeanToData(course);
+			    courseData.setTheme(courseDao.readTheme(conn, course.getIdTheme()));
+			    courseData.setTeacher(userDao.readTeacher(conn, course.getIdTeacher()));
+			    result.add(courseData);
+			}
+			return result;
+		    }
+		});
+    }
+    
+    @Override
     public ArrayList<CourseData> getCurrentCourses(final int idTeacher) throws SQLException {
 	return transactionManager
 		.doTransaction(new Operation<ArrayList<CourseData>>() {
@@ -118,7 +160,7 @@ public class MysqlCourseService implements CourseService {
 		    }
 		});
     }
-
+    
     @Override
     public int createCourse(final CourseData courseData) throws SQLException {
 	return transactionManager.doTransaction(new Operation<Integer>() {

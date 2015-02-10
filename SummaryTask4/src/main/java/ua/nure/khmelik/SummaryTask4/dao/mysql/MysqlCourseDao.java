@@ -19,8 +19,10 @@ public class MysqlCourseDao implements CourseDao {
     private static final Logger LOGGER = Logger.getLogger(MysqlCourseDao.class);
 
     private static final String FIND_COURSE_THEMES = "SELECT * FROM course_theme";
-    private static final String FIND_COURSE_THEME = "SELECT * FROM course_theme WHERE idtheme=?";
+    private static final String FIND_COURSE_THEME = "SELECT * FROM course_theme WHERE idcourse_theme=?";
     private static final String FIND_INCOMING_COURSES = "SELECT * FROM course WHERE start>?";
+    private static final String FIND_CURRENT_COURSES = "SELECT * FROM course WHERE start<? AND end>?";
+    private static final String FIND_PASSED_COURSES = "SELECT * FROM course WHERE end<?";
     private static final String FIND_INCOMING_COURSES_WITH_NO_TEACHER = "SELECT * FROM course WHERE start>? AND idteacher=NULL";
     private static final String FIND_INCOMING_COURSES_BY_TID = "SELECT * FROM course WHERE start>? AND idteacher=?";
     private static final String FIND_STUDENT_PASSED_COURSES = "SELECT * FROM course WHERE end<? AND idcourse IN (SELECT idcourse FROM student_course WHERE idstudent=?)";
@@ -44,6 +46,8 @@ public class MysqlCourseDao implements CourseDao {
 		currentCourse.setName(rs.getString(2));
 		currentCourse.setStart(rs.getDate(3));
 		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
 		result.add(currentCourse);
 	    }
 	} catch (SQLException ex) {
@@ -53,6 +57,59 @@ public class MysqlCourseDao implements CourseDao {
 	return result;
     }
 
+    @Override
+    public ArrayList<Course> readCurrentCourses(Connection conn)
+	    throws SQLException {
+	ArrayList<Course> result = new ArrayList<Course>();
+	try (PreparedStatement pstm = conn
+		.prepareStatement(FIND_CURRENT_COURSES)) {
+	    java.util.Date now = new java.util.Date();
+	    pstm.setDate(1, new java.sql.Date(now.getTime()));
+	    pstm.setDate(2, new java.sql.Date(now.getTime()));
+	    ResultSet rs = pstm.executeQuery();
+	    while (rs.next()) {
+		Course currentCourse = new Course();
+		currentCourse.setId(rs.getInt(1));
+		currentCourse.setName(rs.getString(2));
+		currentCourse.setStart(rs.getDate(3));
+		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
+		result.add(currentCourse);
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read incoming course entities ", ex);
+	    throw ex;
+	}
+	return result;
+    }
+
+    @Override
+    public ArrayList<Course> readPassedCourses(Connection conn)
+	    throws SQLException {
+	ArrayList<Course> result = new ArrayList<Course>();
+	try (PreparedStatement pstm = conn
+		.prepareStatement(FIND_PASSED_COURSES)) {
+	    java.util.Date now = new java.util.Date();
+	    pstm.setDate(1, new java.sql.Date(now.getTime()));
+	    ResultSet rs = pstm.executeQuery();
+	    while (rs.next()) {
+		Course currentCourse = new Course();
+		currentCourse.setId(rs.getInt(1));
+		currentCourse.setName(rs.getString(2));
+		currentCourse.setStart(rs.getDate(3));
+		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
+		result.add(currentCourse);
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read incoming course entities ", ex);
+	    throw ex;
+	}
+	return result;
+    }
+ 
     public ArrayList<Course> readIncomingCourses(Connection conn, int idTeacher)
 	    throws SQLException {
 	ArrayList<Course> result = new ArrayList<Course>();
@@ -70,6 +127,8 @@ public class MysqlCourseDao implements CourseDao {
 		currentCourse.setName(rs.getString(2));
 		currentCourse.setStart(rs.getDate(3));
 		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
 		result.add(currentCourse);
 	    }
 	} catch (SQLException ex) {
@@ -96,6 +155,8 @@ public class MysqlCourseDao implements CourseDao {
 		currentCourse.setName(rs.getString(2));
 		currentCourse.setStart(rs.getDate(3));
 		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
 		result.add(currentCourse);
 	    }
 	} catch (SQLException ex) {
@@ -124,6 +185,8 @@ public class MysqlCourseDao implements CourseDao {
 		currentCourse.setName(rs.getString(2));
 		currentCourse.setStart(rs.getDate(3));
 		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
 		result.add(currentCourse);
 	    }
 	} catch (SQLException ex) {
@@ -230,6 +293,8 @@ public class MysqlCourseDao implements CourseDao {
 		currentCourse.setName(rs.getString(2));
 		currentCourse.setStart(rs.getDate(3));
 		currentCourse.setEnd(rs.getDate(4));
+		currentCourse.setIdTheme(rs.getInt(5));
+		currentCourse.setIdTeacher(rs.getInt(6));
 		result.add(currentCourse);
 	    }
 	} catch (SQLException ex) {
@@ -244,17 +309,20 @@ public class MysqlCourseDao implements CourseDao {
 	    throws SQLException {
 	CourseTheme result = new CourseTheme();
 	try (PreparedStatement pstm = conn.prepareStatement(FIND_COURSE_THEME)) {
+	    pstm.setInt(1, idTheme);
 	    ResultSet rs = pstm.executeQuery();
+	    LOGGER.info("reading theme" + idTheme);
 	    if (rs.next()) {
 		result.setId(rs.getInt(1));
 		result.setName(rs.getString(2));
 		result.setDescription(rs.getString(3));
 	    }
+	    LOGGER.info("read " + result);
 	} catch (SQLException ex) {
 	    LOGGER.error("Cannot read course theme entity ", ex);
 	    throw ex;
 	}
 	return result;
     }
-
+  
 }

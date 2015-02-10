@@ -51,4 +51,13 @@ public class CourseTheme extends Entity{
 				+ (description != null ? description.hashCode() : 0);
 		return result;
 	}
+
+	@Override
+	public String toString() {
+	    return "CourseTheme [name=" + name + ", description=" + description
+		    + "]";
+	}
+	
+	
+	
 }

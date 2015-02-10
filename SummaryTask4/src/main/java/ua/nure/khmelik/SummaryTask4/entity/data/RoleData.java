@@ -10,30 +10,46 @@ public class RoleData {
     private String name;
     private String description;
     private ArrayList<Permission> permissions;
-    
+    private ArrayList<Permission> missingPermissions;
+
     public int getIdRole() {
-        return idRole;
+	return idRole;
     }
+
     public void setIdRole(int idRole) {
-        this.idRole = idRole;
+	this.idRole = idRole;
     }
+
     public String getName() {
-        return name;
+	return name;
     }
+
     public void setName(String name) {
-        this.name = name;
+	this.name = name;
     }
+
     public String getDescription() {
-        return description;
+	return description;
     }
+
     public void setDescription(String description) {
-        this.description = description;
+	this.description = description;
     }
+
     public ArrayList<Permission> getPermissions() {
-        return permissions;
+	return permissions;
     }
+
     public void setPermissions(ArrayList<Permission> permissions) {
-        this.permissions = permissions;
+	this.permissions = permissions;
     }
-    
+
+    public ArrayList<Permission> getMissingPermissions() {
+	return missingPermissions;
+    }
+
+    public void setMissingPermissions(ArrayList<Permission> missingPermission) {
+	this.missingPermissions = missingPermission;
+    }
+
 }

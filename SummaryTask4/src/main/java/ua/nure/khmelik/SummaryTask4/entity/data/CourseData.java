@@ -62,4 +62,12 @@ public class CourseData {
 	this.teacher = teacher;
     }
 
+    @Override
+    public String toString() {
+	return "CourseData [theme=" + theme
+		+ ", teacher=" + teacher + "]";
+    }
+    
+    
+
 }

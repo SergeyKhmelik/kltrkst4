@@ -3,6 +3,7 @@ package ua.nure.khmelik.SummaryTask4.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import ua.nure.khmelik.SummaryTask4.entity.data.RoleData;
 import ua.nure.khmelik.SummaryTask4.entity.dbentities.Permission;
 
 public interface PermissionService {
@@ -14,5 +15,7 @@ public interface PermissionService {
     int addPermissionToRole(int idPermission, int idRole) throws SQLException;
 
     int removePermissionFromRole(int idPermission, int idRole) throws SQLException;
+    
+    ArrayList<RoleData> getRoles() throws SQLException;
     
 }

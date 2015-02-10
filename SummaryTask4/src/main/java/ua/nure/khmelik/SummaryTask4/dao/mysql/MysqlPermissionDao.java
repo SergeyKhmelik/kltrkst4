@@ -19,12 +19,14 @@ public class MysqlPermissionDao implements PermissionDao {
     private final static Logger LOGGER = Logger
 	    .getLogger(MysqlPermissionDao.class);
 
+    private static final String FIND_ROLES = "SELECT * FROM role";
     private static final String FIND_PERMISSIONS = "SELECT * FROM permission";
-    private static final String FIND_PERMITIONS_BY_ROLEID = "SELECT * FROM permission WHERE idpermission IN (SELECT idpermission FROM role_permission WHERE idrole=?)";
+    private static final String FIND_PERMISSIONS_BY_ROLEID = "SELECT * FROM permission WHERE idpermission IN (SELECT idpermission FROM role_permission WHERE idrole=?)";
     private static final String ADD_PERMISSION_TO_ROLE = "INSERT INTO role_permission VALUES (?, ?)";
     private static final String REMOVE_PERMISSION_FROM_ROLE = "DELETE FROM role_permission WHERE idrole=? AND idpermission=?";
     private static final String FIND_ROLE_BY_NAME = "SELECT * FROM role WHERE name=?";
     private static final String FIND_ROLE_BY_ID = "SELECT * FROM role WHERE idrole=?";
+    private static final String FIND_MISSING_ROLE_PERMISSIONS = "SELECT * FROM permission WHERE idpermission NOT IN (SELECT idpermission FROM role_permission WHERE idrole=?)";
     
     @Override
     public ArrayList<Permission> readPermissions(Connection conn)
@@ -53,7 +55,7 @@ public class MysqlPermissionDao implements PermissionDao {
 	ArrayList<Permission> result = new ArrayList<Permission>();
 	Permission currentPermission;
 	try (PreparedStatement pstm = conn
-		.prepareStatement(FIND_PERMITIONS_BY_ROLEID)) {
+		.prepareStatement(FIND_PERMISSIONS_BY_ROLEID)) {
 	    pstm.setInt(1, idRole);
 
 	    ResultSet rs = pstm.executeQuery();
@@ -73,12 +75,37 @@ public class MysqlPermissionDao implements PermissionDao {
     }
 
     @Override
+    public ArrayList<Permission> readMissingPermissions(Connection conn,
+	    int idRole) throws SQLException {
+	ArrayList<Permission> result = new ArrayList<Permission>();
+	Permission currentPermission;
+	try (PreparedStatement pstm = conn
+		.prepareStatement(FIND_MISSING_ROLE_PERMISSIONS)) {
+	    pstm.setInt(1, idRole);
+
+	    ResultSet rs = pstm.executeQuery();
+	    while (rs.next()) {
+		currentPermission = new Permission();
+		currentPermission.setId(rs.getInt(1));
+		currentPermission.setName(rs.getString(2));
+		currentPermission.setDescription(rs.getString(3));
+		result.add(currentPermission);
+	    }
+	} catch (SQLException ex) {
+	    LOGGER.error("Cannot read permission entities where idRole="
+		    + idRole, ex);
+	    throw ex;
+	}
+	return result;
+    }
+    
+    @Override
     public int createRolePermission(Connection conn,
 	    RolePermission rolePermission) throws SQLException {
 	try (PreparedStatement pstm = conn
 		.prepareStatement(ADD_PERMISSION_TO_ROLE)) {
-	    pstm.setInt(1, rolePermission.getIdPermission());
-	    pstm.setInt(2, rolePermission.getIdRole());
+	    pstm.setInt(1, rolePermission.getIdRole());
+	    pstm.setInt(2, rolePermission.getIdPermission());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
 	    LOGGER.error("Cannot create a role_permission ", ex);
@@ -92,8 +119,8 @@ public class MysqlPermissionDao implements PermissionDao {
 	    RolePermission rolePermission) throws SQLException {
 	try (PreparedStatement pstm = conn
 		.prepareStatement(REMOVE_PERMISSION_FROM_ROLE)) {
-	    pstm.setInt(1, rolePermission.getIdPermission());
-	    pstm.setInt(2, rolePermission.getIdRole());
+	    pstm.setInt(1, rolePermission.getIdRole());
+	    pstm.setInt(2, rolePermission.getIdPermission());
 	    pstm.executeUpdate();
 	} catch (SQLException ex) {
 	    LOGGER.error("Cannot delete role_permission with idRole="
@@ -137,6 +164,25 @@ public class MysqlPermissionDao implements PermissionDao {
 	    }
 	} catch (SQLException ex) {
 	    LOGGER.error("Cannot read role with id " + idRole, ex);
+	    throw ex;
+	}
+	return result;
+    }
+
+    @Override
+    public ArrayList<Role> readRoles(Connection conn) throws SQLException {
+	ArrayList<Role> result = new ArrayList<Role>();
+	try(Statement stm = conn.createStatement()){
+	    ResultSet rs = stm.executeQuery(FIND_ROLES);
+	    while(rs.next()){
+		Role currentRole = new Role();
+		currentRole.setId(rs.getInt(1));
+		currentRole.setName(rs.getString(2));
+		currentRole.setDescription(rs.getString(3));
+		result.add(currentRole);
+	    }
+	} catch (SQLException ex){
+	    LOGGER.error("Cannot read all roles", ex);
 	    throw ex;
 	}
 	return result;

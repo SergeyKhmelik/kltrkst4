@@ -12,6 +12,10 @@ public interface CourseDao {
 
     ArrayList<Course> readIncomingCourses(Connection conn) throws SQLException;
 
+    ArrayList<Course> readCurrentCourses(Connection conn) throws SQLException;
+
+    ArrayList<Course> readPassedCourses(Connection conn) throws SQLException;
+    
     ArrayList<Course> readIncomingCoursesWithoutTeacher(Connection conn)
 	    throws SQLException;
 

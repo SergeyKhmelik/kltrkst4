@@ -66,7 +66,7 @@ public class UserRegistrationServlet extends HttpServlet {
 		    if (validateStudent(studentData, session)) {
 			userService.addStudent(studentData);
 		    } else {
-			request.getRequestDispatcher("update").forward(request, response);
+			response.sendRedirect("userManagement");
 			return;
 		    }  
 		} else if (TEACHER_ROLE.equals(role)) { // INSERT TEACHER
@@ -74,7 +74,7 @@ public class UserRegistrationServlet extends HttpServlet {
 		    if (validateTeacher(teacherData, session)) {
 			userService.addTeacher(teacherData);
 		    } else {
-			request.getRequestDispatcher("update").forward(request, response);
+			response.sendRedirect("userManagement");
 			return;
 		    }
 		}
@@ -127,7 +127,7 @@ public class UserRegistrationServlet extends HttpServlet {
 	getUserFromRequest(request, teacherData);
 	teacherData.setExperience(Integer.parseInt(request
 		.getParameter("experience")));
-	teacherData.setSirname(request.getParameter("specialization"));
+	teacherData.setSpecialization(request.getParameter("specialization"));
 	return teacherData;
     }
 
@@ -162,31 +162,25 @@ public class UserRegistrationServlet extends HttpServlet {
     private boolean validateUser(UserData userData, HttpSession session) throws SQLException {
 	boolean result = true;
 	result = result && validateName(userData.getName(), session);
-	LOGGER.error("NAME VALIDATION!"
-		+ validateName(userData.getName(), session) + " "
-		+ userData.getName());
+	LOGGER.info("Name "+ userData.getName() + " validation "
+		+ validateName(userData.getName(), session));
 	result = result && validateName(userData.getPatronymic(), session);
-	LOGGER.error("Patron VALIDATION!"
-		+ validateName(userData.getPatronymic(), session) + " "
-		+ userData.getPatronymic());
+	LOGGER.info("Patronymic " + userData.getPatronymic() + "validation"
+		+ validateName(userData.getPatronymic(), session));
 	result = result && validateName(userData.getSirname(), session);
-	LOGGER.error("sirname VALIDATION!"
-		+ validateName(userData.getSirname(), session) + " "
-		+ userData.getSirname());
+	LOGGER.info("Sirname "+ userData.getSirname() + "validation"
+		+ validateName(userData.getSirname(), session));
 	result = result && validateLogin(userData.getLogin(), session);
-	LOGGER.error("login VALIDATION!"
-		+ validateLogin(userData.getLogin(), session) + " "
-		+ userData.getLogin());
+	LOGGER.info("Login " + userData.getLogin() + "validation"
+	+ validateLogin(userData.getLogin(), session));
 	result = result && validateEmail(userData.getEmail(), session);
-	LOGGER.error("email VALIDATION!"
-		+ validateEmail(userData.getEmail(), session) + " "
-		+ userData.getEmail());
+	LOGGER.info("Email " + userData.getEmail() + "validation"
+		+ validateEmail(userData.getEmail(), session));
 	result = result && validatePassword(userData.getPassword(), session);
-	LOGGER.error("password VALIDATION!"
-		+ validatePassword(userData.getPassword(), session) + " "
-		+ userData.getPassword());
+	LOGGER.info("Password " + userData.getPassword() + "validation"
+		+ validatePassword(userData.getPassword(), session));
 	result = result && validateUserOnDuplicateInsert(userData, session);
-	LOGGER.error("duplications VALIDATION!"
+	LOGGER.info("Duplications check " 
 		+ validateUserOnDuplicateInsert(userData, session));
 	return result;
     }

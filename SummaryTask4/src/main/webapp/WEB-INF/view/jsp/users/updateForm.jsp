@@ -24,7 +24,7 @@
 							method="post">	
 
 						<div class="form-group">
-							 
+							 Name
 							<input type="text" class="form-control input-lg"
 								value="${param.name}" name="name" />
 								<span  style="color:red">${sessionScope.nameValidationError}</span>
@@ -32,6 +32,7 @@
 						</div>
 	
 						<div class="form-group">
+							Patronymic
 							<input type="text" class="form-control input-lg"
 								value="${param.patronymic}" name="patronymic" />
 								<span  style="color:red">${sessionScope.nameValidationError}</span>
@@ -39,6 +40,7 @@
 						</div>
 	
 						<div class="form-group">
+							Sirname
 							<input type="text" class="form-control input-lg"
 								value="${param.sirname}" name="sirname" />
 								<span  style="color:red">${sessionScope.nameValidationError}</span>
@@ -46,6 +48,7 @@
 						</div>
 	
 						<div class="form-group">
+							Login
 							<input type="text" class="form-control input-lg"
 								value="${param.login}" name="login" />
 							<span  style="color:red">${sessionScope.nameValidationError}</span>
@@ -55,13 +58,15 @@
 						</div>
 
 						<div class="form-group">
+							Password
 							<input type="text" class="form-control input-lg"
 								value="${param.password}" name="password" />
 							<span  style="color:red">${sessionScope.passwordValidationError}</span>
 							<c:remove var="passwordValidationError" scope="session"/>			
 						</div>
-
+ 						
 						<div class="form-group">
+							Email
 							<span class="input-group-addon" id="basic-addon1">@
 							<input type="text" class="form-control" value="${param.email }" 
 							aria-describedby="basic-addon1" name="email"/></span> 
@@ -74,6 +79,7 @@
 						</div>
 
 						<c:if test="${param.role eq 'student'}">
+							College
 							<div class="form-group">
 								<input type="text" class="form-control input-lg"
 									value="${param.college}" name="college" />
@@ -83,12 +89,14 @@
 						</c:if>
 					
 						<c:if test="${param.role eq 'teacher'}">
+							Specialization							
 							<div class="form-group">
 								<input type="text" class="form-control input-lg"
 									value="${param.specialization}" name="specialization" />
 							</div>
 
 							<div class="form-group">
+								Experience
 								<input type="number" class="form-control input-lg"
 									value="${param.experience}" name="experience" />
 								<span  style="color:red">${sessionScope.experienceValidationError}</span>
@@ -114,7 +122,9 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<div class="col-md-12"></div>
+					<div class="col-md-12">
+						<a href="/SummaryTask4/userManagement" class="btn btn-primary btn-lg btn-block">Back</a>
+					</div>
 				</div>
 			</div>
 		</div>

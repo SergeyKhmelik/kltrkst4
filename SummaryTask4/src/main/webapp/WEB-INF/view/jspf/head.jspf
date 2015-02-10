@@ -9,6 +9,11 @@
 		<c:otherwise>${param.title}</c:otherwise>
 	</c:choose>
 </title>
+
 <link rel="stylesheet" type="text/css" media="screen"
 	href="css/bootstrap.min.css" />
+
+<link rel="stylesheet" type="text/css" media="screen"
+	href="css/left_tabs.css" />
+
 </head>

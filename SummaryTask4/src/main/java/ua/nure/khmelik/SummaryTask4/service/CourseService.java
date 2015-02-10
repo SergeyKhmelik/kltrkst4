@@ -10,6 +10,10 @@ public interface CourseService {
 
     ArrayList<CourseData> getIncomingCourses() throws SQLException;
 
+    ArrayList<CourseData> getCurrentCourses() throws SQLException;
+
+    ArrayList<CourseData> getPassedCourses() throws SQLException;
+    
     ArrayList<CourseData> getIncomingCourses(int idTeacher) throws SQLException;
 
     ArrayList<CourseData> getIncomingCoursesWithoutTeacher() throws SQLException;    
@@ -27,5 +31,5 @@ public interface CourseService {
     int deleteCourse(int idCourse) throws SQLException;
     
     int addStudent(int idCourse, int idStudent) throws SQLException;
-
+    
 }

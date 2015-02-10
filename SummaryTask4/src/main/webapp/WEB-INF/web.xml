@@ -40,10 +40,14 @@
 		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.UserManagementServlet</servlet-class>
 	</servlet>
 
-
 	<servlet>
 		<servlet-name>CourseManagement</servlet-name>
 		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.CourseManagementServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>PermissionManagement</servlet-name>
+		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.PermissionManagementServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -61,6 +65,14 @@
 		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.UpdateDataServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>AddPermission</servlet-name>
+		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.AddPermissionServlet</servlet-class>
+	</servlet>
+
+
+
+
 	<!-- JSP declaration -->
 
 	<servlet>
@@ -74,24 +86,35 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>courses.jsp</servlet-name>
-		<jsp-file>/WEB-INF/view/jsp/management/courses.jsp</jsp-file>
-	</servlet>
-
-	<servlet>
-		<servlet-name>users.jsp</servlet-name>
-		<jsp-file>/WEB-INF/view/jsp/management/users.jsp</jsp-file>
-	</servlet>
-
-	<servlet>
 		<servlet-name>error.jsp</servlet-name>
 		<jsp-file>/WEB-INF/view/jsp/error.jsp</jsp-file>
+	</servlet>
+	
+	<!-- User management -->
+	<servlet>
+		<servlet-name>users.jsp</servlet-name>
+		<jsp-file>/WEB-INF/view/jsp/users/usersMain.jsp</jsp-file>
 	</servlet>
 
 	<servlet>
 		<servlet-name>updateForm.jsp</servlet-name>
-		<jsp-file>/WEB-INF/view/jsp/updateForm.jsp</jsp-file>
+		<jsp-file>/WEB-INF/view/jsp/users/updateForm.jsp</jsp-file>
 	</servlet>
+	
+	<!-- Permission management -->
+	<servlet>
+		<servlet-name>permissions.jsp</servlet-name>
+		<jsp-file>/WEB-INF/view/jsp/permissions/permissionsMain.jsp</jsp-file>
+	</servlet>
+	
+	<!-- Course management -->
+	<servlet>
+		<servlet-name>courses.jsp</servlet-name>
+		<jsp-file>/WEB-INF/view/jsp/courses/courses.jsp</jsp-file>
+	</servlet>
+
+
+
 
 	<!-- MAPPING -->
 
@@ -114,6 +137,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>PermissionManagement</servlet-name>
+		<url-pattern>/permissionManagement</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>LogoutServlet</servlet-name>
 		<url-pattern>/logout</url-pattern>
 	</servlet-mapping>
@@ -132,6 +160,12 @@
 		<servlet-name>UpdateServlet</servlet-name>
 		<url-pattern>/update</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AddPermission</servlet-name>
+		<url-pattern>/addPermission</url-pattern>
+	</servlet-mapping>
+	
 
 	<!-- JSP mapping -->
 
@@ -144,26 +178,33 @@
 		<servlet-name>login.jsp</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
-
+	
 	<servlet-mapping>
-		<servlet-name>courses.jsp</servlet-name>
-		<url-pattern>/courses</url-pattern>
+		<servlet-name>error.jsp</servlet-name>
+		<url-pattern>/error</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>users.jsp</servlet-name>
 		<url-pattern>/users</url-pattern>
 	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>error.jsp</servlet-name>
-		<url-pattern>/error</url-pattern>
-	</servlet-mapping>
 	
 	<servlet-mapping>
 		<servlet-name>updateForm.jsp</servlet-name>
 		<url-pattern>/updateForm</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>permissions.jsp</servlet-name>
+		<url-pattern>/permissions</url-pattern>
+	</servlet-mapping>
+	
+
+	<servlet-mapping>
+		<servlet-name>courses.jsp</servlet-name>
+		<url-pattern>/courses</url-pattern>
+	</servlet-mapping>
+
 
 	<!-- FILTERS -->
 
@@ -195,16 +236,4 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-
-	<!-- TEST -->
-	
-	<servlet>
-		<servlet-name>Test</servlet-name>
-		<servlet-class>ua.nure.khmelik.SummaryTask4.web.servlet.TestServlet</servlet-class>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>Test</servlet-name>
-		<url-pattern>/test</url-pattern>
-	</servlet-mapping>
 </web-app>
